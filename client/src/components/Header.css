@@ -1,0 +1,9 @@
+.logo-img {
+  margin-left: 0;
+  height: 30px;
+  margin-top: -4px;
+}
+.logo-text {
+  font-family: var(--theme-post-title-font-family);
+  font-size: 100%;
+}
