@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import "./Header.css";
+import { TbSearch } from "react-icons/tb";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -11,10 +13,10 @@ const HeaderWrapper = styled.header`
   border-top: 3px solid RGB(244, 130, 37);
   margin: 0 auto;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   background-color: hsl(210, 8%, 97.5%);
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.05),
-    0 2px 8px hsla(0, 0%, 0%, 0.05); ;
+    0 2px 8px hsla(0, 0%, 0%, 0.05);
 `;
 
 const Logo = styled.a`
@@ -47,17 +49,21 @@ const Button = styled.button`
   color: ${(props) => props.color || "hsl(205, 47%, 42%)"};
   background: ${(props) => props.background || "hsl(205, 46%, 92%)"};
   margin-left: ${(props) => props.marginLeft || "0"};
+  margin-right: ${(props) => props.marginRight || "0"};
   border-color: ${(props) => props.borderColor || "hsl(205, 41%, 63%)"};
 `;
 
-const Search = styled.input`
+const Search = styled.div`
   background-color: white;
   border: 1px solid hsl(210, 8%, 75%);
   border-radius: 3px;
   color: hsl(210, 8%, 25%);
-  display: block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   line-height: calc(15 / 13);
   width: 100%;
+  height: 30.6px;
   padding: 0.6em 0.7em;
   margin-right: 0.5em;
 `;
@@ -65,23 +71,34 @@ const Search = styled.input`
 function Header() {
   return (
     <HeaderWrapper>
-      <Logo href="/">
-        <img
-          className="logo-img"
-          src="./img/stackoverflow_logo_icon.png"
-          alt="로고이미지"
-        />
-        <span className="logo-text">ErrorIt Overflow</span>
-      </Logo>
-      <Search type="search" placeholder="Search..." />
-      <Button>Log in</Button>
-      <Button
-        color="hsl(0,0%,100%)"
-        background="hsl(206,100%,52%)"
-        marginLeft="4px"
-        borderColor="hsl(206,100%,52%)">
-        Sign up
-      </Button>
+      <div className="header-wrapper">
+        <RxHamburgerMenu className="menu-icon" />
+        <Logo href="/">
+          <img
+            className="logo-img"
+            src="./img/stackoverflow_logo_icon.png"
+            alt="로고이미지"
+          />
+          <span className="logo-text">ErrorIt Overflow</span>
+        </Logo>
+        <Search>
+          <TbSearch className="search-icon" />
+          <input
+            className="search-input"
+            type="search"
+            placeholder="Search..."
+          />
+        </Search>
+        <Button>Log in</Button>
+        <Button
+          color="hsl(0,0%,100%)"
+          background="hsl(206,100%,52%)"
+          marginLeft="4px"
+          marginRight="13px"
+          borderColor="hsl(206,100%,52%)">
+          Sign up
+        </Button>
+      </div>
     </HeaderWrapper>
   );
 }
