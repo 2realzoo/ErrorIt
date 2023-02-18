@@ -1,9 +1,49 @@
 .menu-icon {
-  font-size: 22px;
-  min-width: 22px;
-  align-self: center;
-  height: 100%;
-  margin: 0 16px 0 16px;
+  width: var(--su-static16);
+  height: var(--su-static2);
+  background-color: var(--theme-topbar-item-color);
+  display: block;
+  position: relative;
+  left: 0;
+  right: 0;
+  min-width: 16px;
+}
+.menu-icon.active {
+  background-color: transparent;
+}
+.menu-icon::before {
+  left: 0;
+  right: 0;
+  top: -5px;
+  transition: top, transform;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in-out;
+}
+.active::before {
+  transform: rotate(-45deg);
+  top: 0;
+}
+.menu-icon::after {
+  left: 0;
+  right: 0;
+  top: 5px;
+  transition: top, transform;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in-out;
+}
+.active::after {
+  transform: rotate(45deg);
+  top: 0;
+}
+.menu-icon::before,
+.menu-icon::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: var(--theme-topbar-item-color);
+  width: 100%;
+  min-width: 16px;
+  height: var(--su-static2);
 }
 .search-icon {
   margin-right: 0.3em;
