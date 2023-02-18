@@ -4,6 +4,8 @@ import Main from "./pages/Main";
 import Login from "./pages/Login";
 import Question from "./pages/Question";
 import Footer from "./components/Footer";
+import "./styles/colors.css";
+import "./styles/stack.css";
 
 function App() {
   return (

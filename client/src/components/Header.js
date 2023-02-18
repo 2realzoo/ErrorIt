@@ -17,6 +17,8 @@ const HeaderWrapper = styled.header`
   background-color: hsl(210, 8%, 97.5%);
   box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.05),
     0 2px 8px hsla(0, 0%, 0%, 0.05);
+  z-index: 5050;
+  top: 0;
 `;
 
 const Logo = styled.a`
@@ -89,7 +91,9 @@ function Header() {
             placeholder="Search..."
           />
         </Search>
-        <Button>Log in</Button>
+        <a href="http://localhost:3000/login">
+          <Button>Log in</Button>
+        </a>
         <Button
           color="hsl(0,0%,100%)"
           background="hsl(206,100%,52%)"
