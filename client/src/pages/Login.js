@@ -99,22 +99,12 @@ const Button = styled.button`
   --_bu-bc: transparent;
   --_bu-br: var(--br-sm);
 `;
+
 const LabelWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`;
-
-const Caption = styled.a`
-  font-size: var(--fs-caption);
-  --_li-fc: var(--theme-link-color);
-  --_li-fc-hover: var(--theme-link-color-hover);
-  --_li-fc-visited: var(--theme-link-color-visited);
-  color: var(--_li-fc);
-  cursor: pointer;
-  text-decoration: none;
-  user-select: auto;
 `;
 
 const GuideWrapper = styled.div`
@@ -126,6 +116,17 @@ const GuideWrapper = styled.div`
   margin-bottom: 24px;
   margin-left: auto;
   margin-right: auto;
+`;
+
+const Caption = styled.a`
+  font-size: var(--fs-caption);
+  --_li-fc: var(--theme-link-color);
+  --_li-fc-hover: var(--theme-link-color-hover);
+  --_li-fc-visited: var(--theme-link-color-visited);
+  color: var(--_li-fc);
+  cursor: pointer;
+  text-decoration: none;
+  user-select: auto;
 `;
 
 function Login() {
