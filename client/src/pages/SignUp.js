@@ -203,8 +203,8 @@ function SignUp() {
           </Notice>
         </FormContainer>
         <GuideWrapper>
-          Don’t have an account?&nbsp;
-          <Caption href="#">Sign up</Caption>
+          Already have an account?&nbsp;
+          <Caption href="/login">Log in</Caption>
         </GuideWrapper>
       </SignUpWrapper>
     </SignUpContainer>

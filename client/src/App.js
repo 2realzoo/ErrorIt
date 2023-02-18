@@ -8,6 +8,7 @@ import Question from "./pages/Question";
 import Footer from "./components/Footer";
 
 import SignUp from "./pages/SignUp";
+import CheckUser from "./pages/CheckUser";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/question" element={<Question />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/check-user" element={<CheckUser />} />
       </Routes>
       <Footer />
     </BrowserRouter>
