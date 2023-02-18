@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
 import "./Header.css";
 import { TbSearch } from "react-icons/tb";
 import { RxHamburgerMenu } from "react-icons/rx";
 
-const HeaderWrapper = styled.header`
+const HeaderContainer = styled.header`
   position: fixed;
   display: flex;
   flex-direction: row;
@@ -21,6 +21,14 @@ const HeaderWrapper = styled.header`
   top: 0;
 `;
 
+const HeaderWrapper = styled.div`
+  display: flex;
+  height: 100%;
+  width: 97.2307692rem;
+  max-width: 100%;
+  align-items: center;
+`;
+
 const Logo = styled.a`
   margin: 0 8px 0 8px;
   width: 150px;
@@ -28,6 +36,17 @@ const Logo = styled.a`
   display: flex;
   align-items: center;
   background-color: transparent;
+`;
+
+const LogoText = styled.span`
+  font-family: var(--theme-post-title-font-family);
+  font-size: 100%;
+`;
+const Img = styled.img`
+  margin-left: 0;
+  height: 30px;
+  margin-top: -4px;
+  padding-right: 10px;
 `;
 
 const Button = styled.button`
@@ -43,10 +62,22 @@ const Button = styled.button`
   display: inline-block;
   position: relative;
   text-align: center;
-  font-size: 13px;
+  font-size: 0.8rem;
   line-height: 15px;
   box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, 0.7);
   white-space: nowrap;
+  ${(props) =>
+    props.hoverBackgroundColor
+      ? css`
+          &:hover {
+            background-color: ${props.hoverBackgroundColor};
+          }
+        `
+      : css`
+          &:hover {
+            background-color: inherit;
+          }
+        `};
 
   color: ${(props) => props.color || "hsl(205, 47%, 42%)"};
   background: ${(props) => props.background || "hsl(205, 46%, 92%)"};
@@ -70,40 +101,57 @@ const Search = styled.div`
   margin-right: 0.5em;
 `;
 
+const SearchInput = styled.input`
+  width: 100%;
+`;
+
 function Header() {
+  const [isLogin, setIsLogin] = useState(false);
+
   return (
-    <HeaderWrapper>
-      <div className="header-wrapper">
+    <HeaderContainer>
+      <HeaderWrapper>
         <RxHamburgerMenu className="menu-icon" />
         <Logo href="/">
-          <img
+          <Img
             className="logo-img"
             src="./img/stackoverflow_logo_icon.png"
             alt="로고이미지"
           />
-          <span className="logo-text">ErrorIt Overflow</span>
+          <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
         <Search>
           <TbSearch className="search-icon" />
-          <input
+          <SearchInput
             className="search-input"
             type="search"
             placeholder="Search..."
           />
         </Search>
-        <a href="http://localhost:3000/login">
-          <Button>Log in</Button>
-        </a>
-        <Button
-          color="hsl(0,0%,100%)"
-          background="hsl(206,100%,52%)"
-          marginLeft="4px"
-          marginRight="13px"
-          borderColor="hsl(206,100%,52%)">
-          Sign up
-        </Button>
-      </div>
-    </HeaderWrapper>
+        {isLogin ? (
+          <div></div>
+        ) : (
+          <>
+            <a href="http://localhost:3000/login">
+              <Button hoverBackgroundColor="var(--_bu-filled-bg-hover)">
+                Log in
+              </Button>
+            </a>
+            <a href="/signup">
+              <Button
+                color="hsl(0,0%,100%)"
+                background="hsl(206,100%,52%)"
+                marginLeft="4px"
+                marginRight="13px"
+                borderColor="hsl(206,100%,52%)"
+                hoverBackgroundColor="var(--_bu-bg-hover)">
+                Sign up
+              </Button>
+            </a>
+          </>
+        )}
+      </HeaderWrapper>
+    </HeaderContainer>
   );
 }
 
