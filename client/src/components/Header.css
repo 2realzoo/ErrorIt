@@ -1,0 +1,31 @@
+.header-wrapper {
+  display: flex;
+  height: 100%;
+  width: 97.2307692rem;
+  max-width: 100%;
+  align-items: center;
+}
+.menu-icon {
+  font-size: 22px;
+  min-width: 22px;
+  align-self: center;
+  height: 100%;
+  margin: 0 16px 0 16px;
+}
+.logo-img {
+  margin-left: 0;
+  height: 30px;
+  margin-top: -4px;
+}
+.logo-text {
+  font-family: var(--theme-post-title-font-family);
+  font-size: 100%;
+}
+.search-icon {
+  margin-right: 0.3em;
+  font-size: 22px;
+  min-width: 22px;
+}
+.search-input {
+  width: 100%;
+}
