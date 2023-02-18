@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import "./Header.css";
 import { TbSearch } from "react-icons/tb";
-import { RxHamburgerMenu } from "react-icons/rx";
+import { FaGlobeAsia } from "react-icons/fa";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -20,7 +20,6 @@ const HeaderContainer = styled.header`
   z-index: 5050;
   top: 0;
 `;
-
 const HeaderWrapper = styled.div`
   display: flex;
   height: 100%;
@@ -28,27 +27,96 @@ const HeaderWrapper = styled.div`
   max-width: 100%;
   align-items: center;
 `;
-
+const MenuWrapper = styled.a`
+  display: flex;
+  height: 100%;
+  padding: 0 var(--su16);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: var(--theme-topbar-item-background-hover);
+  }
+`;
+const MenuSidebar = styled.div`
+  display: ${(props) => props.display || "block"};
+  position: fixed;
+  top: 50px;
+  height: fit-content;
+  box-shadow: 0 0 0 hsl(210deg 8% 5% / 5%);
+  transition: box-shadow ease-in-out 0.1s, transform ease-in-out 0.1s;
+  transform: translateZ(0);
+  background-color: var(--white);
+`;
+const SidebarNav = styled.ol`
+  padding-top: 24px;
+  margin: 0 0 var(--su12);
+`;
+const SelectedItem = styled.li`
+  position: relative;
+  width: 240px;
+  display: flex;
+  cursor: pointer;
+  text-transform: ${(props) => props.textTransform || "none"};
+`;
+const NavItemWrapper = styled.li`
+  position: relative;
+  width: 240px;
+  display: flex;
+  cursor: pointer;
+`;
+const NavItem = styled.a`
+  display: flex;
+  align-items: center;
+  padding: 10px 4px 10px 18px;
+  color: var(--black-600);
+  line-height: var(--lh-md);
+  font-size: var(--fs-body1);
+  &:hover {
+    color: var(--black-900);
+  }
+`;
+const Itemflex = styled.span`
+  padding-right: 5px;
+`;
+const NavLink = styled.a`
+  display: block;
+  font-weight: bold;
+  color: var(--black-900);
+  background: var(--black-050);
+  border-right: 3px solid var(--theme-primary-color);
+  width: 100%;
+  padding: 10px 4px 10px 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-body1);
+`;
 const Logo = styled.a`
-  margin: 0 8px 0 8px;
-  width: 150px;
-  min-width: 150px;
+  margin-right: 8px;
+  width: fit-content;
   display: flex;
   align-items: center;
   background-color: transparent;
+  height: 100%;
+  &:hover {
+    background-color: var(--theme-topbar-item-background-hover);
+  }
 `;
-
 const LogoText = styled.span`
   font-family: var(--theme-post-title-font-family);
   font-size: 100%;
+  padding-right: 5px;
+  display: block;
+  white-space: nowrap;
 `;
 const Img = styled.img`
   margin-left: 0;
   height: 30px;
   margin-top: -4px;
+  padding-left: 3px;
   padding-right: 10px;
 `;
-
 const Button = styled.button`
   border-color: hsl(205, 41%, 63%);
   border: 1px solid;
@@ -85,7 +153,6 @@ const Button = styled.button`
   margin-right: ${(props) => props.marginRight || "0"};
   border-color: ${(props) => props.borderColor || "hsl(205, 41%, 63%)"};
 `;
-
 const Search = styled.div`
   background-color: white;
   border: 1px solid hsl(210, 8%, 75%);
@@ -100,18 +167,47 @@ const Search = styled.div`
   padding: 0.6em 0.7em;
   margin-right: 0.5em;
 `;
-
 const SearchInput = styled.input`
   width: 100%;
 `;
 
 function Header() {
   const [isLogin, setIsLogin] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+
+  const handleClickMenu = () => {
+    setOpenMenu(!openMenu);
+  };
 
   return (
     <HeaderContainer>
       <HeaderWrapper>
-        <RxHamburgerMenu className="menu-icon" />
+        <MenuWrapper onClick={handleClickMenu}>
+          <span className="menu-icon"></span>
+        </MenuWrapper>
+        {openMenu ? (
+          <MenuSidebar>
+            <SidebarNav>
+              <SelectedItem>
+                <NavLink>Home</NavLink>
+              </SelectedItem>
+              <NavItemWrapper>
+                <NavItem>
+                  <Itemflex>Questions</Itemflex>
+                  <FaGlobeAsia />
+                </NavItem>
+              </NavItemWrapper>
+              <NavItemWrapper>
+                <NavItem>Tags</NavItem>
+              </NavItemWrapper>
+              <NavItemWrapper>
+                <NavItem>Users</NavItem>
+              </NavItemWrapper>
+            </SidebarNav>
+          </MenuSidebar>
+        ) : (
+          <MenuSidebar display="none"></MenuSidebar>
+        )}
         <Logo href="/">
           <Img
             className="logo-img"
