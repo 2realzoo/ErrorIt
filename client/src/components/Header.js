@@ -183,7 +183,7 @@ function Header() {
     <HeaderContainer>
       <HeaderWrapper>
         <MenuWrapper onClick={handleClickMenu}>
-          <span className="menu-icon"></span>
+          <span className={`menu-icon ${openMenu ? "active" : ""}`}></span>
         </MenuWrapper>
         {openMenu ? (
           <MenuSidebar>
