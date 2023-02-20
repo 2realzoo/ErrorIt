@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { currentPage } from "../reducers/actions";
 
 const SignUpContainer = styled.div`
   max-width: 100%;
@@ -139,6 +141,10 @@ const Caption = styled.a`
 `;
 
 function SignUp() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(currentPage("Users"));
+  }, []);
   return (
     <SignUpContainer>
       <SignUpWrapper>

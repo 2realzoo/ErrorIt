@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { currentPage } from "../reducers/actions";
 
 const LoginContainer = styled.div`
   max-width: 100%;
@@ -120,6 +122,11 @@ const Caption = styled.a`
 `;
 
 function Login() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(currentPage("Users"));
+  }, []);
+
   return (
     <LoginContainer>
       <LoginWrapper>
