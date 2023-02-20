@@ -8,7 +8,7 @@ const LoginContainer = styled.div`
   justify-content: center;
   flex: 1 0 auto;
   background-color: var(--black-050);
-  height: 100%;
+  height: 95vh;
 `;
 const LoginWrapper = styled.div`
   display: flex;

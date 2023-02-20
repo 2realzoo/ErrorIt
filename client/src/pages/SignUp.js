@@ -9,7 +9,7 @@ const SignUpContainer = styled.div`
   justify-content: center;
   flex: 1 0 auto;
   background-color: var(--black-050);
-  height: 100%;
+  height: 95vh;
   padding: var(--su24);
   padding-left: var(--su16);
   padding-right: var(--su16);
