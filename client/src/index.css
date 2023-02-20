@@ -75,6 +75,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: 50px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 code {
