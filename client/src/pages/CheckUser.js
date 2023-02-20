@@ -1,22 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import Container from "../styles/Container";
+import Wrapper from "../styles/Wrapper";
+import Notice from "../styles/Notice";
 
-const CheckContainer = styled.div`
-  max-width: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex: 1 0 auto;
-  background-color: var(--black-050);
-  height: 100%;
-`;
-const CheckWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 95vh;
-`;
 const FormContainer = styled.div`
   box-shadow: var(--bs-xl);
   padding: var(--su24);
@@ -93,18 +80,11 @@ const Button = styled.button`
   --_bu-bc: transparent;
   --_bu-br: var(--br-sm);
 `;
-const Notice = styled.div`
-  font-size: var(--fs-caption);
-  margin-bottom: 1em;
-  margin-top: 0;
-  clear: both;
-  color: ${(props) => props.color || "var(--theme-body-font-color)"};
-`;
 
 function CheckUser() {
   return (
-    <CheckContainer>
-      <CheckWrapper>
+    <Container>
+      <Wrapper pageName="CheckUser">
         <FormContainer>
           <Notice>
             Forgot your account’s password?Please answer the email and the
@@ -130,8 +110,8 @@ function CheckUser() {
           </Form>
           <Button>Submit</Button>
         </FormContainer>
-      </CheckWrapper>
-    </CheckContainer>
+      </Wrapper>
+    </Container>
   );
 }
 

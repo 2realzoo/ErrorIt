@@ -5,6 +5,7 @@ import { TbSearch } from "react-icons/tb";
 import { FaGlobeAsia } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { currentPage } from "../reducers/actions";
+import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -178,6 +179,7 @@ function Header() {
   const [openMenu, setOpenMenu] = useState(false);
   const { currentPageReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   console.log(currentPageReducer);
@@ -189,6 +191,10 @@ function Header() {
   };
   const handlePageHome = () => {
     dispatch(currentPage("Home"));
+  };
+  const handleLogout = () => {
+    dispatch(isLogin(false));
+    navigate("/");
   };
   return (
     <HeaderContainer>
@@ -205,7 +211,7 @@ function Header() {
                 </SelectedItem>
               ) : (
                 <NavItemWrapper onClick={handlePageHome}>
-                  <NavItem>Home</NavItem>
+                  <NavItem href="/">Home</NavItem>
                 </NavItemWrapper>
               )}
               {currentPageReducer === "Question" ? (
@@ -261,7 +267,14 @@ function Header() {
           />
         </Search>
         {isLogin ? (
-          <div></div>
+          <>
+            <a href="#">
+              <Img></Img>
+            </a>
+            <Button onClick={handleLogout} marginLeft="4px" marginRight="13px">
+              Log out
+            </Button>
+          </>
         ) : (
           <>
             <a href="http://localhost:3000/login">
