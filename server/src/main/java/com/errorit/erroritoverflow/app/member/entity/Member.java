@@ -1,20 +1,26 @@
 package com.errorit.erroritoverflow.app.member.entity;
 
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Auditable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "MEMBER_ID")
     private Long id;
 
-    // 이미지 entity 추가 해야함
-    // private Image image;
+    @OneToMany
+    private List<Image> image;
 
     @Column
     private String name;
