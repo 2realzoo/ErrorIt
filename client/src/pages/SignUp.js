@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { currentPage } from "../reducers/actions";
 
 const SignUpContainer = styled.div`
   max-width: 100%;
@@ -9,7 +11,7 @@ const SignUpContainer = styled.div`
   justify-content: center;
   flex: 1 0 auto;
   background-color: var(--black-050);
-  height: 100%;
+  height: 95vh;
   padding: var(--su24);
   padding-left: var(--su16);
   padding-right: var(--su16);
@@ -139,6 +141,10 @@ const Caption = styled.a`
 `;
 
 function SignUp() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(currentPage("Users"));
+  }, []);
   return (
     <SignUpContainer>
       <SignUpWrapper>
@@ -203,8 +209,8 @@ function SignUp() {
           </Notice>
         </FormContainer>
         <GuideWrapper>
-          Don’t have an account?&nbsp;
-          <Caption href="#">Sign up</Caption>
+          Already have an account?&nbsp;
+          <Caption href="/login">Log in</Caption>
         </GuideWrapper>
       </SignUpWrapper>
     </SignUpContainer>

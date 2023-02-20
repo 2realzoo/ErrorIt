@@ -1,35 +1,21 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import styled from "styled-components";
-import { currentPage } from "../reducers/actions";
 
-const LoginContainer = styled.div`
+const CheckContainer = styled.div`
   max-width: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
   flex: 1 0 auto;
   background-color: var(--black-050);
-  height: 95vh;
+  height: 100%;
 `;
-const LoginWrapper = styled.div`
+const CheckWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 95vh;
-`;
-const Logo = styled.a`
-  margin: 0 8px 0 8px;
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-`;
-const Img = styled.img`
-  margin-left: auto;
-  margin-right: auto;
-  height: 38px;
-  margin-bottom: var(--su24);
 `;
 const FormContainer = styled.div`
   box-shadow: var(--bs-xl);
@@ -39,6 +25,7 @@ const FormContainer = styled.div`
   margin-right: auto;
   background-color: var(--white);
   border-radius: var(--br-lg);
+  max-width: 20rem;
 `;
 const Label = styled.label`
   font-size: 0.95rem;
@@ -72,6 +59,18 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const Select = styled.select`
+  margin: calc(var(--su4) / 2);
+  margin-right: 0;
+  margin-left: 0;
+  padding: 0.3em 0.5em;
+  border: 1px solid var(--bc-darker);
+  border-radius: var(--br-sm);
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
+  width: 100%;
+`;
 const Button = styled.button`
   margin: calc(var(--su16) / 2);
   margin-right: 0;
@@ -94,70 +93,46 @@ const Button = styled.button`
   --_bu-bc: transparent;
   --_bu-br: var(--br-sm);
 `;
-const LabelWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-const GuideWrapper = styled.div`
-  max-width: 300px;
-  width: 100%;
-  text-align: center;
-  font-size: var(--fs-body1);
-  padding: 16px;
-  margin-bottom: 24px;
-  margin-left: auto;
-  margin-right: auto;
-`;
-const Caption = styled.a`
+const Notice = styled.div`
   font-size: var(--fs-caption);
-  --_li-fc: var(--theme-link-color);
-  --_li-fc-hover: var(--theme-link-color-hover);
-  --_li-fc-visited: var(--theme-link-color-visited);
-  color: var(--_li-fc);
-  cursor: pointer;
-  text-decoration: none;
-  user-select: auto;
+  margin-bottom: 1em;
+  margin-top: 0;
+  clear: both;
+  color: ${(props) => props.color || "var(--theme-body-font-color)"};
 `;
 
-function Login() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(currentPage("Users"));
-  }, []);
-
+function CheckUser() {
   return (
-    <LoginContainer>
-      <LoginWrapper>
-        <Logo href="/">
-          <Img src="./Img/stackoverflow_logo_icon.png" alt="로고이미지"></Img>
-        </Logo>
+    <CheckContainer>
+      <CheckWrapper>
         <FormContainer>
+          <Notice>
+            Forgot your account’s password?Please answer the email and the
+            questions you chose when signing up. You can change your password.
+          </Notice>
           <Form>
-            <Label
-              marginTop="calc(var(--su4) / 2)"
-              marginBottom="calc(var(--su4) / 2)">
-              Email
-            </Label>
-            <Input type="email"></Input>
+            <Label>Email</Label>
+            <Input></Input>
           </Form>
           <Form>
-            <LabelWrapper>
-              <Label marginTop="calc(var(--su6) / 2)">Password</Label>
-              <Caption href="/check-user">Forgot password?</Caption>
-            </LabelWrapper>
+            <Label>Password Finding Question</Label>
+            <Select>
+              <option value="">--Please choose an option--</option>
+              <option>질문1</option>
+            </Select>
           </Form>
-          <Input type="password"></Input>
-          <Button>login</Button>
+          <Form>
+            <Label>Password Finding Answer</Label>
+            <Input type="text" placeholder="type your answer"></Input>
+            <Notice color="var(--fc-light)">
+              This Question and Answer are used to find the password
+            </Notice>
+          </Form>
+          <Button>Submit</Button>
         </FormContainer>
-        <GuideWrapper>
-          Don’t have an account?&nbsp;
-          <Caption href="/signup">Sign up</Caption>
-        </GuideWrapper>
-      </LoginWrapper>
-    </LoginContainer>
+      </CheckWrapper>
+    </CheckContainer>
   );
 }
 
-export default Login;
+export default CheckUser;

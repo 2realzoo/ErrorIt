@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import "./Header.css";
 import { TbSearch } from "react-icons/tb";
 import { FaGlobeAsia } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { currentPage } from "../reducers/actions";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -174,11 +176,20 @@ const SearchInput = styled.input`
 function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
+  const { currentPageReducer } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   console.log(currentPageReducer);
+  // }, [currentPageReducer]);
+  // currentPageReducer 상태 확인용 코드
 
   const handleClickMenu = () => {
     setOpenMenu(!openMenu);
   };
-
+  const handlePageHome = () => {
+    dispatch(currentPage("Home"));
+  };
   return (
     <HeaderContainer>
       <HeaderWrapper>
@@ -188,21 +199,46 @@ function Header() {
         {openMenu ? (
           <MenuSidebar>
             <SidebarNav>
-              <SelectedItem>
-                <NavLink>Home</NavLink>
-              </SelectedItem>
-              <NavItemWrapper>
-                <NavItem>
-                  <Itemflex>Questions</Itemflex>
+              {currentPageReducer === "Home" ? (
+                <SelectedItem onClick={handlePageHome}>
+                  <NavLink>Home</NavLink>
+                </SelectedItem>
+              ) : (
+                <NavItemWrapper onClick={handlePageHome}>
+                  <NavItem>Home</NavItem>
+                </NavItemWrapper>
+              )}
+              {currentPageReducer === "Question" ? (
+                <SelectedItem>
+                  <NavLink>Questions</NavLink>
                   <FaGlobeAsia />
-                </NavItem>
-              </NavItemWrapper>
-              <NavItemWrapper>
-                <NavItem>Tags</NavItem>
-              </NavItemWrapper>
-              <NavItemWrapper>
-                <NavItem>Users</NavItem>
-              </NavItemWrapper>
+                </SelectedItem>
+              ) : (
+                <NavItemWrapper>
+                  <NavItem>
+                    <Itemflex>Questions</Itemflex>
+                    <FaGlobeAsia />
+                  </NavItem>
+                </NavItemWrapper>
+              )}
+              {currentPageReducer === "Tags" ? (
+                <SelectedItem>
+                  <NavLink>Tags</NavLink>
+                </SelectedItem>
+              ) : (
+                <NavItemWrapper>
+                  <NavItem>Tags</NavItem>
+                </NavItemWrapper>
+              )}
+              {currentPageReducer === "Users" ? (
+                <SelectedItem>
+                  <NavLink>Users</NavLink>
+                </SelectedItem>
+              ) : (
+                <NavItemWrapper>
+                  <NavItem>Users</NavItem>
+                </NavItemWrapper>
+              )}
             </SidebarNav>
           </MenuSidebar>
         ) : (
