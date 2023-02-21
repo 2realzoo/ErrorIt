@@ -2,20 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { currentPage } from "../reducers/actions";
+import Container from "../styles/Container";
+import Wrapper from "../styles/Wrapper";
+import Notice from "../styles/Notice";
 
-const SignUpContainer = styled.div`
-  max-width: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1 0 auto;
-  background-color: var(--black-050);
-  height: 95vh;
-  padding: var(--su24);
-  padding-left: var(--su16);
-  padding-right: var(--su16);
-`;
 const SignUpTitle = styled.div`
   font-size: 1.3rem;
   max-width: calc(var(--s-step) * 3.3);
@@ -23,14 +13,6 @@ const SignUpTitle = styled.div`
   margin-bottom: var(--su24);
   margin-left: auto;
   margin-right: auto;
-`;
-const SignUpWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  flex-shrink: 0;
 `;
 const FormContainer = styled.div`
   box-shadow: var(--bs-xl);
@@ -108,13 +90,13 @@ const Button = styled.button`
   --_bu-bc: transparent;
   --_bu-br: var(--br-sm);
 `;
-const Notice = styled.div`
-  color: var(--fc-light);
-  font-size: var(--fs-caption);
-  margin-bottom: var(--su4);
-  margin-top: var(--su4);
-  clear: both;
-`;
+// const Notice = styled.div`
+//   color: var(--fc-light);
+//   font-size: var(--fs-caption);
+//   margin-bottom: var(--su4);
+//   margin-top: var(--su4);
+//   clear: both;
+// `;
 const LinkedWord = styled.a`
   color: var(--theme-link-color);
   cursor: pointer;
@@ -142,12 +124,14 @@ const Caption = styled.a`
 
 function SignUp() {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(currentPage("Users"));
   }, []);
+
   return (
-    <SignUpContainer>
-      <SignUpWrapper>
+    <Container pageName="SignUp">
+      <Wrapper pageName="SignUp">
         <SignUpTitle>
           Create your Stack Overflow account. It’s free and only takes a minute.
         </SignUpTitle>
@@ -167,7 +151,7 @@ function SignUp() {
           <Form>
             <Label>Confirm password</Label>
             <Input type="password"></Input>{" "}
-            <Notice>
+            <Notice color="var(--fc-light)">
               Passwords must contain at least eight characters, including at
               least 1 letter and 1 number.
             </Notice>
@@ -182,12 +166,12 @@ function SignUp() {
           <Form>
             <Label>Password Finding Answer</Label>
             <Input type="text" placeholder="type your answer"></Input>
-            <Notice>
+            <Notice color="var(--fc-light)">
               This Question and Answer are used to find the password
             </Notice>
           </Form>
           <Button>Sign up</Button>
-          <Notice>
+          <Notice color="var(--fc-light)" marginTop="var(--su16)">
             By clicking “Sign up”, you agree to our{" "}
             <LinkedWord
               href="https://stackoverflow.com/legal/terms-of-service/public"
@@ -212,8 +196,8 @@ function SignUp() {
           Already have an account?&nbsp;
           <Caption href="/login">Log in</Caption>
         </GuideWrapper>
-      </SignUpWrapper>
-    </SignUpContainer>
+      </Wrapper>
+    </Container>
   );
 }
 

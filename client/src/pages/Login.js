@@ -1,24 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { currentPage } from "../reducers/actions";
+import { currentPage, isLogin } from "../reducers/actions";
+import Container from "../styles/Container";
+import Wrapper from "../styles/Wrapper";
+import axios from "axios";
 
-const LoginContainer = styled.div`
-  max-width: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex: 1 0 auto;
-  background-color: var(--black-050);
-  height: 95vh;
-`;
-const LoginWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 95vh;
-`;
 const Logo = styled.a`
   margin: 0 8px 0 8px;
   display: flex;
@@ -123,13 +110,49 @@ const Caption = styled.a`
 
 function Login() {
   const dispatch = useDispatch();
+  const [loginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     dispatch(currentPage("Users"));
   }, []);
 
+  const handleSubmit = () => {
+    if (!loginInfo.email && loginInfo.password) {
+      setErrorMessage("Please enter your ID.");
+    } else if (loginInfo.email && !loginInfo.password) {
+      setErrorMessage("Please enter your password.");
+    } else if (!loginInfo.email && !loginInfo.password) {
+      setErrorMessage("Please enter your ID and password.");
+    }
+    return axios
+      .post("https://f84e-1-227-164-12.jp.ngrok.io/member/login", loginInfo)
+      .then((res) => {
+        dispatch(isLogin(true));
+        setErrorMessage("");
+      })
+      .catch((err) => {
+        setErrorMessage("login fail");
+      });
+  };
+  const handleChange = (e) => {
+    e.target.type === "email"
+      ? setLoginInfo({ email: e.target.value, password: loginInfo.password })
+      : setLoginInfo({
+          email: loginInfo.email,
+          password: e.target.value,
+        });
+  };
+  // useEffect(() => {
+  //   console.log(loginInfo);
+  // }, [loginInfo]);
+
   return (
-    <LoginContainer>
-      <LoginWrapper>
+    <Container>
+      <Wrapper pageName="Login">
         <Logo href="/">
           <Img src="./Img/stackoverflow_logo_icon.png" alt="로고이미지"></Img>
         </Logo>
@@ -140,23 +163,24 @@ function Login() {
               marginBottom="calc(var(--su4) / 2)">
               Email
             </Label>
-            <Input type="email"></Input>
+            <Input type="email" onChange={handleChange}></Input>
           </Form>
           <Form>
             <LabelWrapper>
               <Label marginTop="calc(var(--su6) / 2)">Password</Label>
               <Caption href="/check-user">Forgot password?</Caption>
             </LabelWrapper>
+            <Input type="password" onChange={handleChange}></Input>
           </Form>
-          <Input type="password"></Input>
-          <Button>login</Button>
+
+          <Button onClick={handleSubmit}>login</Button>
         </FormContainer>
         <GuideWrapper>
           Don’t have an account?&nbsp;
           <Caption href="/signup">Sign up</Caption>
         </GuideWrapper>
-      </LoginWrapper>
-    </LoginContainer>
+      </Wrapper>
+    </Container>
   );
 }
 
