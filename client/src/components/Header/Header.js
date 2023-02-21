@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import "./Header.css";
-import { TbSearch } from "react-icons/tb";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MenuSideBar from "./MenuSideBar";
+import HeaderSearch from "./HeaderSearch";
+import Button from "../../styles/Button";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -54,75 +55,18 @@ const Img = styled.img`
   padding-left: 3px;
   padding-right: 10px;
 `;
-const Button = styled.button`
-  border-color: hsl(205, 41%, 63%);
-  border: 1px solid;
-  border-radius: 3px;
-  align-self: center;
-  padding-top: calc(8px * 1);
-  padding-bottom: calc(8px * 1);
-  padding-left: 0.8em;
-  padding-right: 0.8em;
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  text-align: center;
-  font-size: 0.8rem;
-  line-height: 15px;
-  box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, 0.7);
-  white-space: nowrap;
-  ${(props) =>
-    props.hoverBackgroundColor
-      ? css`
-          &:hover {
-            background-color: ${props.hoverBackgroundColor};
-          }
-        `
-      : css`
-          &:hover {
-            background-color: inherit;
-          }
-        `};
-
-  color: ${(props) => props.color || "hsl(205, 47%, 42%)"};
-  background: ${(props) => props.background || "hsl(205, 46%, 92%)"};
-  margin-left: ${(props) => props.marginLeft || "0"};
-  margin-right: ${(props) => props.marginRight || "0"};
-  border-color: ${(props) => props.borderColor || "hsl(205, 41%, 63%)"};
-`;
-const Search = styled.div`
-  background-color: white;
-  border: 1px solid hsl(210, 8%, 75%);
-  border-radius: 3px;
-  color: hsl(210, 8%, 25%);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  line-height: calc(15 / 13);
-  width: 100%;
-  height: 30.6px;
-  padding: 0.6em 0.7em;
-  margin-right: 0.5em;
-`;
-const SearchInput = styled.input`
-  width: 100%;
-`;
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(false);
-
+  const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   console.log(currentPageReducer);
-  // }, [currentPageReducer]);
-  // currentPageReducer 상태 확인용 코드
-
   const handleLogout = () => {
-    dispatch(isLogin(false));
+    // dispatch(isLogin(false));
+    setIsLogin(false);
     navigate("/");
   };
+
   return (
     <HeaderContainer>
       <HeaderWrapper>
@@ -135,14 +79,7 @@ function Header() {
           />
           <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
-        <Search>
-          <TbSearch className="search-icon" />
-          <SearchInput
-            className="search-input"
-            type="search"
-            placeholder="Search..."
-          />
-        </Search>
+        <HeaderSearch />
         {isLogin ? (
           <>
             <a href="#">
@@ -155,7 +92,9 @@ function Header() {
         ) : (
           <>
             <a href="http://localhost:3000/login">
-              <Button hoverBackgroundColor="var(--_bu-filled-bg-hover)">
+              <Button
+                hoverBackgroundColor="var(--_bu-filled-bg-hover)"
+                marginLeft="0.5rem">
                 Log in
               </Button>
             </a>

@@ -90,13 +90,6 @@ const Button = styled.button`
   --_bu-bc: transparent;
   --_bu-br: var(--br-sm);
 `;
-// const Notice = styled.div`
-//   color: var(--fc-light);
-//   font-size: var(--fs-caption);
-//   margin-bottom: var(--su4);
-//   margin-top: var(--su4);
-//   clear: both;
-// `;
 const LinkedWord = styled.a`
   color: var(--theme-link-color);
   cursor: pointer;
