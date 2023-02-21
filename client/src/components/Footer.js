@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 const FooterContainer = styled.div`
   padding: var(--su24);
-  max-width: 1264px;
-  width: 100%;
-  margin: 0 auto;
+  position: relative;
+  left: 0;
+  right: 0;
   background-color: var(--theme-footer-background-color);
   display: flex;
   flex-direction: column;
@@ -15,6 +15,7 @@ const Logo = styled.a`
   display: flex;
   align-items: flex-start;
   background-color: transparent;
+  width: fit-content;
 `;
 
 const Img = styled.img`
