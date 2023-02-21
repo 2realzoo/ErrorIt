@@ -1,13 +1,13 @@
 package com.errorit.erroritoverflow.app.member.entity;
 
-import lombok.AllArgsConstructor;
+import com.errorit.erroritoverflow.app.audit.Auditable;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-public class Image {
+public class Image extends Auditable {
 
     @Id
     @GeneratedValue

@@ -1,10 +1,10 @@
 package com.errorit.erroritoverflow.app.member.dto;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class PasswordDto {
     private Long memberId;
     private String password;
