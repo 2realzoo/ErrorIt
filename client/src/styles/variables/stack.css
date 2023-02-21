@@ -370,4 +370,22 @@
   --theme-topbar-item-color-current: var(--black);
   --theme-topbar-item-border-current: var(--theme-primary-color);
   --theme-topbar-accent-border: 3px solid var(--theme-primary-color);
+  /* header search bar에 필요 */
+  --_po-bg: var(--white);
+  --_po-bc: var(--bc-medium);
+  --_po-bs: var(--bs-md);
+  --_po-d: none;
+  --_po-wmn: 12rem;
+  --_po-w: 100%;
+  --_po-arrow-fc: var(--white);
+  --_po-arrow-b: unset;
+  --_po-arrow-l: unset;
+  --_po-arrow-r: unset;
+  --_po-arrow-t: unset;
+  --_po-arrow-ps: calc(var(--su6) * -1);
+  --_po-arrow-after-b: unset;
+  --_po-arrow-after-l: unset;
+  --_po-arrow-after-r: unset;
+  --_po-arrow-after-t: unset;
+  --_po-arrow-after-bs: unset;
 }
