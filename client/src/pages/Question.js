@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components"
 import Detail from "../components/Detail";
 import axios from "axios"
@@ -30,8 +30,20 @@ const SubAttribute = styled.div`
     }
   }
 `
+const AnswerContainer = styled.div`
+
+`
 
 function Question() {
+  const [data, setData] = useState({})
+  useEffect(()=>{
+    axios.get('/api/questions/123123')
+    .then((res)=>{
+      setData(res.data)
+    })
+    .catch((err)=>err)
+  },[])
+  console.log(data)
   return (
     <QuestionContainer>
       <QuestionHeader>
@@ -46,8 +58,10 @@ function Question() {
         </ul>
         <hr/>
       </SubAttribute>
-      
       <Detail></Detail>
+      <AnswerContainer>
+        {/*데이터 받아온거 Detail 컴포넌트로 맵해서 보내기 */}
+      </AnswerContainer>
     </QuestionContainer>
   )
 }
