@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import LoginPopup from "./LoginPopup";
@@ -26,32 +25,35 @@ const UserAddOn = styled.div`
   padding: 10px 0;
   width: 50%;
   color: var(--black-300);
+  li{
+      display: inline;
+      margin-right: 5px;
+  }
 `
 const UserInfoConainer = styled.div`
   padding: 10px 0;
   width: 50%;
 `
 
-function Detail() {
+function Detail({data}) {
   const [isOpenLoginPopup, setisOpenLoginPopup] = useState(false)
+  const userAddOnArr = ['Share','Edit','Follow']
   const openLoginPopupHandler = () =>{
     setisOpenLoginPopup(!isOpenLoginPopup)
   }
   return (
-  <DetailContainer>
+  <DetailContainer key={data?.question?.questionId}>
     <SideMenu/>
-    <QuestionDetail>
-    I'm trying to identify outliers in each housing type category, but
-    encountering an issue. Whenever I run the code, I receive the
-    following error: "IndexingError: Unalignable boolean Series provided
-    as indexer (index of the boolean Series and of the indexed object do
-    not match).
-    </QuestionDetail>
+    <QuestionDetail>{data?.question?.content}</QuestionDetail>
     <UserBoxContainer>
       <UserAddOn>
-        <button onClick={openLoginPopupHandler}>Share</button> 
-        Edit
-        Follow
+      <ul>
+        {userAddOnArr.map((el)=>{
+          return(
+            <li onClick={openLoginPopupHandler}>{el}</li>
+          )
+        })}
+      </ul>
       </UserAddOn>
       <UserInfoConainer>
 
