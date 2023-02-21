@@ -148,6 +148,7 @@
   --theme-button-filled-selected-border-color: var(--powder-700);
   --theme-button-outlined-border-color: var(--blue-400);
   --theme-button-outlined-selected-border-color: var(--blue-600);
+  --theme-button-primary-color: var(--white);
   --theme-button-primary-background-color: var(--blue-500);
   --theme-button-primary-hover-background-color: var(--blue-600);
   --theme-button-primary-active-background-color: var(--blue-700);
