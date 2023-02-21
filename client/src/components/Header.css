@@ -41,8 +41,6 @@
   display: block;
   position: absolute;
   background-color: var(--theme-topbar-item-color);
-  width: 100%;
-  min-width: 16px;
   height: var(--su-static2);
 }
 .search-icon {
