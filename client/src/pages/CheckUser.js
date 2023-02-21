@@ -1,51 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Container from "../styles/Container";
 import Wrapper from "../styles/Wrapper";
 import Notice from "../styles/Notice";
+import FormContainer from "../styles/FormContainer";
+import Form from "../styles/Form";
+import Label from "../styles/Label";
+import Input from "../styles/Input";
 
-const FormContainer = styled.div`
-  box-shadow: var(--bs-xl);
-  padding: var(--su24);
-  margin-bottom: var(--su24);
-  margin-left: auto;
-  margin-right: auto;
-  background-color: var(--white);
-  border-radius: var(--br-lg);
-  max-width: 20rem;
-`;
-const Label = styled.label`
-  font-size: 0.95rem;
-  color: var(--fc-dark);
-  font-family: inherit;
-  font-weight: 600;
-  padding: 0 var(--su2);
-  margin-top: ${(props) => props.marginTop || "0"};
-  margin-bottom: ${(props) => props.marginBottom || "0"};
-  margin-right: 0;
-  margin-left: 0;
-`;
-const Input = styled.input`
-  -webkit-appearance: none;
-  width: 100%;
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.6em 0.7em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  background-color: var(--white);
-  color: var(--fc-dark);
-  font-size: var(--fs-body1);
-  font-family: inherit;
-`;
-const Form = styled.div`
-  margin: calc(var(--su12) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  display: flex;
-  flex-direction: column;
-`;
 const Select = styled.select`
   margin: calc(var(--su4) / 2);
   margin-right: 0;
@@ -82,6 +45,10 @@ const Button = styled.button`
 `;
 
 function CheckUser() {
+  const navigate = useNavigate();
+  const handleSubmit = () => {
+    navigate("/change-password");
+  };
   return (
     <Container>
       <Wrapper pageName="CheckUser">
@@ -97,8 +64,11 @@ function CheckUser() {
           <Form>
             <Label>Password Finding Question</Label>
             <Select>
-              <option value="">--Please choose an option--</option>
-              <option>질문1</option>
+              <option defaultChecked>--Please choose an option--</option>
+              <option>가장 인상깊게 읽었던 책은?</option>
+              <option>자신의 보물 제 1호는?</option>
+              <option>가장 기억에 남는 선생님 성함은?</option>
+              <option>다시 태어나면 되고 싶은 것은?</option>
             </Select>
           </Form>
           <Form>
@@ -108,7 +78,7 @@ function CheckUser() {
               This Question and Answer are used to find the password
             </Notice>
           </Form>
-          <Button>Submit</Button>
+          <Button onClick={handleSubmit}>Submit</Button>
         </FormContainer>
       </Wrapper>
     </Container>

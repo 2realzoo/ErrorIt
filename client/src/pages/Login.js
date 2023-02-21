@@ -5,6 +5,10 @@ import { currentPage, isLogin } from "../reducers/actions";
 import Container from "../styles/Container";
 import Wrapper from "../styles/Wrapper";
 import axios from "axios";
+import FormContainer from "../styles/FormContainer";
+import Form from "../styles/Form";
+import Label from "../styles/Label";
+import Input from "../styles/Input";
 
 const Logo = styled.a`
   margin: 0 8px 0 8px;
@@ -17,47 +21,6 @@ const Img = styled.img`
   margin-right: auto;
   height: 38px;
   margin-bottom: var(--su24);
-`;
-const FormContainer = styled.div`
-  box-shadow: var(--bs-xl);
-  padding: var(--su24);
-  margin-bottom: var(--su24);
-  margin-left: auto;
-  margin-right: auto;
-  background-color: var(--white);
-  border-radius: var(--br-lg);
-`;
-const Label = styled.label`
-  font-size: 0.95rem;
-  color: var(--fc-dark);
-  font-family: inherit;
-  font-weight: 600;
-  padding: 0 var(--su2);
-  margin-top: ${(props) => props.marginTop || "0"};
-  margin-bottom: ${(props) => props.marginBottom || "0"};
-  margin-right: 0;
-  margin-left: 0;
-`;
-const Input = styled.input`
-  -webkit-appearance: none;
-  width: 100%;
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.6em 0.7em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  background-color: var(--white);
-  color: var(--fc-dark);
-  font-size: var(--fs-body1);
-  font-family: inherit;
-`;
-const Form = styled.div`
-  margin: calc(var(--su12) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  display: flex;
-  flex-direction: column;
 `;
 const Button = styled.button`
   margin: calc(var(--su16) / 2);
@@ -156,7 +119,7 @@ function Login() {
         <Logo href="/">
           <Img src="./Img/stackoverflow_logo_icon.png" alt="로고이미지"></Img>
         </Logo>
-        <FormContainer>
+        <FormContainer pageName="Login">
           <Form>
             <Label
               marginTop="calc(var(--su4) / 2)"
