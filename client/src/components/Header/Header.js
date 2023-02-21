@@ -4,7 +4,7 @@ import "./Header.css";
 import { TbSearch } from "react-icons/tb";
 import { FaGlobeAsia } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { currentPage } from "../reducers/actions";
+import { currentPage } from "../../reducers/actions";
 import { useNavigate } from "react-router-dom";
 
 const HeaderContainer = styled.header`

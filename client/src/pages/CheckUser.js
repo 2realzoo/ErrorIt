@@ -97,8 +97,11 @@ function CheckUser() {
           <Form>
             <Label>Password Finding Question</Label>
             <Select>
-              <option value="">--Please choose an option--</option>
-              <option>질문1</option>
+              <option defaultChecked>--Please choose an option--</option>
+              <option>가장 인상깊게 읽었던 책은?</option>
+              <option>자신의 보물 제 1호는?</option>
+              <option>가장 기억에 남는 선생님 성함은?</option>
+              <option>다시 태어나면 되고 싶은 것은?</option>
             </Select>
           </Form>
           <Form>

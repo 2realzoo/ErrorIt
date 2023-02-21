@@ -1,7 +1,7 @@
 import "./styles/colors.css";
 import "./styles/stack.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import Question from "./pages/Question";
