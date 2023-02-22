@@ -6,36 +6,34 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@ToString
 public class QuestionDto {
-
-    //질문 제목
-    @NotBlank(message = "제목을 작성해 주세요.")
-    private String title;
-
-    //질문 내용
-    @NotBlank(message = "질문을 작성해 주세요.")
-    private String content;
 
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @ToString
     public static class Post{
+        @NotBlank
         private String title;
 
+        @NotBlank
         private String content;
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class Patch{
         private long questionId;
 
+        @NotBlank
         private String title;
 
+        @NotBlank
         private String content;
 
         public void setQuestionId(long questionId) {
@@ -43,4 +41,34 @@ public class QuestionDto {
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Response {
+        private Long questionId;
+        //private MemeberDto.Response author;
+        private String title;
+        private String content;
+        //private Long views;
+        //private int answerCount;
+        //private LocalDateTime createdAt;
+        //private LocalDateTime updatedAt;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SimpleResponse {
+        private Long questionId;
+        //private MemeberDto.Response author;
+        private String title;
+        private String content;
+        //private Long views;
+        //private LocalDateTime createdAt;
+        //private LocalDateTime updatedAt;
+    }
 }

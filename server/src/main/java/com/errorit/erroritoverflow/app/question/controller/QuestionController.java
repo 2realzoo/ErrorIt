@@ -1,14 +1,13 @@
 package com.errorit.erroritoverflow.app.question.controller;
 
+import antlr.Lookahead;
 import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
-import com.errorit.erroritoverflow.app.question.dto.QuestionPatchDto;
-import com.errorit.erroritoverflow.app.question.dto.QuestionPostDto;
-import com.errorit.erroritoverflow.app.question.dto.QuestionResponseDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import com.errorit.erroritoverflow.app.question.mapper.QuestionMapper;
 import com.errorit.erroritoverflow.app.question.service.QuestionService;
-import com.errorit.erroritoverflow.app.utils.UriCreator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,48 +15,43 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/questions")
-@Validated
+@RequiredArgsConstructor
 @Slf4j
 public class QuestionController {
-    private final static String QUESTION_DEFAULT_URL = "/questions";
     private final QuestionService questionService;
     private final QuestionMapper mapper;
-
-    public QuestionController(QuestionService questionService,
-                              QuestionMapper mapper){
-        this.questionService = questionService;
-        this.mapper = mapper;
-    }
+    //private final JwtTokenizer jwtTokenizer;
 
     @PostMapping
-    public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.Post requestBody) {
+    public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.Post requestDto) {
+        log.info("requestDto = {}",  requestDto);
 
-        Question question = questionService.createQuestion(mapper.questionPostDtoToQuestion(requestBody));
-        log.info("question = {}",  question);
+        Question question = mapper.questionPostDtoToEntity(requestDto);
+        Question createdQuestion = questionService.createQuestion(question);
 
-        //URI location = UriCreator.createUri(QUESTION_DEFAULT_URL, question.getQuestionId());
+        log.info("출력내용 = {}",  mapper.questionEntityToResponseDto(question));
 
-        //return ResponseEntity.created(location).build();
-        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(question)
+        return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
+        //맴버 변수 넣을때 다시 수정
+//        return mapper.entityToSimpleResponseDto(
+//                questionService.saveQuestion(question, jwtTokenizer.getMemberId(token)));
     }
 
     @PatchMapping("/{question-id}")
     public ResponseEntity patchQuestion(@PathVariable("question-id") @Positive long questionId,
-                                        @Valid @RequestBody QuestionDto.Patch requestBody){
+                                        @RequestBody QuestionDto.Patch requestDto){
 
-        requestBody.setQuestionId(questionId);
+        requestDto.setQuestionId(questionId);
+        Question question =
+                questionService.updateQuestion(mapper.questionPatchDtoToEntity(requestDto));
 
-        Question response =
-                questionService.updateQuestion(mapper.questionPatchDtoToQuestion(requestBody));
-
-        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(response)
+        return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
     }
 
@@ -66,20 +60,15 @@ public class QuestionController {
 
         Question response = questionService.findQuestion(questionId);
 
-        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(response)
+        return new ResponseEntity<>(mapper.questionEntityToResponseDto(response)
                 , HttpStatus.OK);
     }
 
-//    public ResponseEntity getQuestions(){
-//
-//        List<Question> questions = questionService.findQuestions();
-//
-//        List<QuestionResponseDto> response =
-//                questions.stream()
-//                        .map(question -> mapper.questionToQuestionResponseDto(question))
-//                        .collect(Collectors.toList());
-//
-//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    @GetMapping
+//    public ResponseEntity getQuestions(int page,int size){
+//        Page<Question> pagedQuestions = questionService.findQuestions(page - 1, size);
+//        List<Question> questions = pagedQuestions.getContent();
+//        //return MultiResponseDto.of(mapper.entityListToResponseDtoList(questions), pagedQuestions);
 //    }
 
     @DeleteMapping("/{question-id}")
