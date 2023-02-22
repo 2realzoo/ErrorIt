@@ -1,13 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Container from "../styles/Container";
-import Wrapper from "../styles/Wrapper";
-import Notice from "../styles/Notice";
-import FormContainer from "../styles/FormContainer";
-import Form from "../styles/Form";
-import Label from "../styles/Label";
-import Input from "../styles/Input";
+import Container from "./commons/Container";
+import Wrapper from "./commons/Wrapper";
+import Notice from "./commons/Notice";
+import FormContainer from "./commons/FormContainer";
+import Form from "./commons/Form";
+import Label from "./commons/Label";
+import Input from "./commons/Input";
+import Button from "./commons/Button";
 
 const Select = styled.select`
   margin: calc(var(--su4) / 2);
@@ -20,28 +21,6 @@ const Select = styled.select`
   -moz-appearance: auto;
   appearance: auto;
   width: 100%;
-`;
-const Button = styled.button`
-  margin: calc(var(--su16) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  background-color: var(--_bu-bg);
-  border: var(--_bu-baw) solid var(--_bu-bc);
-  border-radius: var(--_bu-br);
-  box-shadow: var(--_bu-bs);
-  color: white;
-  font-size: var(--_bu-fs);
-  padding: var(--_bu-p);
-  cursor: pointer;
-  display: inline-block;
-  font-family: inherit;
-  font-weight: normal;
-  line-height: var(--lh-sm);
-  position: relative;
-  width: 100%;
-  --_bu-baw: var(--su-static1);
-  --_bu-bc: transparent;
-  --_bu-br: var(--br-sm);
 `;
 
 function CheckUser() {
