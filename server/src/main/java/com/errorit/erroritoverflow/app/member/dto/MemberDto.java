@@ -1,6 +1,6 @@
 package com.errorit.erroritoverflow.app.member.dto;
 
-import com.errorit.erroritoverflow.app.member.entity.Image;
+import com.errorit.erroritoverflow.app.image.entity.Image;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

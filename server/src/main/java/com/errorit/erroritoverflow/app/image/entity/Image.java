@@ -1,4 +1,4 @@
-package com.errorit.erroritoverflow.app.member.entity;
+package com.errorit.erroritoverflow.app.image.entity;
 
 import com.errorit.erroritoverflow.app.audit.Auditable;
 import lombok.Getter;
