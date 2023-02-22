@@ -2,6 +2,8 @@ package com.errorit.erroritoverflow.app.answer.entity;
 
 
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import com.errorit.erroritoverflow.app.member.entity.Member;
+import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Answer {
+public class Answer extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
@@ -20,12 +22,12 @@ public class Answer {
     @Column
     private String content;
 
-//    @ManyToOne
-//    @JoinColumn(name = "author_id")
-//    private Member author;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
-//    @ManyToOne
-//    @JoinColumn(name = "question_id")
-//    private Question question;
+    @ManyToOne
+    @JoinColumn(name = "QUESTION_ID")
+    private Question question;
 
 }
