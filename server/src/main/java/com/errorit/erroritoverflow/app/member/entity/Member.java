@@ -1,20 +1,26 @@
 package com.errorit.erroritoverflow.app.member.entity;
 
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Auditable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "MEMBER_ID")
     private Long id;
 
-    // 이미지 entity 추가 해야함
-    // private Image image;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "IMAGE_ID")
+    private Image image;
 
     @Column
     private String name;
@@ -34,7 +40,13 @@ public class Member extends Auditable {
     @Column
     private String findAnswer;
 
-    // 매핑 정보에 따라 아래에 필드들이 더 추가되어야함
-    // ex : 맴버가 등록한 질문
-    // ex : 맴버가 등록한 답변
+    @Builder
+    public Member(String name, String email, String password, String findQuestion, String findAnswer) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.findQuestion = findQuestion;
+        this.findAnswer = findAnswer;
+    }
+
 }
