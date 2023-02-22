@@ -25,22 +25,14 @@ import java.util.Optional;
 public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper mapper;
-    //private final JwtTokenizer jwtTokenizer;
 
     @PostMapping
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.Post requestDto) {
-        log.info("requestDto = {}",  requestDto);
 
         Question question = mapper.questionPostDtoToEntity(requestDto);
-        Question createdQuestion = questionService.createQuestion(question);
-
-        log.info("출력내용 = {}",  mapper.questionEntityToResponseDto(question));
 
         return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
-        //맴버 변수 넣을때 다시 수정
-//        return mapper.entityToSimpleResponseDto(
-//                questionService.saveQuestion(question, jwtTokenizer.getMemberId(token)));
     }
 
     @PatchMapping("/{question-id}")
@@ -78,4 +70,6 @@ public class QuestionController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }

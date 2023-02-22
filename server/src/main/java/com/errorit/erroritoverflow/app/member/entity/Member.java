@@ -1,11 +1,15 @@
 package com.errorit.erroritoverflow.app.member.entity;
 
+import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.audit.Auditable;
 import com.errorit.erroritoverflow.app.image.entity.Image;
+import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -49,6 +53,12 @@ public class Member extends Auditable {
 //        this.findQuestion = findQuestion;
 //        this.findAnswer = findAnswer;
 //    }
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Question> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Answer> answers = new ArrayList<>();
 
     // 향후 연관관계 매핑 엔티티 추가
 
