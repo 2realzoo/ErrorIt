@@ -1,6 +1,9 @@
 package com.errorit.erroritoverflow.app.question.controller;
 
 import antlr.Lookahead;
+import com.errorit.erroritoverflow.app.answer.entity.Answer;
+import com.errorit.erroritoverflow.app.member.entity.Member;
+import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import com.errorit.erroritoverflow.app.question.mapper.QuestionMapper;
@@ -25,11 +28,14 @@ import java.util.Optional;
 public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper mapper;
+    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.Post requestDto) {
 
-        Question question = mapper.questionPostDtoToEntity(requestDto);
+        Question question = questionService.createQuestion(
+                mapper.questionPostDtoToEntity(requestDto));
+
 
         return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
@@ -41,35 +47,37 @@ public class QuestionController {
 
         requestDto.setQuestionId(questionId);
         Question question =
-                questionService.updateQuestion(mapper.questionPatchDtoToEntity(requestDto));
+                questionService.updateQuestion(questionId,requestDto);
 
         return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
     }
 
+    // 질문 상세 페이지
     @GetMapping("/{question-id}")
     public ResponseEntity getQuestion(@PathVariable("question-id") @Positive long questionId){
 
-        Question response = questionService.findQuestion(questionId);
+        Question response = questionService.find(questionId);
 
         return new ResponseEntity<>(mapper.questionEntityToResponseDto(response)
                 , HttpStatus.OK);
     }
 
-//    @GetMapping
+
+    @DeleteMapping("/{question-id}")
+    public ResponseEntity deleteQuestion(@PathVariable("question-id") @Positive long questionId,
+                                         @PathVariable(name = "member-id") @Positive long memberId){
+
+        questionService.deleteQuestion(questionId,memberId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //    @GetMapping
 //    public ResponseEntity getQuestions(int page,int size){
 //        Page<Question> pagedQuestions = questionService.findQuestions(page - 1, size);
 //        List<Question> questions = pagedQuestions.getContent();
 //        //return MultiResponseDto.of(mapper.entityListToResponseDtoList(questions), pagedQuestions);
 //    }
-
-    @DeleteMapping("/{question-id}")
-    public ResponseEntity deleteQuestion(@PathVariable("question-id") @Positive long questionId){
-
-        questionService.deleteQuestion(questionId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
 
 }
