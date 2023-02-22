@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-// @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Auditable {
 
     @Id
@@ -45,6 +44,7 @@ public class Member extends Auditable {
     @Column
     private String findAnswer;
 
+<<<<<<< HEAD
 //    @Builder
 //    public Member(String name, String email, String password, String findQuestion, String findAnswer) {
 //        this.name = name;
@@ -60,6 +60,8 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<>();
 
+=======
+>>>>>>> 268ec19222f0ec35b8d94060512cf577fe809167
     // 향후 연관관계 매핑 엔티티 추가
 
 }
