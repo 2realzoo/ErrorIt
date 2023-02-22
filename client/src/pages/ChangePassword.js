@@ -40,7 +40,7 @@ function ChangePassword() {
   }, [passwords]);
 
   const handleSubmit = () => {
-    navigate("/");
+    navigate("/change-password/alert-change");
   };
   return (
     <Container>
