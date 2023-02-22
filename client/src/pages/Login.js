@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { currentPage, isLogin } from "../reducers/actions";
-import Container from "../styles/Container";
-import Wrapper from "../styles/Wrapper";
+import Container from "./commons/Container";
+import Wrapper from "./commons/Wrapper";
 import axios from "axios";
-import FormContainer from "../styles/FormContainer";
-import Form from "../styles/Form";
-import Label from "../styles/Label";
-import Input from "../styles/Input";
-
+import FormContainer from "./commons/FormContainer";
+import Form from "./commons/Form";
+import Label from "./commons/Label";
+import Input from "./commons/Input";
+import Button from "./commons/Button";
 const Logo = styled.a`
   margin: 0 8px 0 8px;
   display: flex;
@@ -21,28 +21,6 @@ const Img = styled.img`
   margin-right: auto;
   height: 38px;
   margin-bottom: var(--su24);
-`;
-const Button = styled.button`
-  margin: calc(var(--su16) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  background-color: var(--_bu-bg);
-  border: var(--_bu-baw) solid var(--_bu-bc);
-  border-radius: var(--_bu-br);
-  box-shadow: var(--_bu-bs);
-  color: white;
-  font-size: var(--_bu-fs);
-  padding: var(--_bu-p);
-  cursor: pointer;
-  display: inline-block;
-  font-family: inherit;
-  font-weight: normal;
-  line-height: var(--lh-sm);
-  position: relative;
-  width: 100%;
-  --_bu-baw: var(--su-static1);
-  --_bu-bc: transparent;
-  --_bu-br: var(--br-sm);
 `;
 const LabelWrapper = styled.div`
   display: flex;
@@ -98,7 +76,7 @@ function Login() {
         setErrorMessage("");
       })
       .catch((err) => {
-        setErrorMessage("login fail");
+        setErrorMessage("login failed");
       });
   };
   const handleChange = (e) => {

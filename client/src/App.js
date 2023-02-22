@@ -10,6 +10,8 @@ import Footer from "./components/Footer";
 import SignUp from "./pages/SignUp";
 import CheckUser from "./pages/CheckUser";
 import ChangePassword from "./pages/ChangePassword";
+import AlertChange from "./pages/AlertChange";
+import AlertSignUp from "./pages/AlertSignUp";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/check-user" element={<CheckUser />} />
         <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/change-password/alert-change" element={<AlertChange />} />
+        <Route path="/signup/alert-signup" element={<AlertSignUp />} />
       </Routes>
       <Footer />
     </BrowserRouter>

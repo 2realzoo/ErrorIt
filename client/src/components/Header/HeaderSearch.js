@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { TbSearch } from "react-icons/tb";
-import Button from "../../styles/Button";
+import Button from "./Button";
 import "./HeaderSearch.css";
 
 const Container = styled.div`

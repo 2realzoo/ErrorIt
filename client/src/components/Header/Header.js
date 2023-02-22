@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MenuSideBar from "./MenuSideBar";
 import HeaderSearch from "./HeaderSearch";
-import Button from "../../styles/Button";
+import Button from "./Button";
+import { isLogin } from "../../reducers/actions";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -26,7 +27,7 @@ const HeaderContainer = styled.header`
 const HeaderWrapper = styled.div`
   display: flex;
   height: 100%;
-  width: 97.2307692rem;
+  width: 80rem;
   max-width: 100%;
   align-items: center;
 `;
@@ -57,13 +58,12 @@ const Img = styled.img`
 `;
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(true);
+  const { isLoginReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // dispatch(isLogin(false));
-    setIsLogin(false);
+    dispatch(isLogin(false));
     navigate("/");
   };
 
@@ -80,7 +80,7 @@ function Header() {
           <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
         <HeaderSearch />
-        {isLogin ? (
+        {isLoginReducer ? (
           <>
             <a href="#">
               <Img></Img>
