@@ -1,24 +1,24 @@
 package com.errorit.erroritoverflow.app.member.entity;
 
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import com.errorit.erroritoverflow.app.image.entity.Image;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+// @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Auditable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IMAGE_ID")
     private Image image;
 
@@ -29,6 +29,7 @@ public class Member extends Auditable {
     private String intro;
 
     @Email
+    @Column(unique = true)
     private String email;
 
     @Column
@@ -40,13 +41,15 @@ public class Member extends Auditable {
     @Column
     private String findAnswer;
 
-    @Builder
-    public Member(String name, String email, String password, String findQuestion, String findAnswer) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.findQuestion = findQuestion;
-        this.findAnswer = findAnswer;
-    }
+//    @Builder
+//    public Member(String name, String email, String password, String findQuestion, String findAnswer) {
+//        this.name = name;
+//        this.email = email;
+//        this.password = password;
+//        this.findQuestion = findQuestion;
+//        this.findAnswer = findAnswer;
+//    }
+
+    // 향후 연관관계 매핑 엔티티 추가
 
 }

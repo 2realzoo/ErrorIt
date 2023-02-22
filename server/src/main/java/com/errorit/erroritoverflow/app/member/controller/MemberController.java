@@ -58,7 +58,7 @@ public class MemberController {
 
     @PostMapping("/email")
     public boolean checkEmailDuplicate(@RequestBody EmailDto emailDto) {
-        List<Member> members = memberRepository.findAllByEmail(emailDto.getEmail());
+        List<Member> members = memberRepository.findByEmail(emailDto.getEmail());
         return members.isEmpty();
     }
 
