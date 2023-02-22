@@ -12,8 +12,7 @@ public enum ExceptionCode {
     QUESTION_CODE_EXISTS(409,"Question already exists"),
     USER_UNAUTHORIZED(403, "User unauthorized"),
     ANSWER_NOT_FOUND(404,"Answer not found"),
-    COMMENT_NOT_FOUND(404,"comment not found"),
-    ;
+    COMMENT_NOT_FOUND(404,"comment not found");
     private final int status;
     private final String message;
 

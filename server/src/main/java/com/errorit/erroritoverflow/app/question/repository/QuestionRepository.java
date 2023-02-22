@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+    Optional<Question> findByTitle(String title);
 
     Page<Question> findAll(Pageable pageable);
 
