@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 import SignUp from "./pages/SignUp";
 import CheckUser from "./pages/CheckUser";
 import ChangePassword from "./pages/ChangePassword";
-import AlertChange from "./pages/alertChange";
+import AlertChange from "./pages/AlertChange";
 
 function App() {
   return (
