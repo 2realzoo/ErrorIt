@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MenuSideBar from "./MenuSideBar";
 import HeaderSearch from "./HeaderSearch";
-import Button from "../../styles/Button";
+import Button from "./Button";
 
 const HeaderContainer = styled.header`
   position: fixed;
