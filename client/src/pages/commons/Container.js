@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 const StyledContainer = styled.div`
   max-width: 100%;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,6 +14,7 @@ const StyledContainer = styled.div`
     switch (props.pageName) {
       case "SignUp":
         return css`
+          height: 100%;
           padding: var(--su24);
           padding-left: var(--su16);
           padding-right: var(--su16);
@@ -22,8 +23,12 @@ const StyledContainer = styled.div`
         return css`
           justify-content: center;
         `;
+      case "AlertChange":
+        return css`
+          padding-bottom: 10rem;
+        `;
       default:
-        return css``;
+        return;
     }
   }}
 `;

@@ -47,10 +47,10 @@ function ChangePassword() {
       <Wrapper>
         <FormContainer>
           <Form>
-            <Label for="new-password">New password</Label>
+            <Label for="newPassword">New password</Label>
             <Input
               onChange={handleInputChange}
-              id="new-password"
+              id="newPassword"
               type="password"></Input>
             <Notice color="var(--fc-light)">
               Passwords must contain at least eight characters, including at
@@ -58,10 +58,10 @@ function ChangePassword() {
             </Notice>
           </Form>
           <Form>
-            <Label for="confirm-password">Confirm new password</Label>
+            <Label for="confirmPassword">Confirm new password</Label>
             <Input
               onChange={handleInputChange}
-              id="confirm-password"
+              id="confirmPassword"
               type="password"></Input>
             {informMessage.length > 0 ? (
               <Notice color="red">{informMessage}</Notice>
@@ -70,9 +70,13 @@ function ChangePassword() {
             )}
           </Form>
           {informMessage.length === 0 ? (
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button onClick={handleSubmit} pageName="ChangePassword">
+              Submit
+            </Button>
           ) : (
-            <Button disabled>Submit</Button>
+            <Button disabled pageName="ChangePassword">
+              Submit
+            </Button>
           )}
         </FormContainer>
       </Wrapper>

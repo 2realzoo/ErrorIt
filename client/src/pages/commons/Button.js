@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledButton = styled.button`
   margin: calc(var(--su16) / 2);
@@ -21,15 +21,35 @@ const StyledButton = styled.button`
   --_bu-baw: var(--su-static1);
   --_bu-bc: transparent;
   --_bu-br: var(--br-sm);
-  &:disabled {
-    cursor: default;
-    background-color: var(--black-150);
-    color: black;
-  }
-  &:hover {
-    background-color: var(--_bu-bg-hover);
-    color: white;
-  }
+
+  ${(props) => {
+    switch (props.pageName) {
+      case "SignUp":
+        return css`
+          &:disabled {
+            cursor: default;
+          }
+        `;
+      case "ChangePassword":
+        return css`
+          &:disabled {
+            cursor: default;
+            background-color: var(--black-150);
+            color: black;
+            &:hover {
+              background-color: var(--black-150);
+              color: black;
+            }
+          }
+          &:hover {
+            background-color: var(--_bu-bg-hover);
+            color: white;
+          }
+        `;
+      default:
+        return css``;
+    }
+  }}
 `;
 
 function Button({ children, ...rest }) {

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import MenuSideBar from "./MenuSideBar";
 import HeaderSearch from "./HeaderSearch";
 import Button from "./Button";
+import { isLogin } from "../../reducers/actions";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -57,13 +58,12 @@ const Img = styled.img`
 `;
 
 function Header() {
-  const [isLogin, setIsLogin] = useState(true);
+  const { isLoginReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // dispatch(isLogin(false));
-    setIsLogin(false);
+    dispatch(isLogin(false));
     navigate("/");
   };
 
@@ -80,7 +80,7 @@ function Header() {
           <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
         <HeaderSearch />
-        {isLogin ? (
+        {isLoginReducer ? (
           <>
             <a href="#">
               <Img></Img>

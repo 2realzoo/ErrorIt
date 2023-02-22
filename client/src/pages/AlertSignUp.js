@@ -25,20 +25,20 @@ const IconWrapper = styled.div`
     color: var(--black-700);
   }
 `;
-function AlertChange() {
+function AlertSignUp() {
   return (
     <Container pageName="AlertChange">
       <Wrapper>
-        <Title>Password change complete</Title>
+        <Title>Member registration completed</Title>
         <IconWrapper>
           <SlCheck className="check-icon" />
         </IconWrapper>
-        <div>Password change is complete.</div>
-        <div>Please log in with a new password.</div>
+        <div>You have completed your membership.</div>
+        <div>Please log in.</div>
         <LinkedWord href="/login">Log in</LinkedWord>
       </Wrapper>
     </Container>
   );
 }
 
-export default AlertChange;
+export default AlertSignUp;
