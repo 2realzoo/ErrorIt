@@ -76,7 +76,7 @@ function Login() {
         setErrorMessage("");
       })
       .catch((err) => {
-        setErrorMessage("login fail");
+        setErrorMessage("login failed");
       });
   };
   const handleChange = (e) => {
