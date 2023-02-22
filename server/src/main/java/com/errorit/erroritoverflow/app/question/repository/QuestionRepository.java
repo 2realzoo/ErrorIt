@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     Optional<Question> findByTitle(String title);
 
-    Page<Question> findAll(Pageable pageable);
+    List<Question> findAllOrder();
 
     //페이지네이션
     //Page<Question> findAllByTitleContainsOrContentContains(String title, String content, Pageable pageable);

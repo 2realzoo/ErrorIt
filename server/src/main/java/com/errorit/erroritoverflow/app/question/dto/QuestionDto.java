@@ -1,10 +1,12 @@
 package com.errorit.erroritoverflow.app.question.dto;
 
+import com.errorit.erroritoverflow.app.member.dto.MemberDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public class QuestionDto {
 
@@ -48,13 +50,13 @@ public class QuestionDto {
     @Builder
     public static class Response {
         private Long questionId;
-        //private MemeberDto.Response author;
+        private MemberDto.MemberDetailResponse author;
         private String title;
         private String content;
-        //private Long views;
-        //private int answerCount;
-        //private LocalDateTime createdAt;
-        //private LocalDateTime updatedAt;
+        private Long views;
+        private int answerCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 
     @Getter
@@ -64,11 +66,11 @@ public class QuestionDto {
     @Builder
     public static class SimpleResponse {
         private Long questionId;
-        //private MemeberDto.Response author;
+        private MemberDto.MemberDetailResponse author;
         private String title;
         private String content;
-        //private Long views;
-        //private LocalDateTime createdAt;
-        //private LocalDateTime updatedAt;
+        private Long views;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 }

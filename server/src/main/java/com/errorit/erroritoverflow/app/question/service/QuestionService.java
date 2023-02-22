@@ -1,11 +1,13 @@
 package com.errorit.erroritoverflow.app.question.service;
 
+import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.answer.mapper.AnswerMapper;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import com.errorit.erroritoverflow.app.member.repository.MemberRepository;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
+import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import com.errorit.erroritoverflow.app.question.mapper.QuestionMapper;
 import com.errorit.erroritoverflow.app.question.repository.QuestionRepository;
@@ -17,6 +19,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -30,85 +37,70 @@ public class QuestionService {
     private final AnswerMapper answerMapper;
     private MemberRepository memberRepository;
 
-    //질문 저장
-    public Question saveQuestion(Question question, Long memberId) {
-        //질문을 작성한 회원 찾기
-        Member findMember = memberService.findById(memberId);
-        //질문 만들기
-        Question madeQuestion = createQuestion(question,findMember);
-        //저장
-        return questionRepository.save(madeQuestion);
+    private Question saveQuestion(Question question) {
+        Member member = memberRepository.findById(question.getMember().getId())
+                .orElseThrow(()->new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        question.setMember(member);
+
+        return questionRepository.save(question);
     }
 
     //생성
-    public Question createQuestion(Question question, Member member) {
-        question.setMember(member);
-        member.getQuestions().add(question);
-
-        return question;
+    public Question createQuestion(Question question) {
+        verifyQuestion(question);
+        Question savedQuestion = saveQuestion(question);
+        return savedQuestion;
     }
-
-    //이미 글이 존재하면 에러
-    public Question findVerifiedQuestion(Long questionId) {
-        return questionRepository.findById(questionId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-    }
-
 
     //수정
-    public Question updateQuestion(Question updateQuestion) {
-        //회원인지 확인
-        //Question question = findQuestionWriter(updateQuestion,memberId);
+    public Question updateQuestion(Long questionId, QuestionDto.Patch patch) {
+        Question updateQuestion = find(questionId);
+
         //수정사항 반영
-        updateQuestion.setTitle(updateQuestion.getTitle());
-        updateQuestion.setContent(updateQuestion.getContent());
+        updateQuestion.setTitle(patch.getTitle());
+        updateQuestion.setContent(patch.getContent());
+        updateQuestion.setModifiedAt(LocalDateTime.now());
 
         return questionRepository.save(updateQuestion);
     }
 
+    public void deleteQuestion(long questionId, long memberId) {
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+
+        optionalQuestion.ifPresentOrElse(question -> {
+            if (!Objects.equals(question.getMember().getId(), memberId)) {
+                throw new BusinessLogicException(ExceptionCode.USER_UNAUTHORIZED);
+            }
+            questionRepository.delete(question);
+        }, () -> {
+            return;
+        });
+    }
+
     //질문 찾기
-    public Question findQuestion(Long questionId) {
-        Question findQuestion = findVerifiedQuestion(questionId);
-        //findQuestion.setView(findQuestion.getView()+1);
-        questionRepository.save(findQuestion);
-        return findQuestion;
+    public Question find(Long questionId) {
+        Optional<Question> findQuestion = this.questionRepository.findById(questionId);
+        if (findQuestion.isPresent()) {
+            return findQuestion.get();
+        } else {
+            throw new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND);
+        }
+    }
+
+    // 모든 질문을 날짜순으로 정렬
+    public List<Question> getQuestions() {
+        return this.questionRepository.findAllOrder();
     }
 
 
-    //질
     public Page<Question> findQuestions(int page, int size) {
         return questionRepository.findAll(
                 PageRequest.of(page, size, Sort.by("questionId").descending()));
     }
 
-    // 질문 작성자만 질문을 수정, 삭제할 수 있도록 질문의 작성자를 찾는 메서드
-//    public Question findQuestionWriter(long questionId,long memberId) {
-//
-//        //맴버 ID 어떻게 가져올까...?
-//        Member findMemberId = memberRepository.findByMemberId(findMemberId);
-//        Question question = findVerifiedQuestion(questionId);
-//        if(question.getMember().getId() != findMemberId) {
-//            throw new BusinessLogicException(ExceptionCode.USER_UNAUTHORIZED);
-//        }
-//        return question;
-//    }
-
-
-    public void deleteQuestion(long questionId) {
-        //회원이 작성한 질문이 맞는지 확인
-        //Question question = findQuestionWriter(questionId,memberId);
-        
-        //회원 질문 갯수 감소 시키기(필요할 경우)
-//        Member member = question.getMember();
-//        member.setCount(member.getCount() - 1);
-//        memberRepository.save(member);
-
-        Question question = findQuestion(questionId);
-        questionRepository.delete(question);
-    }
-
-    private Member getMember(long memberId) {
-        return memberRepository.findById(memberId).get();
+    private void verifyQuestion(Question question) {
+        // 회원이 존재하는지 확인
+        memberService.findById(question.getMember().getId());
     }
 
 }

@@ -5,17 +5,19 @@ import com.errorit.erroritoverflow.app.audit.Auditable;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
-@SuperBuilder
-public class Question extends Auditable{
+public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +35,14 @@ public class Question extends Auditable{
     @Column(name = "VIEW_COUNT")
     private int count;
 
+    @CreatedDate
+    @Column(name = "CREATED_AT", updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "MODIFIED_AT")
+    private LocalDateTime modifiedAt;
+
     //작성자를 member에서 가져옴
     //연관관계
     @ManyToOne
@@ -40,7 +50,6 @@ public class Question extends Auditable{
     private Member member;
 
     //질문에 달리는 답변 리스트
-    @Builder.Default
     @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE})
     private List<Answer> answers = new ArrayList<>();
     
