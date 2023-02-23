@@ -65,8 +65,12 @@ function Login() {
   }, []);
 
   const handleSubmit = () => {
+    const regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
     if (!loginInfo.email && loginInfo.password) {
       alert("Please enter your ID.");
+    }
+    if (!regexp.test(loginInfo.email)) {
+      return alert("Fill it out in email format.");
     } else if (loginInfo.email && !loginInfo.password) {
       alert("Please enter your password.");
     } else if (!loginInfo.email && !loginInfo.password) {
@@ -100,15 +104,15 @@ function Login() {
           password: e.target.value,
         });
   };
-  const handleEmailVaild = (e) => {
-    const regexp = new RegExp("[A-Za-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (!regexp.test(e.target.value)) {
-      alert("Fill it out in email format.");
-      setTimeout(() => {
-        e.target.focus();
-      }, 100);
-    }
-  };
+  // const handleEmailVaild = (e) => {
+  //   const regexp = new RegExp("[A-Za-z0-9]+@[a-z]+.[a-z]{2,3}");
+  //   if (!regexp.test(e.target.value)) {
+  //     alert("Fill it out in email format.");
+  //     setTimeout(() => {
+  //       e.target.focus();
+  //     }, 100);
+  //   }
+  // };
 
   return (
     <Container>
@@ -123,10 +127,7 @@ function Login() {
               marginBottom="calc(var(--su4) / 2)">
               Email
             </Label>
-            <Input
-              type="email"
-              onChange={handleChange}
-              onBlur={handleEmailVaild}></Input>
+            <Input type="email" onChange={handleChange}></Input>
           </Form>
           <Form>
             <LabelWrapper>
