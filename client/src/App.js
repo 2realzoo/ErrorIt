@@ -11,6 +11,7 @@ import SignUp from "./pages/SignUp";
 import CheckUser from "./pages/CheckUser";
 import ChangePassword from "./pages/ChangePassword";
 import Alert from "./pages/Alert";
+import AskQuestion from "./pages/AskQuestion";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/check-user" element={<CheckUser />} />
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/alert/:type" element={<Alert />} />
+        <Route path="/ask" element={<AskQuestion />} />
       </Routes>
       <Footer />
     </BrowserRouter>
