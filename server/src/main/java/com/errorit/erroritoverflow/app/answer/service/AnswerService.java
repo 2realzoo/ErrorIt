@@ -1,7 +1,6 @@
 package com.errorit.erroritoverflow.app.answer.service;
 
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
-import com.errorit.erroritoverflow.app.answer.mapper.AnswerMapper;
 import com.errorit.erroritoverflow.app.answer.repository.AnswerRepository;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
@@ -9,7 +8,6 @@ import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.question.mapper.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,14 +19,13 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class AnswerService {
 
-    @Autowired
-    private final AnswerRepository answerRepository;
     private final MemberService memberService;
     private final QuestionMapper questionMapper;
+    private final AnswerRepository answerRepository;
 
     //생성
     public Answer createAnswer(Answer answer) {
@@ -42,7 +39,7 @@ public class AnswerService {
         Optional.ofNullable(answer.getContent())
                 .ifPresent(findAnswer::setContent);
 
-        findAnswer.setModifiedAt(LocalDateTime.now());
+        findAnswer.setUpdatedAt(LocalDateTime.now());
         return answerRepository.save(answer);
     }
 
