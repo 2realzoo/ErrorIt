@@ -3,12 +3,9 @@ package com.errorit.erroritoverflow.app.comment.controller;
 import com.errorit.erroritoverflow.app.comment.dto.CommentDto;
 import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.comment.mapper.CommentMapper;
-import com.errorit.erroritoverflow.app.comment.repository.CommentRepository;
 import com.errorit.erroritoverflow.app.comment.service.CommentService;
 import com.errorit.erroritoverflow.app.common.response.MultiResponseDto;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
-import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
-import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,12 +22,11 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
     private final CommentMapper mapper;
-    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity postComment(@Valid @RequestBody CommentDto.Post requestDto){
-        Comment comment = mapper.commentPostDtoToComment(requestDto);
-        Comment createComment = commentService.createComment(comment);
+        Comment comment = commentService.createComment(
+                mapper.commentPostDtoToComment(requestDto));
 
         return new ResponseEntity<>(mapper.commentToCommentResponseDto(comment),
                 HttpStatus.OK);
@@ -42,7 +38,7 @@ public class CommentController {
 
         requestDto.setCommentId(commentId);
         Comment comment =
-                commentService.updateComment(mapper.commentPatchDtoToComment(requestDto));
+                commentService.updateComment(commentId,requestDto);
 
         return new ResponseEntity<>(mapper.commentToCommentResponseDto(comment)
                 ,HttpStatus.OK);
@@ -51,7 +47,7 @@ public class CommentController {
     //1개 댓글
     @GetMapping("/comment-id")
     public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId){
-        Comment comment = commentService.findComment(commentId);
+        Comment comment = commentService.find(commentId);
 
         return new ResponseEntity(mapper.commentToCommentResponseDto(comment),
                 HttpStatus.OK);
@@ -71,9 +67,10 @@ public class CommentController {
     
 
     @DeleteMapping("/{comment-id}")
-    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
+    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId,
+                                        @PathVariable(name = "member-id") @Positive long memberId){
 
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(commentId, memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

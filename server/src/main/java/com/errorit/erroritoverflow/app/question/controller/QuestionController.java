@@ -1,9 +1,6 @@
 package com.errorit.erroritoverflow.app.question.controller;
 
-import antlr.Lookahead;
-import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.common.response.MultiResponseDto;
-import com.errorit.erroritoverflow.app.member.entity.Member;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
@@ -14,13 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/questions")
@@ -29,7 +24,6 @@ import java.util.Optional;
 public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper mapper;
-    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.Post requestDto) {
@@ -64,15 +58,15 @@ public class QuestionController {
                 , HttpStatus.OK);
     }
 
-//    @GetMapping
-//    public ResponseEntity getQuestions(@Positive @RequestParam int page,
-//                                       @Positive @RequestParam int size) {
-//        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
-//        List<Question> questions = pageQuestions.getContent();
-//
-//        return new ResponseEntity<>(new MultiResponseDto(mapper.questionToQuestionResponseDto(questions),
-//                pageQuestions),HttpStatus.OK);
-//    }
+    @GetMapping
+    public ResponseEntity getQuestions(@Positive @RequestParam int page,
+                                       @Positive @RequestParam int size) {
+        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
+        List<Question> questions = pageQuestions.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto(mapper.QuestionListToResponseDtoList(questions),
+                pageQuestions),HttpStatus.OK);
+    }
 
 
     @DeleteMapping("/{question-id}")

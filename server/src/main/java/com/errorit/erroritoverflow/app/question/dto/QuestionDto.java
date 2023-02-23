@@ -41,8 +41,12 @@ public class QuestionDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class Response {
         private Long questionId;
+        private Long memberId;
         private String member;
         private String title;
         private String content;
