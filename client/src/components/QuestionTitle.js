@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -35,7 +36,9 @@ const QuestionTitle = ({ TitleContents }) => {
   return (
     <Container>
       <Title>{TitleContents}</Title>
-      <WriteBtn>Ask Question</WriteBtn>
+      <Link to={"/ask"}>
+        <WriteBtn>Ask Question</WriteBtn>
+      </Link>
     </Container>
   );
 };

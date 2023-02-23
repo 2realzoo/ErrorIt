@@ -10,7 +10,7 @@ export const MainQuestion = ({ createAt, answers, member, questionId, tags, titl
           <p>{viewCount} views</p>
         </M.LeftBox>
         <M.RigthBox>
-          <Link to={{ pathname: `/question`, state: { questionId: questionId } }}>
+          <Link to={`/question`} state={{ questionId: questionId }}>
             <h3>{title}</h3>
           </Link>
 
