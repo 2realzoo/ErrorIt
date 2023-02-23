@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "./Button";
 
@@ -95,50 +96,67 @@ const LinkedWord = styled.a`
 `;
 
 function SearchHintBox() {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/ask");
+    console.log("버튼 눌림");
+  };
   return (
     <SearchHintWrapper className="search-box">
-      <div className="arrow-icon"></div>
-      <SearchHint>
-        <FlexItem>
-          <ItemWrapper>
-            <ItemName>[tag]</ItemName>
-            <ItemExplain>search within a tag</ItemExplain>
+      <div className="arrow-icon search-box"></div>
+      <SearchHint className="search-box">
+        <FlexItem className="search-box">
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">[tag]</ItemName>
+            <ItemExplain className="search-box">
+              search within a tag
+            </ItemExplain>
           </ItemWrapper>
-          <ItemWrapper>
-            <ItemName>user:1234</ItemName>
-            <ItemExplain>search by author</ItemExplain>
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">user:1234</ItemName>
+            <ItemExplain className="search-box">search by author</ItemExplain>
           </ItemWrapper>
-          <ItemWrapper>
-            <ItemName>"words here"</ItemName>
-            <ItemExplain>exact phrase</ItemExplain>
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">"words here"</ItemName>
+            <ItemExplain className="search-box">exact phrase</ItemExplain>
           </ItemWrapper>
-          <ItemWrapper>
-            <ItemName>collective:"Name"</ItemName>
-            <ItemExplain>collective content</ItemExplain>
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">collective:"Name"</ItemName>
+            <ItemExplain className="search-box">collective content</ItemExplain>
           </ItemWrapper>
         </FlexItem>
-        <FlexItem>
-          <ItemWrapper>
-            <ItemName>answers:0</ItemName>
-            <ItemExplain>unanswered questions</ItemExplain>
+        <FlexItem className="search-box">
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">answers:0</ItemName>
+            <ItemExplain className="search-box">
+              unanswered questions
+            </ItemExplain>
           </ItemWrapper>
-          <ItemWrapper>
-            <ItemName>score:3</ItemName>
-            <ItemExplain>posts with a 3+ score</ItemExplain>
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">score:3</ItemName>
+            <ItemExplain className="search-box">
+              posts with a 3+ score
+            </ItemExplain>
           </ItemWrapper>
-          <ItemWrapper>
-            <ItemName>is:question</ItemName>
-            <ItemExplain>type of post</ItemExplain>
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">is:question</ItemName>
+            <ItemExplain className="search-box">type of post</ItemExplain>
           </ItemWrapper>
-          <ItemWrapper>
-            <ItemName>isaccepted:yes</ItemName>
-            <ItemExplain>search within status</ItemExplain>
+          <ItemWrapper className="search-box">
+            <ItemName className="search-box">isaccepted:yes</ItemName>
+            <ItemExplain className="search-box">
+              search within status
+            </ItemExplain>
           </ItemWrapper>
         </FlexItem>
       </SearchHint>
-      <SearchHintBottom>
-        <Button>Ask a question</Button>
-        <LinkedWord href="https://stackoverflow.com/help/searching">
+      <SearchHintBottom className="search-box">
+        <Button onClick={handleClick} className="search-box">
+          Ask a question
+        </Button>
+        <LinkedWord
+          href="https://stackoverflow.com/help/searching"
+          className="search-box">
           Search help
         </LinkedWord>
       </SearchHintBottom>

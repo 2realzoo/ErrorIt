@@ -37,29 +37,26 @@ const Search = styled.div`
 const SearchInput = styled.input`
   width: 100%;
 `;
-function HeaderSearch() {
+function HeaderSearch({ isHintOpen }) {
   const [isActive, setIsActive] = useState(false);
-  const handleClickSearch = () => {
-    setIsActive(true);
-  };
-  const handleDisableSearch = () => {
-    setIsActive(false);
-  };
+  // const handleClickSearch = () => {
+  //   setIsActive(true);
+  // };
+  // const handleDisableSearch = () => {
+  //   setIsActive(false);
+  // };
 
   return (
-    <Container>
-      <Search
-        className="search-box"
-        onFocus={handleClickSearch}
-        onBlur={handleDisableSearch}>
-        <TbSearch className="search-icon" />
+    <Container className="search-box">
+      <Search className="search-box">
+        <TbSearch className="search-icon search-box" />
         <SearchInput
-          className="search-input"
+          className="search-input search-box"
           type="search"
           placeholder="Search..."
         />
       </Search>
-      {isActive ? <SearchHintBox /> : <></>}
+      {isHintOpen ? <SearchHintBox /> : <></>}
     </Container>
   );
 }

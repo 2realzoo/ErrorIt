@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -107,6 +107,7 @@ function Header() {
   const { isLoginReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isHintOpen, setIsHintOpen] = useState(false);
 
   const handleLogout = () => {
     return axios
@@ -115,6 +116,12 @@ function Header() {
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
   };
+  window.addEventListener("click", (e) => {
+    console.log(e.target.className);
+    e.target.className.includes("search-box")
+      ? setIsHintOpen(true)
+      : setIsHintOpen(false);
+  });
 
   return (
     <HeaderContainer>
@@ -124,7 +131,7 @@ function Header() {
           <Img className="logo-img" src={logo} alt="로고이미지" />
           <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
-        <HeaderSearch />
+        <HeaderSearch isHintOpen={isHintOpen} />
         {isLoginReducer ? (
           <>
             <a href="/user">
