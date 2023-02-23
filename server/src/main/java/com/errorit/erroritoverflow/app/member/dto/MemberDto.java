@@ -55,7 +55,6 @@ public class MemberDto {
     // 단일 회원 조회
     @Getter
     @Setter
-    @AllArgsConstructor
     public static class MemberDetailResponse {
         private Long memberId;
         private String imageUrl;
