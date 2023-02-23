@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Question {
+public class Question{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Question {
     //질문 제목
     @Column
     private String title;
-    
+
     //질문 내용
     @Column
     private String content;
@@ -35,13 +35,12 @@ public class Question {
     @Column(name = "VIEW_COUNT")
     private int count;
 
-    @CreatedDate
-    @Column(name = "CREATED_AT", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @LastModifiedDate
-    @Column(name = "MODIFIED_AT")
-    private LocalDateTime modifiedAt;
+    @Column(nullable = false, name = "LAST_MODIFIED_AT")
+    private LocalDateTime modifiedAt = LocalDateTime.now();
+
 
     //작성자를 member에서 가져옴
     //연관관계
@@ -49,10 +48,18 @@ public class Question {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+
     //질문에 달리는 답변 리스트
     @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE})
     private List<Answer> answers = new ArrayList<>();
-    
+
+    public void setAnswer(Answer answer){
+        answers.add(answer);
+        if(answer.getQuestion() != this){
+            answer.setQuestion(this);
+        }
+    }
+
     //질문에 달리는 답변수
     public int getAnswerCount() {
         return this.answers.size();
