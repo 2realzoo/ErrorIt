@@ -1,68 +1,21 @@
-import { useState } from "react";
-import styled from "styled-components";
-
-const FormContainer = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-`;
-const InputContainer = styled.div`
-  width: 80%;
-  max-width: 950px;
-  margin-top: 20px;
-`;
-const InputBox = styled.div`
-  width: 100%;
-  border: 1px solid var(--black-075);
-  padding: 1rem;
-  margin-bottom: 20px;
-  h3 {
-    font-size: 18px;
-    font-weight: 600;
-  }
-  p {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  input {
-    border: 1px solid var(--black-075);
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 3px;
-  }
-  textarea {
-    border: 1px solid var(--black-075);
-    width: 100%;
-    height: 200px;
-    padding: 0.5rem;
-    border-radius: 3px;
-    resize: vertical;
-  }
-`;
-const NextBnt = styled.div`
-  width: 50px;
-  height: 38px;
-  color: white;
-  background: var(--theme-button-primary-background-color);
-  margin-top: 12px;
-  border-radius: 3px;
-  font-size: 14px;
-  text-align: center;
-  line-height: 36px;
-  cursor: pointer;
-  &:not(.disabled):hover {
-    background: var(--theme-button-primary-hover-background-color);
-  }
-  &.disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-`;
+import axios from "axios";
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router";
+import AskTipBox from "./AskTipBox";
+import { titleTip, contentTip, tagTip } from "./AskTips";
+import * as A from "./askStyled";
 
 const AskForm = () => {
   const [chapter, setChapter] = useState(1);
   const [disabledBnt, setDisabledBnt] = useState(true);
   const [openTip, setOpenTip] = useState("title");
+  const [tagItem, setTagItem] = useState("");
+  const [tagList, setTagList] = useState([]);
+  const tagInput = useRef();
+  const titleInput = useRef();
+  const contentInput = useRef();
+  const navigate = useNavigate();
+
   const titleCheck = (e) => {
     if (e.target.value.length >= 10) setDisabledBnt(false);
   };
@@ -75,51 +28,119 @@ const AskForm = () => {
       setDisabledBnt(true);
     }
   };
+  const submitTagItem = () => {
+    let updatedTagList = [...tagList];
+    updatedTagList.push(tagItem);
+    setTagList(updatedTagList);
+    setTagItem("");
+  };
+  const deleteTagItem = (e) => {
+    const deleteTagItem = e.target.parentElement.firstChild.innerText;
+    const filteredTagList = tagList.filter((tagItem) => tagItem !== deleteTagItem);
+    setTagList(filteredTagList);
+  };
+  const submitQuestion = () => {
+    const questionData = {
+      memberId: "memberId",
+      title: titleInput.current.value,
+      content: contentInput.current.value,
+    };
+    console.log(questionData);
+    // axios 나중에 api 풀리면 풀어야지..
+    //   .post("/api/questions", questionData)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     navigate("/question", { state: res.data.questionId });
+    //   })
+    //   .catch((err) => err);
+  };
+
   return (
-    <FormContainer>
-      <InputContainer>
-        <form>
-          <InputBox>
-            <h3>Title</h3>
-            <p>Be specific and imagine you’re asking a question to another person. Minimum 10 characters.</p>
+    <A.FormContainer>
+      <A.InputContainer>
+        <A.InputBox>
+          <h3>Title</h3>
+          <p>Be specific and imagine you’re asking a question to another person. Minimum 10 characters.</p>
+          <input
+            type="text"
+            name="title"
+            placeholder="e.g Is there an R function for finding the index of element in a vector?"
+            onKeyUp={titleCheck}
+            onFocus={() => {
+              setOpenTip("title");
+            }}
+            ref={titleInput}
+          />
+          {chapter === 1 ? (
+            <A.NextBnt className={disabledBnt ? "disabled" : ""} onClick={goToNext}>
+              Next
+            </A.NextBnt>
+          ) : (
+            <></>
+          )}
+        </A.InputBox>
+        {openTip === "title" ? <AskTipBox title={titleTip.title} content={titleTip.description} /> : <></>}
+      </A.InputContainer>
+      <A.InputContainer>
+        <A.InputBox className={chapter >= 2 ? "" : "inputDisabled"}>
+          <h3>What are the details of your problem?</h3>
+          <p>Introduce the problem and expand on what you put in the title. Minimum 20 characters.</p>
+          <textarea
+            name="contents"
+            onKeyUp={contentsCheck}
+            onFocus={() => {
+              setOpenTip("content");
+            }}
+            ref={contentInput}
+            disabled={chapter >= 2 ? false : true}
+          />
+          {chapter === 2 ? (
+            <A.NextBnt className={disabledBnt ? "disabled" : ""} onClick={goToNext}>
+              Next
+            </A.NextBnt>
+          ) : (
+            <></>
+          )}
+        </A.InputBox>
+        {openTip === "content" ? <AskTipBox title={contentTip.title} content={contentTip.description} /> : <></>}
+      </A.InputContainer>
+      <A.InputContainer>
+        <A.InputBox className={chapter === 3 ? "" : "inputDisabled"}>
+          <h3>Tags</h3>
+          <p>Add up to 5 tags to describe what your question is about. Start typing to see suggestions.</p>
+          <A.TagBox
+            onClick={() => {
+              tagInput.current.focus();
+            }}
+          >
+            {tagList.map((tagItem, index) => {
+              return (
+                <A.TagItem key={index}>
+                  <span>{tagItem}</span>
+                  <A.DelBnt onClick={deleteTagItem}>X</A.DelBnt>
+                </A.TagItem>
+              );
+            })}
             <input
               type="text"
-              name="title"
-              placeholder="e.g Is there an R function for finding the index of element in a vector?"
-              onKeyUp={titleCheck}
+              ref={tagInput}
+              placeholder="Press enter to add tags"
+              onChange={(e) => setTagItem(e.target.value)}
+              value={tagItem}
+              onKeyUp={(e) => (e.key === "Enter" ? submitTagItem() : null)}
+              className="tagInput"
               onFocus={() => {
-                setOpenTip("title");
+                setOpenTip("tag");
               }}
             />
-            {chapter === 1 ? (
-              <NextBnt className={disabledBnt ? "disabled" : ""} onClick={goToNext}>
-                Next
-              </NextBnt>
-            ) : (
-              <></>
-            )}
-          </InputBox>
-          <InputBox>
-            <h3>What are the details of your problem?</h3>
-            <p>Introduce the problem and expand on what you put in the title. Minimum 20 characters.</p>
-            <textarea
-              name="contents"
-              onKeyUp={contentsCheck}
-              onFocus={() => {
-                setOpenTip("content");
-              }}
-            />
-            {chapter === 2 ? (
-              <NextBnt className={disabledBnt ? "disabled" : ""} onClick={goToNext}>
-                Next
-              </NextBnt>
-            ) : (
-              <></>
-            )}
-          </InputBox>
-        </form>
-      </InputContainer>
-    </FormContainer>
+          </A.TagBox>
+          <A.SubmitBnt className={chapter === 3 ? "" : "submitDisabled"} onClick={submitQuestion}>
+            Submit
+          </A.SubmitBnt>
+        </A.InputBox>
+        {openTip === "tag" ? <AskTipBox title={tagTip.title} content={tagTip.description} /> : <></>}
+      </A.InputContainer>
+    </A.FormContainer>
   );
 };
 
