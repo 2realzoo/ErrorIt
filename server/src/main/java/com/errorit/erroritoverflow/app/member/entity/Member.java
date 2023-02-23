@@ -2,6 +2,7 @@ package com.errorit.erroritoverflow.app.member.entity;
 
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.image.entity.Image;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
@@ -47,6 +48,16 @@ public class Member extends Auditable {
     @Column
     private String findAnswer;
 
-    // 향후 연관관계 매핑 엔티티 추가
+    // 질문
+    @OneToMany(mappedBy = "member")
+    private List<Question> questions;
+
+    // 답변
+    @OneToMany(mappedBy = "member")
+    private List<Answer> answers;
+
+    // 댓글
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments;
 
 }
