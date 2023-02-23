@@ -7,6 +7,7 @@ import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -14,13 +15,19 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Answer extends Auditable{
+public class Answer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
 
     @Column
     private String content;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false, name = "LAST_MODIFIED_AT")
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
