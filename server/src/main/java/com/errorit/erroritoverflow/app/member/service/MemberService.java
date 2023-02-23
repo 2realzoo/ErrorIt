@@ -1,5 +1,6 @@
 package com.errorit.erroritoverflow.app.member.service;
 
+import com.errorit.erroritoverflow.app.auth.CustomAuthorityUtils;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import com.errorit.erroritoverflow.app.image.entity.Image;
@@ -7,9 +8,11 @@ import com.errorit.erroritoverflow.app.member.entity.Member;
 import com.errorit.erroritoverflow.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -18,6 +21,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomAuthorityUtils authorityUtils;
 
     // 디폴트 이미지 URI
     @Value("${image.default-image.uri}")
@@ -30,7 +35,13 @@ public class MemberService {
         image.setUrl(DEFAULT_IMAGE_URI);
         member.setImage(image);
 
-        // TODO : 회원 비밀번호 암호화 로직 추가 필요
+        // 비밀번호 암호화
+        String encryptedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encryptedPassword);
+
+        // 권한 저장
+        List<String> roles = authorityUtils.createRoles(member.getEmail());
+        member.setRoles(roles);
 
         return memberRepository.save(member);
     }
@@ -72,8 +83,11 @@ public class MemberService {
     // 비밀번호 변경
     public Boolean updatePassword(Long memberId, String newPassword) {
         Member findedMember = findVerifyMemberById(memberId);
-        // TODO : 암호화 로직 추가
-        findedMember.setPassword(newPassword);
+
+        // 비밀번호 암호화
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+        findedMember.setPassword(encryptedPassword);
+
         memberRepository.save(findedMember);
         return true;
     }
