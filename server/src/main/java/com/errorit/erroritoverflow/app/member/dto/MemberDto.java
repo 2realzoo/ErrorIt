@@ -66,7 +66,6 @@ public class MemberDto {
     // 처리 결과
     @Getter
     @Setter
-    @AllArgsConstructor
     public static class ResultResponse {
         private Boolean result;
     }
@@ -74,7 +73,6 @@ public class MemberDto {
     // 회원 작성 질문 목록
     @Getter
     @Setter
-    @AllArgsConstructor
     public static class MemberQuestionsResponse {
         private PageInfo pageInfo;
         private List<MemberQuestionsDto> questions;
@@ -83,7 +81,6 @@ public class MemberDto {
     // 회원 작성 답변 목록
     @Getter
     @Setter
-    @AllArgsConstructor
     public static class MemberAnswersResponse {
         private PageInfo pageInfo;
         private List<MemberAnswersDto> answers;
