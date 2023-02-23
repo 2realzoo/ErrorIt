@@ -21,7 +21,7 @@ public class MemberService {
 
     // 디폴트 이미지 URI
     @Value("${image.default-image.uri}")
-    private final String DEFAULT_IMAGE_URI;
+    private String DEFAULT_IMAGE_URI;
 
     // 회원 Create
     public Member create(Member member) {
