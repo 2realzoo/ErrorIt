@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import * as Q from "./QuestionStyled";
-import Detail from "../Detail";
+import Detail from "./Detail";
 import QuestionTitle from "../QuestionTitle";
 
 function Questions() {
