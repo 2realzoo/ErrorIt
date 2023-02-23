@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import HeaderSearch from "./HeaderSearch";
 import Button from "./Button";
 import { isLogin } from "../../reducers/actions";
 import logo from "../../asset/stackoverflow_logo_icon.png";
+import axios from "axios";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -108,9 +109,13 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(isLogin(false));
-    navigate("/");
+    return axios
+      .post("/api/logout")
+      .then((res) => dispatch(isLogin(false)))
+      .then(() => navigate("/"))
+      .catch((err) => console.log(err));
   };
+
   return (
     <HeaderContainer>
       <HeaderWrapper>
@@ -122,7 +127,7 @@ function Header() {
         <HeaderSearch />
         {isLoginReducer ? (
           <>
-            <a href="#">
+            <a href="/user">
               <Img></Img>
             </a>
             <Button onClick={handleLogout} marginLeft="4px" marginRight="13px">

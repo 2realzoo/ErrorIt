@@ -12,6 +12,7 @@ import Input from "./commons/Input";
 import Button from "./commons/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AiFillCheckCircle } from "react-icons/ai";
 
 const SignUpTitle = styled.div`
   font-size: 1.3rem;
@@ -57,23 +58,61 @@ const Caption = styled.a`
   text-decoration: none;
   user-select: auto;
 `;
+const EmailBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  .check-icon {
+    color: green;
+    font-size: 1.1rem;
+  }
+`;
+const EmailCheckBtn = styled.button`
+  border: 1px solid hsl(205, 41%, 63%);
+  border-radius: 3px;
+  align-self: center;
+  background-color: hsl(205, 46%, 92%);
+  font-size: 0.75rem;
+  padding: 0.3rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, 0.7);
+  margin-left: 0.5rem;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--_bu-filled-bg-hover);
+  }
+`;
 
 function SignUp() {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
     password: "",
+    confirmPw: "",
     findQuestion: "",
     findAnswer: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-  const [confirmPw, setConfirmPw] = useState(false);
+  const [vaild, setVaild] = useState({
+    name: 1,
+    email: 1,
+    password: 1,
+    confirmPw: 1,
+    findQuestion: 1,
+    findAnswer: 1,
+  });
+  const [emailCheck, setEmailCheck] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(currentPage("Users"));
   }, []);
+
   const handleSignUp = (e) => {
     if (userInfo.name === "") {
       alert("Please fill out display name");
@@ -95,33 +134,62 @@ function SignUp() {
         })
         .catch((err) => {
           setErrorMessage("Sign up failed");
+          alert("Sign up failed");
         });
     }
   };
-  const handleEmailVaild = (e) => {
-    const regexp = new RegExp("[A-Za-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (!regexp.test(e.target.value)) {
-      alert("Fill it out in email format.");
-      setTimeout(() => {
-        e.target.focus();
-      }, 100);
+  const handleVaild = (e) => {
+    let regexp;
+    switch (e.target.id) {
+      case "emailAddress":
+        regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
+        if (emailCheck === true) {
+          setEmailCheck(false);
+        }
+        !regexp.test(e.target.value)
+          ? setVaild({ ...vaild, email: false })
+          : setVaild({ ...vaild, email: true });
+        break;
+      case "password":
+        regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
+        !regexp.test(e.target.value)
+          ? setVaild({ ...vaild, password: false })
+          : setVaild({ ...vaild, password: true });
+        if (vaild.confirmPw !== 1 && e.target.value !== userInfo.confirmPw) {
+          setVaild({ ...vaild, confirmPw: false });
+        } else if (
+          vaild.confirmPw !== 1 &&
+          e.target.value === userInfo.confirmPw
+        ) {
+          setVaild({ ...vaild, confirmPw: true });
+        }
+        break;
+      case "confirmPassword":
+        userInfo.password === e.target.value
+          ? setVaild({ ...vaild, confirmPw: true })
+          : setVaild({ ...vaild, confirmPw: false });
+        break;
+      default:
+        return;
     }
   };
-  const handlePasswordVaild = (e) => {
-    const regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
-    if (!regexp.test(e.target.value)) {
-      alert("Please use the appropriate password pattern.");
-      setTimeout(() => {
-        e.target.focus();
-      }, 100);
-    }
-  };
-  const handleConfirmPassword = (e) => {
-    if (e._reactName === "onChange") {
-      userInfo.password === e.target.value
-        ? setConfirmPw(true)
-        : setConfirmPw(false);
-    }
+
+  // useEffect(() => {
+  //   console.log(userInfo);
+  // }, [vaild]);
+
+  const onDuplicationCheck = () => {
+    return axios
+      .post("api/members/password", {
+        email: userInfo.email,
+      })
+      .then((res) => {
+        setEmailCheck(res.data.canUse);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("duplicatation check failed!");
+      });
   };
   return (
     <Container pageName="SignUp">
@@ -140,24 +208,49 @@ function SignUp() {
               }></Input>
           </Form>
           <Form>
-            <Label htmlfor="emailAddress">Email</Label>
+            <EmailBox>
+              <Label htmlfor="emailAddress">Email</Label>
+              {emailCheck ? (
+                <AiFillCheckCircle className="check-icon" />
+              ) : (
+                <EmailCheckBtn onClick={onDuplicationCheck}>
+                  Duplicate check
+                </EmailCheckBtn>
+              )}
+            </EmailBox>
             <Input
               type="email"
               id="emailAddress"
-              onBlur={handleEmailVaild}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, email: e.target.value })
-              }></Input>
+              onBlur={handleVaild}
+              onChange={(e) => {
+                setUserInfo({ ...userInfo, email: e.target.value });
+                handleVaild(e);
+              }}></Input>
+
+            {vaild.email ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the email form.
+              </Notice>
+            )}
           </Form>
           <Form>
             <Label htmlfor="password">Password</Label>
             <Input
               type="password"
               id="password"
-              onBlur={handlePasswordVaild}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, password: e.target.value })
-              }></Input>
+              onChange={(e) => {
+                setUserInfo({ ...userInfo, password: e.target.value });
+                handleVaild(e);
+              }}></Input>
+            {vaild.password ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the password form.
+              </Notice>
+            )}
             <Notice color="var(--fc-light)">
               Passwords must contain at least eight characters, including at
               least 1 letter and 1 number.
@@ -168,9 +261,11 @@ function SignUp() {
             <Input
               type="password"
               id="confirmPassword"
-              onChange={handleConfirmPassword}
-              onBlur={handleConfirmPassword}></Input>
-            {confirmPw ? (
+              onChange={(e) => {
+                setUserInfo({ ...userInfo, confirmPw: e.target.value });
+                handleVaild(e);
+              }}></Input>
+            {vaild.confirmPw ? (
               <></>
             ) : (
               <Notice color="red">
@@ -215,7 +310,13 @@ function SignUp() {
               This Question and Answer are used to find the password
             </Notice>
           </Form>
-          {userInfo.findAnswer !== "" ? (
+          {userInfo.findAnswer !== "" &&
+          vaild.email !== 1 &&
+          vaild.email &&
+          vaild.password &&
+          vaild.password !== 1 &&
+          vaild.confirmPw &&
+          vaild.confirmPw !== 1 ? (
             <Button
               onClick={(e) => {
                 handleSignUp(e);
