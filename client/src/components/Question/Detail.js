@@ -1,20 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import LoginPopup from "./LoginPopup";
-import Comment from "./Comment";
+import LoginPopup from "../LoginPopup";
+import Comment from "../Comment";
 import axios from "axios";
+import {
+  BsBookmarkCheck,
+  BsFillCaretUpFill,
+  BsFillCaretDownFill,
+  BsArrowCounterclockwise,
+} from "react-icons/bs";
 
 const DetailContainer = styled.div`
-  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
 `;
 const QuestionDetail = styled.div`
   font-size: medium;
 `;
+
 const SideMenu = styled.div`
   width: 55px;
   padding-right: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+  color: var(--black-300);
+  >*{
+    margin-top: 20px;
+  }
 `;
+const RecoContianer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 35px;
+  >b{
+    color: var(--black);
+    font-size: 25px;
+  }
+`
+
 const MainMenu = styled.div`
   width: 100%;
 `;
@@ -110,7 +137,15 @@ function Detail({ QorA, data }) {
 
   return (
     <DetailContainer key={data.question.QorA}>
-      <SideMenu />
+      <SideMenu>
+        <RecoContianer>
+          <BsFillCaretUpFill />
+          <b>0</b>
+          <BsFillCaretDownFill />
+        </RecoContianer>
+          <BsBookmarkCheck />
+        <BsArrowCounterclockwise />
+      </SideMenu>
       <MainMenu>
         <QuestionDetail>{data.question.content}</QuestionDetail>
         <UserBoxContainer>

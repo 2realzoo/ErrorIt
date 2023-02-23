@@ -9,7 +9,6 @@ export const QuestionHeader = styled.div`
 `;
 
 export const SubAttribute = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   ul {
     display: flex;
     li {
