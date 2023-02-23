@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import "./Header.css";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import MenuSideBar from "./MenuSideBar";
 import HeaderSearch from "./HeaderSearch";
 import Button from "./Button";
 import { isLogin } from "../../reducers/actions";
+import logo from "../../asset/stackoverflow_logo_icon.png";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -30,6 +30,51 @@ const HeaderWrapper = styled.div`
   width: 80rem;
   max-width: 100%;
   align-items: center;
+  .menu-icon {
+    width: var(--su-static16);
+    height: var(--su-static2);
+    background-color: var(--theme-topbar-item-color);
+    display: block;
+    position: relative;
+    left: 0;
+    right: 0;
+    min-width: 16px;
+  }
+  .menu-icon.active {
+    background-color: transparent;
+  }
+  .menu-icon::before {
+    left: 0;
+    right: 0;
+    top: -5px;
+    transition: top, transform;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
+  }
+  .active::before {
+    transform: rotate(-45deg);
+    top: 0;
+  }
+  .menu-icon::after {
+    left: 0;
+    right: 0;
+    top: 5px;
+    transition: top, transform;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out;
+  }
+  .active::after {
+    transform: rotate(45deg);
+    top: 0;
+  }
+  .menu-icon::before,
+  .menu-icon::after {
+    content: "";
+    display: block;
+    position: absolute;
+    background-color: var(--theme-topbar-item-color);
+    height: var(--su-static2);
+  }
 `;
 const Logo = styled.a`
   margin-right: 8px;
@@ -66,17 +111,12 @@ function Header() {
     dispatch(isLogin(false));
     navigate("/");
   };
-
   return (
     <HeaderContainer>
       <HeaderWrapper>
         <MenuSideBar />
         <Logo href="/">
-          <Img
-            className="logo-img"
-            src="./img/stackoverflow_logo_icon.png"
-            alt="로고이미지"
-          />
+          <Img className="logo-img" src={logo} alt="로고이미지" />
           <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
         <HeaderSearch />

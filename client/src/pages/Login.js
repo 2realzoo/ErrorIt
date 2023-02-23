@@ -10,6 +10,8 @@ import Form from "./commons/Form";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
+import { useNavigate } from "react-router-dom";
+import logo from "../asset/stackoverflow_logo_icon.png";
 const Logo = styled.a`
   margin: 0 8px 0 8px;
   display: flex;
@@ -51,6 +53,7 @@ const Caption = styled.a`
 
 function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -63,39 +66,55 @@ function Login() {
 
   const handleSubmit = () => {
     if (!loginInfo.email && loginInfo.password) {
-      setErrorMessage("Please enter your ID.");
+      alert("Please enter your ID.");
     } else if (loginInfo.email && !loginInfo.password) {
-      setErrorMessage("Please enter your password.");
+      alert("Please enter your password.");
     } else if (!loginInfo.email && !loginInfo.password) {
-      setErrorMessage("Please enter your ID and password.");
+      alert("Please enter your ID and password.");
+    } else {
+      return axios
+        .post("https://f84e-1-227-164-12.jp.ngrok.io/member/login", loginInfo)
+        .then((res) => {
+          dispatch(isLogin(true));
+          setErrorMessage("");
+        })
+        .then(() => {
+          navigate("/");
+        })
+        .catch((err) => {
+          setErrorMessage("login failed");
+          alert("login failed");
+        });
     }
-    return axios
-      .post("https://f84e-1-227-164-12.jp.ngrok.io/member/login", loginInfo)
-      .then((res) => {
-        dispatch(isLogin(true));
-        setErrorMessage("");
-      })
-      .catch((err) => {
-        setErrorMessage("login failed");
-      });
   };
+
+  useEffect(() => {
+    console.log(errorMessage);
+  }, [errorMessage]);
+
   const handleChange = (e) => {
     e.target.type === "email"
-      ? setLoginInfo({ email: e.target.value, password: loginInfo.password })
+      ? setLoginInfo({ ...loginInfo, email: e.target.value })
       : setLoginInfo({
-          email: loginInfo.email,
+          ...loginInfo,
           password: e.target.value,
         });
   };
-  // useEffect(() => {
-  //   console.log(loginInfo);
-  // }, [loginInfo]);
+  const handleEmailVaild = (e) => {
+    const regexp = new RegExp("[A-Za-z0-9]+@[a-z]+.[a-z]{2,3}");
+    if (!regexp.test(e.target.value)) {
+      alert("Fill it out in email format.");
+      setTimeout(() => {
+        e.target.focus();
+      }, 100);
+    }
+  };
 
   return (
     <Container>
       <Wrapper pageName="Login">
         <Logo href="/">
-          <Img src="./Img/stackoverflow_logo_icon.png" alt="로고이미지"></Img>
+          <Img src={logo} alt="로고이미지"></Img>
         </Logo>
         <FormContainer pageName="Login">
           <Form>
@@ -104,7 +123,10 @@ function Login() {
               marginBottom="calc(var(--su4) / 2)">
               Email
             </Label>
-            <Input type="email" onChange={handleChange}></Input>
+            <Input
+              type="email"
+              onChange={handleChange}
+              onBlur={handleEmailVaild}></Input>
           </Form>
           <Form>
             <LabelWrapper>

@@ -7,7 +7,7 @@ import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
 import Notice from "./commons/Notice";
-import { useNavigate } from "react-router-dom";
+import { Route, useNavigate } from "react-router-dom";
 
 function ChangePassword() {
   const [passwords, setPasswords] = useState({

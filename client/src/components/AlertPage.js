@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import Container from "./commons/Container";
-import Wrapper from "./commons/Wrapper";
+import Container from "../pages/commons/Container";
+import Wrapper from "../pages/commons/Wrapper";
 import { SlCheck } from "react-icons/sl";
 
 const Title = styled.div`
@@ -25,20 +25,21 @@ const IconWrapper = styled.div`
     color: var(--black-700);
   }
 `;
-function AlertChange() {
+function AlertPage({ title, content }) {
   return (
     <Container pageName="AlertChange">
       <Wrapper>
-        <Title>Password change complete</Title>
+        <Title>{title}</Title>
         <IconWrapper>
           <SlCheck className="check-icon" />
         </IconWrapper>
-        <div>Password change is complete.</div>
-        <div>Please log in with a new password.</div>
+        {content.map((el, idx) => (
+          <div key={idx}>{el}</div>
+        ))}
         <LinkedWord href="/login">Log in</LinkedWord>
       </Wrapper>
     </Container>
   );
 }
 
-export default AlertChange;
+export default AlertPage;

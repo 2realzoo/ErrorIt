@@ -66,7 +66,6 @@ function SignUp() {
     findQuestion: "",
     findAnswer: "",
   });
-  const [isActiveButton, setIsActiveButton] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [confirmPw, setConfirmPw] = useState(false);
   const dispatch = useDispatch();
@@ -85,17 +84,18 @@ function SignUp() {
         e.target.focus();
       }, 100);
     } else {
-      axios
+      return axios
         .post("/member", userInfo)
         .then((res) => {
           setUserInfo({});
           setErrorMessage("");
         })
+        .then(() => {
+          navigate("/alert/change");
+        })
         .catch((err) => {
           setErrorMessage("Sign up failed");
         });
-
-      navigate("/signup/alert-change");
     }
   };
   const handleEmailVaild = (e) => {
