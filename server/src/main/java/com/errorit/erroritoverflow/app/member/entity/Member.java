@@ -35,8 +35,11 @@ public class Member extends Auditable {
     @Column(unique = true)
     private String email;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
+
     @Column
-    private String password; // 패스워드 가져도 되나 ? 시큐리티 영향있어서 추후 결정
+    private String password;
 
     @Column
     private String findQuestion;
