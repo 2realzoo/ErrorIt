@@ -1,15 +1,19 @@
 import * as M from "./mainStyled";
+import { Link } from "react-router-dom";
 
-export const MainQuestion = () => {
+export const MainQuestion = ({ createAt, answers, member, questionId, tags, title, viewCount }) => {
   return (
     <>
       <M.QuestionContainer>
         <M.LeftBox>
-          <p>0 answers</p>
-          <p>0 views</p>
+          <p>{answers} answers</p>
+          <p>{viewCount} views</p>
         </M.LeftBox>
         <M.RigthBox>
-          <h3>Questions.title</h3>
+          <Link to={{ pathname: `/question`, state: { questionId: questionId } }}>
+            <h3>{title}</h3>
+          </Link>
+
           <M.QuestionContent>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the
             1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but
@@ -17,12 +21,13 @@ export const MainQuestion = () => {
             containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
           </M.QuestionContent>
           <M.TagContainer>
-            <M.Tag>java</M.Tag>
-            <M.Tag>javascript</M.Tag>
+            {tags.map((el, id) => (
+              <M.Tag key={`${id}'sTags${el}`}>{el}</M.Tag>
+            ))}
           </M.TagContainer>
           <M.WriterContainer>
-            <M.Writer>Question.member</M.Writer>
-            <M.Date>Question.createdAt</M.Date>
+            <M.Writer>{member}</M.Writer>
+            <M.Date>{createAt.split("T")[0]}</M.Date>
           </M.WriterContainer>
         </M.RigthBox>
       </M.QuestionContainer>
