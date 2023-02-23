@@ -1,7 +1,5 @@
 package com.errorit.erroritoverflow.app.question.service;
 
-import com.errorit.erroritoverflow.app.answer.entity.Answer;
-import com.errorit.erroritoverflow.app.answer.mapper.AnswerMapper;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import com.errorit.erroritoverflow.app.member.entity.Member;
@@ -9,11 +7,9 @@ import com.errorit.erroritoverflow.app.member.repository.MemberRepository;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
-import com.errorit.erroritoverflow.app.question.mapper.QuestionMapper;
 import com.errorit.erroritoverflow.app.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,11 +26,9 @@ import java.util.Optional;
 @Slf4j
 public class QuestionService {
 
-    private final QuestionMapper questionMapper;
-    private final AnswerMapper answerMapper;
-    private MemberRepository memberRepository;
     private final QuestionRepository questionRepository;
     private final MemberService memberService;
+    private MemberRepository memberRepository;
 
     private Question saveQuestion(Question question) {
         Member member = memberRepository.findById(question.getMember().getId())
@@ -47,26 +40,25 @@ public class QuestionService {
 
     //생성
     public Question createQuestion(Question question) {
-        verifyQuestion(question);
+        //verifyQuestion(question);
         Question savedQuestion = saveQuestion(question);
         return savedQuestion;
     }
 
     //수정
-    public Question updateQuestion(Long questionId, QuestionDto.Patch patch) {
+    public Question updateQuestion(long questionId, QuestionDto.Patch patch) {
         Question updateQuestion = find(questionId);
 
         //수정사항 반영
         updateQuestion.setTitle(patch.getTitle());
         updateQuestion.setContent(patch.getContent());
-        //updateQuestion.setModifiedAt(LocalDateTime.now());
+        updateQuestion.setUpdatedAt(LocalDateTime.now());
 
         return questionRepository.save(updateQuestion);
     }
 
     //특정 질문 찾기
-    public Question findQuestion(Long questionId) {
-
+    public Question findQuestion(long questionId) {
         return questionRepository.findById(questionId).get();
     }
 
@@ -84,7 +76,7 @@ public class QuestionService {
     }
 
     //질문 찾기
-    public Question find(Long questionId) {
+    public Question find(long questionId) {
         Optional<Question> findQuestion = this.questionRepository.findById(questionId);
         if (findQuestion.isPresent()) {
             return findQuestion.get();
@@ -98,9 +90,9 @@ public class QuestionService {
                 PageRequest.of(page, size, Sort.by("questionId").descending()));
     }
 
-    private void verifyQuestion(Question question) {
-        // 회원이 존재하는지 확인
-        memberService.findById(question.getMember().getId());
-    }
+//    private void verifyQuestion(Question question) {
+//        // 회원이 존재하는지 확인함
+//        memberService.findById(question.getMember().getId());
+//    }
 
 }

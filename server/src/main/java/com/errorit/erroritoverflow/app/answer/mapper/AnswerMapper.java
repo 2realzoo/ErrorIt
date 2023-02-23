@@ -30,5 +30,5 @@ public interface AnswerMapper {
                 .build();
     }
 
-    List<AnswerDto.Response> answersToAnswersResponseDto(List<Answer> answers);
+    List<AnswerDto.Response> answerListToResponseDtoList(List<Answer> answers);
 }

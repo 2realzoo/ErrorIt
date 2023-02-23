@@ -24,17 +24,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/answers")
-@Validated
+@RequiredArgsConstructor
 @Slf4j
 public class AnswerController {
     private final AnswerService answerService;
     private final AnswerMapper mapper;
 
-    public AnswerController(AnswerService answerService,
-                            AnswerMapper mapper){
-        this.answerService = answerService;
-        this.mapper = mapper;
-    }
 
     @PostMapping
     public ResponseEntity postAnswer(@Valid @RequestBody AnswerDto.Post requestDto){
@@ -42,31 +37,28 @@ public class AnswerController {
 //        Answer createdAnswer = answerService.createAnswer(answer);
 //        return new ResponseEntity<>(mapper.answerEntityToResponseDto(answer)
 //                , HttpStatus.OK);
-        Answer answer = mapper.answerPostDtoToAnswer(requestDto);
-        Member member = new Member();
-        member.setId(requestDto.getMemberId());
-        answer.setMember(member);
-        Answer created = answerService.createAnswer(answer);
-        return new ResponseEntity(mapper.answerEntityToResponseDto(created), HttpStatus.CREATED);
+        Answer answer = answerService.createAnswer(
+                mapper.answerPostDtoToAnswer(requestDto));
+
+
+        return new ResponseEntity<>(mapper.answerEntityToResponseDto(answer)
+                ,HttpStatus.OK);
     }
 
     @PatchMapping("/{answer-id}")
     public ResponseEntity patchQuestion(@PathVariable("answer-id") @Positive long answerId,
                                         @Valid @RequestBody AnswerDto.Patch requestDto){
 
-        // mapper로 변환
-        Answer answer = mapper.answerPatchDtoToAnswer(requestDto);
-        // answerId 설정
-        answer.setAnswerId(answerId);
+        requestDto.setAnswerId(answerId);
+        Answer answer =
+                answerService.updateAnswer(answerId,requestDto);
 
-        AnswerDto.Response response = mapper.answerEntityToResponseDto(answerService.updateAnswer(answer));
-
-        return new ResponseEntity(response, HttpStatus.OK);
+        return new ResponseEntity(mapper.answerEntityToResponseDto(answer), HttpStatus.OK);
     }
 
     @GetMapping("/{answer-id}")
     public ResponseEntity getAnswer(@PathVariable("answer-id") @Positive long answerId){
-        Answer answer = answerService.findAnswer(answerId);
+        Answer answer = answerService.find(answerId);
 
         return new ResponseEntity(mapper.answerEntityToResponseDto(answer), HttpStatus.OK);
     }
@@ -76,14 +68,15 @@ public class AnswerController {
                                      @Positive @RequestParam int size){
         Page<Answer> pages = answerService.findAnswers(page-1,size);
         List<Answer> answers = pages.getContent();
-        return new ResponseEntity(new MultiResponseDto<>(mapper.answersToAnswersResponseDto(answers), pages)
+        return new ResponseEntity(new MultiResponseDto<>(mapper.answerListToResponseDtoList(answers), pages)
                 , HttpStatus.OK);
     }
 
     @DeleteMapping("/{answer-id}")
-    public ResponseEntity deleteAnswer(@PathVariable("answer-id") @Positive long answerId){
+    public ResponseEntity deleteAnswer(@PathVariable("answer-id") @Positive long answerId,
+                                       @PathVariable(name = "member-id") @Positive long memberId){
 
-        answerService.deleteAnswer(answerId);
+        answerService.deleteAnswer(answerId,memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
