@@ -50,14 +50,14 @@ public class Member extends Auditable {
 
     // 질문
     @OneToMany(mappedBy = "member")
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     // 답변
     @OneToMany(mappedBy = "member")
-    private List<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     // 댓글
     @OneToMany(mappedBy = "member")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
 }
