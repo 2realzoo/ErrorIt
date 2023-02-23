@@ -2,7 +2,6 @@ package com.errorit.erroritoverflow.app.question.controller;
 
 import antlr.Lookahead;
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
-import com.errorit.erroritoverflow.app.common.response.MultiResponseDto;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
@@ -38,7 +37,7 @@ public class QuestionController {
                 mapper.questionPostDtoToEntity(requestDto));
 
 
-        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(question)
+        return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
     }
 
@@ -50,7 +49,7 @@ public class QuestionController {
         Question question =
                 questionService.updateQuestion(questionId,requestDto);
 
-        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(question)
+        return new ResponseEntity<>(mapper.questionEntityToResponseDto(question)
                 ,HttpStatus.OK);
     }
 
@@ -60,19 +59,9 @@ public class QuestionController {
 
         Question response = questionService.find(questionId);
 
-        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(response)
+        return new ResponseEntity<>(mapper.questionEntityToResponseDto(response)
                 , HttpStatus.OK);
     }
-
-//    @GetMapping
-//    public ResponseEntity getQuestions(@Positive @RequestParam int page,
-//                                       @Positive @RequestParam int size) {
-//        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
-//        List<Question> questions = pageQuestions.getContent();
-//
-//        return new ResponseEntity<>(new MultiResponseDto(mapper.questionToQuestionResponseDto(questions),
-//                pageQuestions),HttpStatus.OK);
-//    }
 
 
     @DeleteMapping("/{question-id}")
@@ -84,5 +73,11 @@ public class QuestionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //    @GetMapping
+//    public ResponseEntity getQuestions(int page,int size){
+//        Page<Question> pagedQuestions = questionService.findQuestions(page - 1, size);
+//        List<Question> questions = pagedQuestions.getContent();
+//        //return MultiResponseDto.of(mapper.entityListToResponseDtoList(questions), pagedQuestions);
+//    }
 
 }
