@@ -1,8 +1,10 @@
 package com.errorit.erroritoverflow.app.comment.entity;
 
+import com.errorit.erroritoverflow.app.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +21,18 @@ public class Comment {
 
     @Column
     private String content;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(nullable = false, name = "LAST_MODIFIED_AT")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+
+
+
 }

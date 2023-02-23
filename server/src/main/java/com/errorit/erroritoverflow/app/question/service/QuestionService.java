@@ -30,12 +30,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class QuestionService {
-    @Autowired
-    private final QuestionRepository questionRepository;
-    private final MemberService memberService;
+
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
     private MemberRepository memberRepository;
+    private final QuestionRepository questionRepository;
+    private final MemberService memberService;
 
     private Question saveQuestion(Question question) {
         Member member = memberRepository.findById(question.getMember().getId())
@@ -59,9 +59,15 @@ public class QuestionService {
         //수정사항 반영
         updateQuestion.setTitle(patch.getTitle());
         updateQuestion.setContent(patch.getContent());
-        updateQuestion.setModifiedAt(LocalDateTime.now());
+        //updateQuestion.setModifiedAt(LocalDateTime.now());
 
         return questionRepository.save(updateQuestion);
+    }
+
+    //특정 질문 찾기
+    public Question findQuestion(Long questionId) {
+
+        return questionRepository.findById(questionId).get();
     }
 
     public void deleteQuestion(long questionId, long memberId) {
@@ -86,12 +92,6 @@ public class QuestionService {
             throw new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND);
         }
     }
-
-    // 모든 질문을 날짜순으로 정렬
-    public List<Question> getQuestions() {
-        return this.questionRepository.findAllOrder();
-    }
-
 
     public Page<Question> findQuestions(int page, int size) {
         return questionRepository.findAll(

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public class CommentDto {
     @Getter
@@ -38,11 +39,10 @@ public class CommentDto {
     @Builder
     public static class Response {
         private Long commentId;
-        //private MemeberDto.Response author;
+        private Long memberId;
         private String content;
-        //private Long views;
-        //private int answerCount;
-        //private LocalDateTime createdAt;
-        //private LocalDateTime updatedAt;
+        private String member;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 }

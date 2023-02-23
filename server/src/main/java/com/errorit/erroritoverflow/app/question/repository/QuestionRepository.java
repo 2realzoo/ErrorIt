@@ -13,11 +13,4 @@ import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    Optional<Question> findByTitle(String title);
-
-    List<Question> findAllOrder();
-
-    //페이지네이션
-    //Page<Question> findAllByTitleContainsOrContentContains(String title, String content, Pageable pageable);
-
 }
