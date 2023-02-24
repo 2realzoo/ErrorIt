@@ -26,7 +26,7 @@ public interface CommentMapper {
                 .member(comment.getMember().getName())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
-                .updatedAt(comment.getUpdatedAt())
+                .updatedAt(comment.getModifiedAt())
                 .build();
     }
 
