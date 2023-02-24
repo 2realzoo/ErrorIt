@@ -40,7 +40,7 @@ public class QuestionService {
 
     //생성
     public Question createQuestion(Question question) {
-        //verifyQuestion(question);
+        verifyQuestion(question);
         Question savedQuestion = saveQuestion(question);
         return savedQuestion;
     }

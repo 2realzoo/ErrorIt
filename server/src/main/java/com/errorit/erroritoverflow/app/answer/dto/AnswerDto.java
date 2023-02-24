@@ -19,6 +19,7 @@ public class AnswerDto {
         private Long memberId;
         private Long questionId;
         private String member;
+        private String title;
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -30,6 +31,7 @@ public class AnswerDto {
     public static class Post{
         private long memberId;
         private long questionId;
+        private String title;
         private String content;
     }
 
@@ -37,7 +39,7 @@ public class AnswerDto {
     @Getter
     public static class Patch{
         private long answerId;
-
+        private String title;
         private String content;
 
         public void setAnswerId(long answerId){
