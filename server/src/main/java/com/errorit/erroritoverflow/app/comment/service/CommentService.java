@@ -52,9 +52,9 @@ public class CommentService {
 
         //수정사항 반영
         updateComment.setContent(patch.getContent());
-        updateComment.setUpdatedAt(LocalDateTime.now());
+        updateComment.setModifiedAt(LocalDateTime.now());
 
-        return commentRepository.save(updateComment);
+        return saveComment(updateComment);
     }
 
     //특정 댓글 찾기
@@ -96,6 +96,4 @@ public class CommentService {
     private void verifyComment(Comment comment) {
         memberService.findById(comment.getMember().getId());
     }
-
-
 }

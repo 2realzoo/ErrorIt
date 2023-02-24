@@ -53,9 +53,9 @@ public class AnswerService {
         //수정사항 반영
         updateAnswer.setTitle(patch.getTitle());
         updateAnswer.setContent(patch.getContent());
-        updateAnswer.setUpdatedAt(LocalDateTime.now());
+        updateAnswer.setModifiedAt(LocalDateTime.now());
 
-        return answerRepository.save(updateAnswer);
+        return saveAnswer(updateAnswer);
     }
 
     //답변 찾기

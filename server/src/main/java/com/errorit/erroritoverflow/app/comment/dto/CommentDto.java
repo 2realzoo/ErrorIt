@@ -14,6 +14,9 @@ public class CommentDto {
     @Builder
     @ToString
     public static class Post{
+        private long memberId;
+        private long answerId;
+        private long questionId;
         private String content;
     }
 
@@ -39,6 +42,8 @@ public class CommentDto {
     @Builder
     public static class Response {
         private Long commentId;
+        private long answerId;
+        private long questionId;
         private Long memberId;
         private String content;
         private String member;

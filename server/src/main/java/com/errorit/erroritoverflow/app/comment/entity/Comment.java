@@ -25,8 +25,8 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(nullable = false, name = "MODIFIED_AT")
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")

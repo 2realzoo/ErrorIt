@@ -16,6 +16,8 @@ public class QuestionDto {
     @Getter
     @Setter
     public static class Post{
+        private long memberId;
+
         @NotBlank
         private String title;
 

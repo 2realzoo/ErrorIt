@@ -38,8 +38,8 @@ public class Question{
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false, name = "LAST_MODIFIED_AT")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(nullable = false, name = "MODIFIED_AT")
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 
 
     //작성자를 member에서 가져옴
