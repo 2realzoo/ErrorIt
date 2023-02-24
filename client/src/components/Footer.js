@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import logo from "../asset/stackoverflow_logo_icon.png";
 
 const FooterContainer = styled.div`
   padding: var(--su24);
@@ -54,7 +55,7 @@ function Footer() {
   return (
     <FooterContainer>
       <Logo href="/">
-        <Img src="./img/stackoverflow_logo_icon.png"></Img>
+        <Img src={logo} alt="로고이미지"></Img>
       </Logo>
       <Team>Error-It</Team>
       <Names>

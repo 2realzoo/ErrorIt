@@ -1,6 +1,7 @@
 export const CURRENT_PAGE = "CURRENT_PAGE";
 export const IS_LOGIN = "IS_LOGIN";
 export const USER_INFO = "USER_INFO";
+export const MEMBER_ID = "MEMBER_ID";
 
 export const currentPage = (state) => {
   return {
@@ -16,9 +17,16 @@ export const isLogin = (state) => {
   };
 };
 
-export const setUserInfo = (state) => {
+export const userInfo = (state) => {
   return {
     type: USER_INFO,
+    payload: state,
+  };
+};
+
+export const memberId = (state) => {
+  return {
+    type: MEMBER_ID,
     payload: state,
   };
 };

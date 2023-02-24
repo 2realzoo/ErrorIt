@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { currentPage } from "../reducers/actions";
+import { currentPage, memberId, userInfo } from "../reducers/actions";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import Notice from "./commons/Notice";
@@ -88,14 +88,7 @@ const EmailCheckBtn = styled.button`
 `;
 
 function SignUp() {
-  const [userInfo, setUserInfo] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPw: "",
-    findQuestion: "",
-    findAnswer: "",
-  });
+  const { userInfoReducer } = useSelector((state) => state);
   const [errorMessage, setErrorMessage] = useState("");
   const [vaild, setVaild] = useState({
     name: 1,
@@ -108,25 +101,24 @@ function SignUp() {
   const [emailCheck, setEmailCheck] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
 
   useEffect(() => {
     dispatch(currentPage("Users"));
   }, []);
 
   const handleSignUp = (e) => {
-    if (userInfo.name === "") {
+    if (userInfoReducer.name === "") {
       alert("Please fill out display name");
     }
-    if (userInfo.findQuestion === "") {
+    if (userInfoReducer.findQuestion === "") {
       alert("Please select a password-finding question.");
-      setTimeout(() => {
-        e.target.focus();
-      }, 100);
     } else {
       return axios
-        .post("/member", userInfo)
+        .post("/member", userInfoReducer)
         .then((res) => {
-          setUserInfo({});
+          dispatch(userInfo({}));
+          setPwdInfo({ pwd: "", confirmPw: "" });
           setErrorMessage("");
         })
         .then(() => {
@@ -146,26 +138,28 @@ function SignUp() {
         if (emailCheck === true) {
           setEmailCheck(false);
         }
-        !regexp.test(e.target.value)
-          ? setVaild({ ...vaild, email: false })
-          : setVaild({ ...vaild, email: true });
+        regexp.test(e.target.value)
+          ? setVaild({ ...vaild, email: true })
+          : setVaild({ ...vaild, email: false });
         break;
       case "password":
         regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
-        !regexp.test(e.target.value)
-          ? setVaild({ ...vaild, password: false })
-          : setVaild({ ...vaild, password: true });
-        if (vaild.confirmPw !== 1 && e.target.value !== userInfo.confirmPw) {
-          setVaild({ ...vaild, confirmPw: false });
+        let pwdVailds = { password: "", confirmPw: "" };
+        regexp.test(e.target.value)
+          ? (pwdVailds.password = true)
+          : (pwdVailds.password = false);
+        if (vaild.confirmPw !== 1 && e.target.value !== pwdInfo.confirmPw) {
+          pwdVailds.confirmPw = false;
         } else if (
           vaild.confirmPw !== 1 &&
-          e.target.value === userInfo.confirmPw
+          e.target.value === pwdInfo.confirmPw
         ) {
-          setVaild({ ...vaild, confirmPw: true });
+          pwdVailds.confirmPw = true;
         }
+        setVaild({ ...vaild, ...pwdVailds });
         break;
       case "confirmPassword":
-        userInfo.password === e.target.value
+        pwdInfo.pwd === e.target.value
           ? setVaild({ ...vaild, confirmPw: true })
           : setVaild({ ...vaild, confirmPw: false });
         break;
@@ -175,13 +169,13 @@ function SignUp() {
   };
 
   // useEffect(() => {
-  //   console.log(userInfo);
+  //   console.log(vaild);
   // }, [vaild]);
 
   const onDuplicationCheck = () => {
     return axios
       .post("api/members/password", {
-        email: userInfo.email,
+        email: userInfoReducer.email,
       })
       .then((res) => {
         setEmailCheck(res.data.canUse);
@@ -204,7 +198,7 @@ function SignUp() {
               type="text"
               id="displayName"
               onChange={(e) =>
-                setUserInfo({ ...userInfo, name: e.target.value })
+                dispatch(userInfo({ ...userInfoReducer, name: e.target.value }))
               }></Input>
           </Form>
           <Form>
@@ -212,10 +206,12 @@ function SignUp() {
               <Label htmlfor="emailAddress">Email</Label>
               {emailCheck ? (
                 <AiFillCheckCircle className="check-icon" />
-              ) : (
+              ) : vaild.email ? (
                 <EmailCheckBtn onClick={onDuplicationCheck}>
                   Duplicate check
                 </EmailCheckBtn>
+              ) : (
+                <EmailCheckBtn disabled></EmailCheckBtn>
               )}
             </EmailBox>
             <Input
@@ -223,7 +219,9 @@ function SignUp() {
               id="emailAddress"
               onBlur={handleVaild}
               onChange={(e) => {
-                setUserInfo({ ...userInfo, email: e.target.value });
+                dispatch(
+                  userInfo({ ...userInfoReducer, email: e.target.value })
+                );
                 handleVaild(e);
               }}></Input>
 
@@ -241,7 +239,7 @@ function SignUp() {
               type="password"
               id="password"
               onChange={(e) => {
-                setUserInfo({ ...userInfo, password: e.target.value });
+                setPwdInfo({ ...pwdInfo, pwd: e.target.value });
                 handleVaild(e);
               }}></Input>
             {vaild.password ? (
@@ -262,7 +260,7 @@ function SignUp() {
               type="password"
               id="confirmPassword"
               onChange={(e) => {
-                setUserInfo({ ...userInfo, confirmPw: e.target.value });
+                setPwdInfo({ ...pwdInfo, confirmPw: e.target.value });
                 handleVaild(e);
               }}></Input>
             {vaild.confirmPw ? (
@@ -278,7 +276,12 @@ function SignUp() {
             <Select
               id="findQuestion"
               onChange={(e) =>
-                setUserInfo({ ...userInfo, findQuestion: e.target.value })
+                dispatch(
+                  userInfo({
+                    ...userInfoReducer,
+                    findQuestion: e.target.value,
+                  })
+                )
               }>
               <option defaultChecked value="">
                 --Please choose an option--
@@ -304,13 +307,15 @@ function SignUp() {
               id="findAnswer"
               placeholder="type your answer"
               onChange={(e) =>
-                setUserInfo({ ...userInfo, findAnswer: e.target.value })
+                dispatch(
+                  userInfo({ ...userInfoReducer, findAnswer: e.target.value })
+                )
               }></Input>
             <Notice color="var(--fc-light)">
               This Question and Answer are used to find the password
             </Notice>
           </Form>
-          {userInfo.findAnswer !== "" &&
+          {userInfoReducer.findAnswer !== "" &&
           vaild.email !== 1 &&
           vaild.email &&
           vaild.password &&

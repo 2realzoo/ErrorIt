@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import Button from "./Button";
 import { isLogin } from "../../reducers/actions";
 import logo from "../../asset/stackoverflow_logo_icon.png";
 import axios from "axios";
+import Gravatar from "react-gravatar";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -81,6 +82,7 @@ const Logo = styled.a`
   margin-right: 8px;
   width: fit-content;
   display: flex;
+  flex-direction: row;
   align-items: center;
   background-color: transparent;
   height: 100%;
@@ -102,11 +104,19 @@ const Img = styled.img`
   padding-left: 3px;
   padding-right: 10px;
 `;
+const UserImg = styled.a`
+  margin: 0.5rem;
+  margin-left: 0.5rem;
+  .user-img {
+    border-radius: 5px;
+  }
+`;
 
 function Header() {
-  const { isLoginReducer } = useSelector((state) => state);
+  const { isLoginReducer, userInfoReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isHintOpen, setIsHintOpen] = useState(false);
 
   const handleLogout = () => {
     return axios
@@ -115,6 +125,11 @@ function Header() {
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
   };
+  window.addEventListener("click", (e) => {
+    e.target.className.includes("search-box")
+      ? setIsHintOpen(true)
+      : setIsHintOpen(false);
+  });
 
   return (
     <HeaderContainer>
@@ -124,12 +139,17 @@ function Header() {
           <Img className="logo-img" src={logo} alt="로고이미지" />
           <LogoText>ErrorIt Overflow</LogoText>
         </Logo>
-        <HeaderSearch />
+        <HeaderSearch isHintOpen={isHintOpen} />
         {isLoginReducer ? (
           <>
-            <a href="/user">
-              <Img></Img>
-            </a>
+            <UserImg href="/user">
+              <Gravatar
+                email={userInfoReducer.email}
+                default="identicon"
+                size={33}
+                className="user-img"
+              />
+            </UserImg>
             <Button onClick={handleLogout} marginLeft="4px" marginRight="13px">
               Log out
             </Button>

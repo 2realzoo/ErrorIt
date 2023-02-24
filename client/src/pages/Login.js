@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { currentPage, isLogin } from "../reducers/actions";
+import { currentPage, isLogin, userInfo } from "../reducers/actions";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import axios from "axios";
@@ -12,6 +12,7 @@ import Input from "./commons/Input";
 import Button from "./commons/Button";
 import { useNavigate } from "react-router-dom";
 import logo from "../asset/stackoverflow_logo_icon.png";
+
 const Logo = styled.a`
   margin: 0 8px 0 8px;
   display: flex;
@@ -77,10 +78,11 @@ function Login() {
       alert("Please enter your ID and password.");
     } else {
       return axios
-        .post("https://f84e-1-227-164-12.jp.ngrok.io/member/login", loginInfo)
+        .post("/api/member/login", loginInfo)
         .then((res) => {
           dispatch(isLogin(true));
           setErrorMessage("");
+          dispatch(res);
         })
         .then(() => {
           navigate("/");
