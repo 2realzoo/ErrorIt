@@ -44,21 +44,18 @@ const Sidebar = () => {
   const { currentPageReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const handlePageHome = (page) => {
-    dispatch(currentPage("Home"));
+    dispatch(currentPage("Question"));
   };
   return (
     <BarContainer>
       <MenuContainer>
         <MenuList>
           <Menus
-            className={currentPageReducer === "Home" ? "active" : ""}
+            className={currentPageReducer === "Question" ? "active" : ""}
             onClick={() => {
               handlePageHome();
             }}
           >
-            Home
-          </Menus>
-          <Menus className={currentPageReducer === "Questions" ? "active" : ""}>
             Questions <FaGlobeAsia className="questionIcon" />
           </Menus>
           <Menus className={currentPageReducer === "Tags" ? "active" : ""}>Tags</Menus>
