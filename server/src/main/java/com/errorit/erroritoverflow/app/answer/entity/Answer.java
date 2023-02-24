@@ -21,6 +21,9 @@ public class Answer{
     private Long answerId;
 
     @Column
+    private String title;
+
+    @Column
     private String content;
 
     @Column(nullable = false)
