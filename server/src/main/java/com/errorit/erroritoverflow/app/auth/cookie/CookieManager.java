@@ -16,6 +16,10 @@ public class CookieManager {
     private int REFRESH_COOKIE_MAX_AGE;
 
     @Getter
+    @Value("${cookie.refresh.path}")
+    private String REFRESH_COOKIE_REQUEST_PATH;
+
+    @Getter
     @Value("${cookie.refresh.name}")
     private String REFRESH_COOKIE_NAME;
 
@@ -34,6 +38,7 @@ public class CookieManager {
     public void generateRefreshCookie(HttpServletResponse response, String refreshToken) {
         Cookie refreshTokenCookie = new Cookie(REFRESH_COOKIE_NAME, refreshToken);
         refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath(REFRESH_COOKIE_REQUEST_PATH);
         refreshTokenCookie.setMaxAge(REFRESH_COOKIE_MAX_AGE);
         response.setHeader("Set-Cookie", refreshTokenCookie.toString());
     }

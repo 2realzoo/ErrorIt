@@ -3,14 +3,17 @@ package com.errorit.erroritoverflow.app.config;
 import com.errorit.erroritoverflow.app.auth.CustomAuthorityUtils;
 import com.errorit.erroritoverflow.app.auth.cookie.CookieManager;
 import com.errorit.erroritoverflow.app.auth.filter.JwtAuthenticationFilter;
+import com.errorit.erroritoverflow.app.auth.filter.JwtVerificationFilter;
 import com.errorit.erroritoverflow.app.auth.handler.MemberAccessDeniedHandler;
 import com.errorit.erroritoverflow.app.auth.handler.MemberAuthenticationEntryPoint;
 import com.errorit.erroritoverflow.app.auth.handler.MemberAuthenticationFailureHandler;
 import com.errorit.erroritoverflow.app.auth.handler.MemberAuthenticationSuccessHandler;
 import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
+import com.errorit.erroritoverflow.app.auth.refresh.service.RefreshService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -39,6 +42,7 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils; // 자격 부여 역할
     private final CookieManager cookieManager;
+    private final RefreshService refreshService;
 
     // SecurityFilterChain Bean 등록
     // Spring Security 에서 HTTP 보안을 설정하기 위한 기본 구성
@@ -80,11 +84,21 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(
                         authorize -> authorize
-//                                .antMatchers(HttpMethod.POST, "/*/members").permitAll()
-//                                .antMatchers(HttpMethod.PATCH, "/*/members/**").hasRole("USER")
-//                                .antMatchers(HttpMethod.GET, "/*/members").hasRole("ADMIN")
-//                                .antMatchers(HttpMethod.GET, "/*/members/**").hasAnyRole("USER", "ADMIN")
-//                                .antMatchers(HttpMethod.DELETE, "/*/members/**").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/members").permitAll()
+                                .antMatchers(HttpMethod.POST, "/members/password").permitAll()
+                                .antMatchers(HttpMethod.POST, "/members/email").permitAll()
+
+                                .antMatchers(HttpMethod.GET, "/logout").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/members/*").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/members/*").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/members/*/password").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/members/*/questions").hasRole("USER")
+                                .antMatchers(HttpMethod.GET, "/members/*/answers").hasRole("USER")
+
+                                .antMatchers(HttpMethod.POST, "/questions").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/answers/*/comment").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/questions/*/answers").hasRole("USER")
                                 .anyRequest().permitAll()
                 );
         return http.build();
@@ -103,7 +117,7 @@ public class SecurityConfiguration {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             // JwtAuthenticationFilter 생성
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, cookieManager);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, cookieManager, refreshService);
 
             // setFilterProcessesUrl() 메서드를 통해 디폴트 request URL 인 “/login” 에서 지정하는 URL 로 변경
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");
@@ -117,7 +131,7 @@ public class SecurityConfiguration {
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             // JwtVerificationFilter 인스턴스 생성 및 DI
-            // JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, cookieManager);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
 
             // Spring Security Filter Chain 에 JwtAuthenticationFilter 추가
             builder

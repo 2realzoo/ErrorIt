@@ -2,6 +2,7 @@ package com.errorit.erroritoverflow.app.member.entity;
 
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import com.errorit.erroritoverflow.app.auth.refresh.entity.RefreshToken;
 import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.image.entity.Image;
 import com.errorit.erroritoverflow.app.question.entity.Question;
@@ -60,4 +61,6 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToOne(mappedBy = "member")
+    private RefreshToken refreshToken;
 }
