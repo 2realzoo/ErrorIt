@@ -33,7 +33,7 @@ public interface QuestionMapper {
                 .member(question.getMember().getName())
                 .content(question.getContent())
                 .createdAt(question.getCreatedAt())
-                .updatedAt(question.getUpdatedAt())
+                .updatedAt(question.getModifiedAt())
                 .build();
     }
 
