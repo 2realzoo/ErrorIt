@@ -12,6 +12,7 @@ import CheckUser from "./pages/CheckUser";
 import ChangePassword from "./pages/ChangePassword";
 import Alert from "./pages/Alert";
 import AskQuestion from "./pages/AskQuestion";
+import Mypage from "./pages/Mypage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/alert/:type" element={<Alert />} />
         <Route path="/ask" element={<AskQuestion />} />
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
       <Footer />
     </BrowserRouter>
