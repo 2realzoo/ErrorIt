@@ -23,7 +23,6 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequestMapping("/answers")
 @RequiredArgsConstructor
 @Slf4j
 public class AnswerController {
@@ -31,7 +30,7 @@ public class AnswerController {
     private final AnswerMapper mapper;
 
 
-    @PostMapping
+    @PostMapping("/questions/{question-id}/answers")
     public ResponseEntity postAnswer(@Valid @RequestBody AnswerDto.Post requestDto){
 //        Answer answer = mapper.answerPostDtoToAnswer(requestDto);
 //        Answer createdAnswer = answerService.createAnswer(answer);
@@ -45,7 +44,7 @@ public class AnswerController {
                 ,HttpStatus.OK);
     }
 
-    @PatchMapping("/{answer-id}")
+    @PatchMapping("/answers/{answer-id}")
     public ResponseEntity patchQuestion(@PathVariable("answer-id") @Positive long answerId,
                                         @Valid @RequestBody AnswerDto.Patch requestDto){
 
@@ -56,14 +55,14 @@ public class AnswerController {
         return new ResponseEntity(mapper.answerEntityToResponseDto(answer), HttpStatus.OK);
     }
 
-    @GetMapping("/{answer-id}")
+    @GetMapping("/answers/{answer-id}")
     public ResponseEntity getAnswer(@PathVariable("answer-id") @Positive long answerId){
         Answer answer = answerService.find(answerId);
 
         return new ResponseEntity(mapper.answerEntityToResponseDto(answer), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/questions/{question-id}/answers")
     public ResponseEntity getAnswers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size){
         Page<Answer> pages = answerService.findAnswers(page-1,size);
@@ -72,7 +71,7 @@ public class AnswerController {
                 , HttpStatus.OK);
     }
 
-    @DeleteMapping("/{answer-id}")
+    @DeleteMapping("/answers/{answer-id}")
     public ResponseEntity deleteAnswer(@PathVariable("answer-id") @Positive long answerId,
                                        @PathVariable(name = "member-id") @Positive long memberId){
 

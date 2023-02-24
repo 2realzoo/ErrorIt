@@ -17,14 +17,13 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
     private final CommentMapper mapper;
 
-    @PostMapping
-    public ResponseEntity postComment(@Valid @RequestBody CommentDto.Post requestDto){
+    @PostMapping("/questions/{question-id}/comment")
+    public ResponseEntity postQuestionComment(@Valid @RequestBody CommentDto.Post requestDto){
         Comment comment = commentService.createComment(
                 mapper.commentPostDtoToComment(requestDto));
 
@@ -32,7 +31,16 @@ public class CommentController {
                 HttpStatus.OK);
     }
 
-    @PatchMapping("/{comment-id}")
+    @PostMapping("/answers/{answer-id}/comment")
+    public ResponseEntity postAnswerComment(@Valid @RequestBody CommentDto.Post requestDto){
+        Comment comment = commentService.createComment(
+                mapper.commentPostDtoToComment(requestDto));
+
+        return new ResponseEntity<>(mapper.commentToCommentResponseDto(comment),
+                HttpStatus.OK);
+    }
+
+    @PatchMapping("/questions/{question-id}/comment")
     public ResponseEntity patchComment(@PathVariable("comment-id") @Positive long commentId,
                                         @RequestBody CommentDto.Patch requestDto){
 
@@ -45,7 +53,7 @@ public class CommentController {
     }
 
     //1개 댓글
-    @GetMapping("/comment-id")
+    @GetMapping("/comments/{comment-id}")
     public ResponseEntity getComment(@PathVariable("comment-id") @Positive long commentId){
         Comment comment = commentService.find(commentId);
 
@@ -53,7 +61,7 @@ public class CommentController {
                 HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/comments")
     public ResponseEntity getComments(@Positive @RequestParam int page,
                                       @Positive @RequestParam int size) {
         Page<Comment> pageComments = commentService.findComments(page - 1, size);
@@ -66,7 +74,7 @@ public class CommentController {
 
     
 
-    @DeleteMapping("/{comment-id}")
+    @DeleteMapping("/questions/{question-id}/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId,
                                         @PathVariable(name = "member-id") @Positive long memberId){
 
