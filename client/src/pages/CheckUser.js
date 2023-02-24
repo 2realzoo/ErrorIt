@@ -11,7 +11,7 @@ import Input from "./commons/Input";
 import Button from "./commons/Button";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { memberId } from "../reducers/actions";
+import { currentPage, memberId } from "../reducers/actions";
 
 const Select = styled.select`
   margin: calc(var(--su4) / 2);
@@ -39,6 +39,7 @@ function CheckUser() {
     findAnswer: 1,
   });
   const dispatch = useDispatch();
+  dispatch(currentPage("Users"));
   const handleSubmit = () => {
     if (!vaild.findQuestion) {
       alert("Please select a password-finding question.");

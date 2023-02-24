@@ -91,18 +91,19 @@ const Logo = styled.a`
   }
 `;
 const LogoText = styled.span`
-  font-family: var(--theme-post-title-font-family);
-  font-size: 100%;
+  font-family: ${(props) => props.fontFamily || "Poppins,sans-serif"};
+  font-size: ${(props) => props.fontSize || "100%"};
   padding-right: 5px;
   display: block;
   white-space: nowrap;
+  font-weight: ${(props) => props.fontWeight || ""};
 `;
 const Img = styled.img`
   margin-left: 0;
   height: 30px;
   margin-top: -4px;
   padding-left: 3px;
-  padding-right: 10px;
+  padding-right: 1px;
 `;
 const UserImg = styled.a`
   margin: 0.5rem;
@@ -137,7 +138,8 @@ function Header() {
         <MenuSideBar />
         <Logo href="/">
           <Img className="logo-img" src={logo} alt="로고이미지" />
-          <LogoText>ErrorIt Overflow</LogoText>
+          <LogoText>ErrorIt</LogoText>
+          <LogoText fontWeight="800"> Overflow</LogoText>
         </Logo>
         <HeaderSearch isHintOpen={isHintOpen} />
         {isLoginReducer ? (

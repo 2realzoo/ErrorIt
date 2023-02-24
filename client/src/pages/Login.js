@@ -60,10 +60,7 @@ function Login() {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    dispatch(currentPage("Users"));
-  }, []);
+  dispatch(currentPage("Users"));
 
   const handleSubmit = () => {
     const regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
