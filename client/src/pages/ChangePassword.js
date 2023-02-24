@@ -8,6 +8,8 @@ import Input from "./commons/Input";
 import Button from "./commons/Button";
 import Notice from "./commons/Notice";
 import { Route, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { currentPage } from "../reducers/actions";
 
 function ChangePassword() {
   const [passwords, setPasswords] = useState({
@@ -16,7 +18,8 @@ function ChangePassword() {
   });
   const [informMessage, setInformMessage] = useState("");
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  dispatch(currentPage("Users"));
   const handleInputChange = (e) => {
     e.target.id === "new-password"
       ? setPasswords({

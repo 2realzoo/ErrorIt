@@ -150,9 +150,7 @@ function SearchHintBox() {
         </FlexItem>
       </SearchHint>
       <SearchHintBottom className="search-box">
-        <Button onClick={handleClick} className="search-box">
-          Ask a question
-        </Button>
+        <Button onClick={handleClick}>Ask a question</Button>
         <LinkedWord
           href="https://stackoverflow.com/help/searching"
           className="search-box">

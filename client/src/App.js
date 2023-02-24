@@ -13,8 +13,10 @@ import ChangePassword from "./pages/ChangePassword";
 import Alert from "./pages/Alert";
 import AskQuestion from "./pages/AskQuestion";
 import Mypage from "./pages/Mypage";
+import { useSelector } from "react-redux";
 
 function App() {
+  const { currentPageReducer } = useSelector((state) => state);
   return (
     <BrowserRouter>
       <Header />
@@ -29,7 +31,7 @@ function App() {
         <Route path="/ask" element={<AskQuestion />} />
         <Route path="/mypage" element={<Mypage />} />
       </Routes>
-      <Footer />
+      {currentPageReducer === "Users" ? <></> : <Footer />}
     </BrowserRouter>
   );
 }

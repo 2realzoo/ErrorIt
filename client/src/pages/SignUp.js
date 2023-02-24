@@ -102,10 +102,7 @@ function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
-
-  useEffect(() => {
-    dispatch(currentPage("Users"));
-  }, []);
+  dispatch(currentPage("Users"));
 
   const handleSignUp = (e) => {
     if (userInfoReducer.name === "") {
