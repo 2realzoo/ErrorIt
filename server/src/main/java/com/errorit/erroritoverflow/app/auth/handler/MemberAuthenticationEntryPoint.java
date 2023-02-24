@@ -1,6 +1,8 @@
 package com.errorit.erroritoverflow.app.auth.handler;
 
 import com.errorit.erroritoverflow.app.auth.util.ErrorResponder;
+import com.errorit.erroritoverflow.app.exception.ExceptionCode;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -11,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.SignatureException;
 
 // AuthenticationEntryPoint 는
 // SignatureException, ExpiredJwtException 등 Exception 발생으로 인해
@@ -25,9 +28,17 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         Exception exception = (Exception) request.getAttribute("exception");
-        // 클라이언트에게 ErrorResponse 를 생성해 전송
-        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
 
+        // 클라이언트에게 ErrorResponse 를 생성해 전송
+        if (exception instanceof SignatureException) {
+            ErrorResponder.sendErrorResponseByExceptionCode(response, ExceptionCode.ACCESS_TOKEN_INVALID);
+        } else if (exception instanceof ExpiredJwtException) {
+            ErrorResponder.sendErrorResponseByExceptionCode(response, ExceptionCode.ACCESS_TOKEN_EXPIRED);
+        } else {
+            ErrorResponder.sendErrorResponseByStatus(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        // 로그 기록
         logExceptionMessage(authException, exception);
     }
 

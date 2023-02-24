@@ -3,6 +3,8 @@ package com.errorit.erroritoverflow.app.auth.filter;
 import com.errorit.erroritoverflow.app.auth.cookie.CookieManager;
 import com.errorit.erroritoverflow.app.auth.dto.LoginDto;
 import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
+import com.errorit.erroritoverflow.app.auth.refresh.entity.RefreshToken;
+import com.errorit.erroritoverflow.app.auth.refresh.service.RefreshService;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JwtTokenizer jwtTokenizer;
     // 쿠키 생성 및 쿠키 획득을 담당
     private final CookieManager cookieManager;
+
+    private final RefreshService refreshService;
 
     // 인증을 시도하는 메서드
     @SneakyThrows
@@ -67,6 +71,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = delegateAccessToken(member);
         // Refresh Token을 생성
         String refreshToken = delegateRefreshToken(member);
+
+        // Refresh Token DB 저장
+        RefreshToken refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.setMember(member);
+        refreshTokenEntity.setKeyValue(refreshToken);
+        refreshService.saveOrUpdate(refreshTokenEntity);
 
         // AccessToken: 헤더 설정
         response.setHeader("Authorization", "Bearer " + accessToken);
