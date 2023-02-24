@@ -99,7 +99,6 @@ function SearchHintBox() {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate("/ask");
-    console.log("버튼 눌림");
   };
   return (
     <SearchHintWrapper className="search-box">

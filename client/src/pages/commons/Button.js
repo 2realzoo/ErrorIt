@@ -24,6 +24,7 @@ const StyledButton = styled.button`
 
   ${(props) => {
     switch (props.pageName) {
+      case "CheckUser":
       case "SignUp":
         return css`
           &:disabled {
