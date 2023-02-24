@@ -4,6 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum ExceptionCode {
+    ACCESS_TOKEN_INVALID(400, "Invalid Access token"),
+    ACCESS_TOKEN_EXPIRED(401, "Access token expired"),
     AUTHORIZED_FAIL(403, "Authorized Fail"),
     USER_NOT_FOUND(404, "User not found"),
     USER_EXISTS(409, "User exists"),

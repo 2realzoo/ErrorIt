@@ -51,6 +51,7 @@ public class AnswerService {
         Answer updateAnswer = find(answerId);
 
         //수정사항 반영
+        updateAnswer.setTitle(patch.getTitle());
         updateAnswer.setContent(patch.getContent());
         updateAnswer.setUpdatedAt(LocalDateTime.now());
 

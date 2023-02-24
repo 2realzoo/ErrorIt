@@ -48,6 +48,16 @@ public class Question{
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    public void setMember(Member member){
+        this.member = member;
+        if(!this.member.getQuestions().contains(this)){
+            this.member.getQuestions().add(this);
+        }
+    }
+    public Question(Member member){
+        this.member = member;
+    }
+
 
     //질문에 달리는 답변 리스트
     @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE})
