@@ -28,7 +28,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final MemberService memberService;
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     private Question saveQuestion(Question question) {
         Member member = memberRepository.findById(question.getMember().getId())
@@ -90,9 +90,9 @@ public class QuestionService {
                 PageRequest.of(page, size, Sort.by("questionId").descending()));
     }
 
-//    private void verifyQuestion(Question question) {
-//        // 회원이 존재하는지 확인함
-//        memberService.findById(question.getMember().getId());
-//    }
+    private void verifyQuestion(Question question) {
+        // 회원이 존재하는지 확인함
+        memberService.findById(question.getMember().getId());
+    }
 
 }
