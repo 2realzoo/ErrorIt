@@ -52,9 +52,9 @@ public class QuestionService {
         //수정사항 반영
         updateQuestion.setTitle(patch.getTitle());
         updateQuestion.setContent(patch.getContent());
-        updateQuestion.setUpdatedAt(LocalDateTime.now());
+        updateQuestion.setModifiedAt(LocalDateTime.now());
 
-        return questionRepository.save(updateQuestion);
+        return saveQuestion(updateQuestion);
     }
 
     //특정 질문 찾기
