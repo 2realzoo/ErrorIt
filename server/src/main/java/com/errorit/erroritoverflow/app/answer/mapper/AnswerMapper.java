@@ -25,7 +25,7 @@ public interface AnswerMapper {
                 .questionId(answer.getQuestion().getQuestionId())
                 .content(answer.getContent())
                 .createdAt(answer.getCreatedAt())
-                .updatedAt(answer.getUpdatedAt())
+                .updatedAt(answer.getModifiedAt())
                 //.comments(commentResponse)
                 .build();
     }
