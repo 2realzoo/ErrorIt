@@ -2,6 +2,8 @@ package com.errorit.erroritoverflow.app.answer.mapper;
 
 import com.errorit.erroritoverflow.app.answer.dto.AnswerDto;
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
+import com.errorit.erroritoverflow.app.comment.dto.CommentDto;
+import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.common.pagenation.PageInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +19,21 @@ public interface AnswerMapper {
     Answer answerPatchDtoToAnswer(AnswerDto.Patch patch);
 
     @Mapping(source = "member.name", target = "member")
-    AnswerDto.AnswerResponse answerToResponseDto(Answer answer);
+    default AnswerDto.AnswerResponse answerToResponseDto(Answer answer) {
+        if ( answer == null ) {
+            return null;
+        }
+
+        AnswerDto.AnswerResponse answerResponse = new AnswerDto.AnswerResponse();
+        answerResponse.setMember( answer.getMember().getName());
+        answerResponse.setAnswerId( answer.getAnswerId() );
+        answerResponse.setCreatedAt( answer.getCreatedAt() );
+        answerResponse.setModifiedAt( answer.getModifiedAt() );
+        answerResponse.setContent( answer.getContent() );
+        answerResponse.setComments(commentListToCommentResponseList(answer.getComments()));
+
+        return answerResponse;
+    };
 
     @Mapping(source = "member.name", target = "member")
     List<AnswerDto.AnswerResponse> answerListToResponseDtoList(List<Answer> answers);
@@ -29,4 +45,10 @@ public interface AnswerMapper {
         response.setAnswers(answerListToResponseDtoList(answers.getContent()));
         return response;
     }
+
+    @Mapping(source = "member.name", target = "member")
+    CommentDto.CommentResponse commentToCommentResponse(Comment comment);
+
+    @Mapping(source = "member.name", target = "member")
+    List<CommentDto.CommentResponse> commentListToCommentResponseList(List<Comment> comments);
 }

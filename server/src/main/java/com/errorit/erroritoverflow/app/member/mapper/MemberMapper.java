@@ -19,7 +19,6 @@ public interface MemberMapper {
     Member findPasswordToMember(MemberDto.FindPassword findPassword);
 
     // member -> MemberDetailResponse
-    @Mapping(target = "memberId", source = "id")
     @Mapping(target = "imageUrl", source = "image.url")
     MemberDto.MemberDetailResponse memberToMemberDetailResponse(Member member);
 }

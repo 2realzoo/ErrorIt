@@ -15,10 +15,10 @@ public class RefreshToken extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REFRESH_TOKEN_ID")
-    private Long id;
+    private Long refreshTokenId;
 
     @JoinColumn(name = "MEMBER_ID")
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Member member;
 
     @Column

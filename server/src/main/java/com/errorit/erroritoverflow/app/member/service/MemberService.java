@@ -58,7 +58,7 @@ public class MemberService {
 
     // 회원 Update
     public Member update(Member updateMember){
-        Member originalMember = findVerifyMemberById(updateMember.getId());
+        Member originalMember = findVerifyMemberById(updateMember.getMemberId());
         Optional.ofNullable(updateMember.getName())
                 .ifPresent(originalMember::setName);
         Optional.ofNullable(updateMember.getIntro())
@@ -70,7 +70,7 @@ public class MemberService {
     // 회원 Delete
     public Long delete(Long memberId) {
         Member findedMember = findVerifyMemberById(memberId);
-        memberRepository.deleteById(findedMember.getId());
+        memberRepository.deleteById(findedMember.getMemberId());
         return memberId;
     }
 

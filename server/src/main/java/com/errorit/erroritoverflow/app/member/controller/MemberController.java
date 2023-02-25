@@ -35,7 +35,7 @@ public class MemberController {
         // return ResponseEntity.created(resultUri).build(); // 응답 Location 헤더에 URI 가 담김
 
         Map<String, Long> response = new HashMap<>();
-        response.put("memberId", savedMember.getId());
+        response.put("memberId", savedMember.getMemberId());
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -60,7 +60,7 @@ public class MemberController {
     public ResponseEntity<MemberDto.MemberDetailResponse> updateMember(@PathVariable("member-id") Long memberId,
                                                                        @RequestBody MemberDto.Update updateDto) {
         Member updateData = memberMapper.updateDtoToMember(updateDto);
-        updateData.setId(memberId);
+        updateData.setMemberId(memberId);
         Member updatedMember = memberService.update(updateData);
         MemberDto.MemberDetailResponse memberDetailResponse = memberMapper.memberToMemberDetailResponse(updatedMember);
         return ResponseEntity.ok(memberDetailResponse);
@@ -73,7 +73,7 @@ public class MemberController {
         Member findedMember = memberService.checkFindQuestion(findMemberData);
 
         Map<String, Long> response = new HashMap<>();
-        response.put("memberId", findedMember.getId());
+        response.put("memberId", findedMember.getMemberId());
 
         return ResponseEntity.ok(response);
     }

@@ -98,7 +98,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 클레임
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", member.getEmail());
-        claims.put("memberId", member.getId());
+        claims.put("memberId", member.getMemberId());
         claims.put("roles", member.getRoles());
 
         // jwt 제목

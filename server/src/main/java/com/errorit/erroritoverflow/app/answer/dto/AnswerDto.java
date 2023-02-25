@@ -41,7 +41,7 @@ public class AnswerDto {
         private LocalDateTime modifiedAt;
         private String member;
         private String content;
-        private List<CommentDto> comments;
+        private List<CommentDto.CommentResponse> comments;
     }
 
     // 답글 목록 응답
