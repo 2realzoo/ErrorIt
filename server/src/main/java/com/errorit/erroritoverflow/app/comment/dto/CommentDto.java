@@ -7,47 +7,36 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public class CommentDto {
+    // 댓글 추가 요청
     @Getter
     @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    @ToString
     public static class Post{
-        private long memberId;
-        private long answerId;
-        private long questionId;
-        private String content;
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class Patch{
-        private long commentId;
-
-        private String content;
-
-        public void setCommentId(long commentId) {
-            this.commentId = commentId;
-        }
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class Response {
-        private Long commentId;
-        private long answerId;
-        private long questionId;
         private Long memberId;
         private String content;
+    }
+
+    // 댓글 수정 요청
+    @Getter
+    @Setter
+    public static class Patch{
+        private Long memberId;
+        private String content;
+    }
+
+    // 댓글 삭제 요청
+    @Getter
+    @Setter
+    public static class Delete{
+        private Long memberId;
+    }
+
+    // 댓글 응답
+    @Getter
+    @Setter
+    public static class CommentResponse {
+        private Long commentId;
+        private String content;
         private String member;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+        private LocalDateTime createAt;
     }
 }

@@ -1,18 +1,19 @@
 package com.errorit.erroritoverflow.app.comment.entity;
 
+import com.errorit.erroritoverflow.app.answer.entity.Answer;
+import com.errorit.erroritoverflow.app.audit.Auditable;
 import com.errorit.erroritoverflow.app.member.entity.Member;
+import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
 @ToString
-public class Comment {
+public class Comment extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,17 +23,15 @@ public class Comment {
     @Column
     private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
-
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @ManyToOne
+    @JoinColumn(name = "QUESTION_ID")
+    private Question question;
 
-
-
+    @ManyToOne
+    @JoinColumn(name = "ANSWER_ID")
+    private Answer answer;
 }
