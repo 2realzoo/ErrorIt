@@ -20,60 +20,68 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class AnswerController {
     private final AnswerService answerService;
     private final AnswerMapper mapper;
 
-
+    // 답변 추가
     @PostMapping("/questions/{question-id}/answers")
-    public ResponseEntity postAnswer(@Valid @RequestBody AnswerDto.Post requestDto){
+    public ResponseEntity<AnswerDto.AnswerResponse> createAnswer(@PathVariable("question-id") Long questionId,
+                                          @RequestBody AnswerDto.Post answerDto) {
 
-        Answer answer = answerService.createAnswer(
-                mapper.answerPostDtoToAnswer(requestDto));
-
-        return new ResponseEntity<>(mapper.answerEntityToResponseDto(answer)
-                ,HttpStatus.OK);
+        Answer answer = mapper.answerPostDtoToAnswer(answerDto);
+        Answer savedAnswer = answerService.createAnswerByQuestionId(answer, answerDto.getMemberId(), questionId);
+        AnswerDto.AnswerResponse response = mapper.answerToResponseDto(savedAnswer);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    // 답변 수정
     @PatchMapping("/answers/{answer-id}")
-    public ResponseEntity patchQuestion(@PathVariable("answer-id") @Positive long answerId,
-                                        @Valid @RequestBody AnswerDto.Patch requestDto){
+    public ResponseEntity<AnswerDto.AnswerResponse> updateAnswer(@PathVariable("answer-id") Long answerId,
+                                          @RequestBody AnswerDto.Patch answerDto) {
 
-        requestDto.setAnswerId(answerId);
-        Answer answer =
-                answerService.updateAnswer(answerId,requestDto);
-
-        return new ResponseEntity(mapper.answerEntityToResponseDto(answer), HttpStatus.OK);
+        Answer answer = mapper.answerPatchDtoToAnswer(answerDto);
+        answer.setAnswerId(answerId);
+        Answer updatedAnswer = answerService.update(answer, answerDto.getMemberId());
+        AnswerDto.AnswerResponse response = mapper.answerToResponseDto(updatedAnswer);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/answers/{answer-id}")
-    public ResponseEntity getAnswer(@PathVariable("answer-id") @Positive long answerId){
-        Answer answer = answerService.find(answerId);
-
-        return new ResponseEntity(mapper.answerEntityToResponseDto(answer), HttpStatus.OK);
-    }
-
-    @GetMapping("/questions/{question-id}/answers")
-    public ResponseEntity getAnswers(@Positive @RequestParam int page,
-                                     @Positive @RequestParam int size){
-        Page<Answer> pages = answerService.findAnswers(page-1,size);
-        List<Answer> answers = pages.getContent();
-        return new ResponseEntity(new MultiResponseDto<>(mapper.answerListToResponseDtoList(answers), pages)
-                , HttpStatus.OK);
-    }
-
+    // 답변 삭제
     @DeleteMapping("/answers/{answer-id}")
-    public ResponseEntity deleteAnswer(@PathVariable("answer-id") @Positive long answerId,
-                                       @PathVariable(name = "member-id") @Positive long memberId){
-
-        answerService.deleteAnswer(answerId,memberId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Map<String, Long>> deleteAnswer(@PathVariable("answer-id") Long answerId,
+                                          @RequestBody AnswerDto.Delete answerDto) {
+        Long deletedAnswerId = answerService.delete(answerId, answerDto.getMemberId());
+        Map<String, Long> response = new HashMap<>();
+        response.put("deletedAnswerId" , deletedAnswerId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 답변 목록 : 질문 상세 페이지
+    @GetMapping("/questions/{question-id}/answers")
+    public ResponseEntity<?> getAnswerListByQuestionId(@PathVariable("question-id") Long questionId,
+                                                       @RequestParam("sort") String orderBy,
+                                                       @RequestParam("page") int page) {
+        Page<Answer> answerListPage = answerService.findAnswerListByQuestionId(questionId, page, orderBy);
+        AnswerDto.MemberAnswerListResponse response = mapper.pageListToMemberAnswerListResponse(answerListPage);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 답변 목록 : 회원이 작성한 답변 페이지
+    @GetMapping("/members/{member-id}/answers")
+    public ResponseEntity<?> getAnswerListByMemberId(@PathVariable("member-id") Long memberId,
+                                                       @RequestParam("sort") String orderBy,
+                                                       @RequestParam("page") int page) {
+        Page<Answer> answerListPage = answerService.findAnswerListByMemberId(memberId, page, orderBy);
+        AnswerDto.MemberAnswerListResponse response = mapper.pageListToMemberAnswerListResponse(answerListPage);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
