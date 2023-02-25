@@ -16,8 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
         // 로그인 필수 체크
         registry.addInterceptor(new ResourceCheckInterceptor())
                 .order(1)
-                .addPathPatterns("/members/{memberId}", "/members/{memberId}/*") // 검사 대상
-                .excludePathPatterns("/**");
+                .addPathPatterns("/members/*", "/members/*/*"); // 검사 대상
     }
 }
 

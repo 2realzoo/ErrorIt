@@ -40,6 +40,6 @@ public class CookieManager {
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath(REFRESH_COOKIE_REQUEST_PATH);
         refreshTokenCookie.setMaxAge(REFRESH_COOKIE_MAX_AGE);
-        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.addCookie(refreshTokenCookie);
     }
 }

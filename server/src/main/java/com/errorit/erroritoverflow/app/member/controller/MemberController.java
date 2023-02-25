@@ -6,6 +6,8 @@ import com.errorit.erroritoverflow.app.member.mapper.MemberMapper;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -25,12 +28,16 @@ public class MemberController {
     // 회원가입
     @PostMapping
     public ResponseEntity<Map<String, Long>> createMember(@RequestBody MemberDto.Create createDto) {
-        Member member = memberMapper.createDtoToMember(createDto);
+        Member member = memberMapper.createToMember(createDto);
         Member savedMember = memberService.create(member);
 
-        URI resultUri = UriCreator.createUri(MEMBER_BASIC_URI, savedMember.getId());
+        // URI resultUri = UriCreator.createUri(MEMBER_BASIC_URI, savedMember.getId());
+        // return ResponseEntity.created(resultUri).build(); // 응답 Location 헤더에 URI 가 담김
 
-        return ResponseEntity.created(resultUri).build();
+        Map<String, Long> response = new HashMap<>();
+        response.put("memberId", savedMember.getId());
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // 단일 회원 조회
@@ -53,6 +60,7 @@ public class MemberController {
     public ResponseEntity<MemberDto.MemberDetailResponse> updateMember(@PathVariable("member-id") Long memberId,
                                                                        @RequestBody MemberDto.Update updateDto) {
         Member updateData = memberMapper.updateDtoToMember(updateDto);
+        updateData.setId(memberId);
         Member updatedMember = memberService.update(updateData);
         MemberDto.MemberDetailResponse memberDetailResponse = memberMapper.memberToMemberDetailResponse(updatedMember);
         return ResponseEntity.ok(memberDetailResponse);
@@ -60,12 +68,12 @@ public class MemberController {
 
     // 비밀번호 찾기 시도
     @PostMapping("/password")
-    public ResponseEntity<Map<String, Boolean>> findPassword(@RequestBody MemberDto.FindPassword findPasswordDto) {
+    public ResponseEntity<Map<String, Long>> findPassword(@RequestBody MemberDto.FindPassword findPasswordDto) {
         Member findMemberData = memberMapper.findPasswordToMember(findPasswordDto);
-        Boolean result = memberService.checkFindQuestion(findMemberData);
+        Member findedMember = memberService.checkFindQuestion(findMemberData);
 
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("result", result);
+        Map<String, Long> response = new HashMap<>();
+        response.put("memberId", findedMember.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -78,18 +86,12 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    // POST : "/member/email" : 이메일 중복확인  : return result=true
+    // 이메일 중복확인
     @PostMapping("/email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestBody MemberDto.CheckEmail emailDto) {
         Boolean result = memberService.checkCreateEmail(emailDto.getEmail());
         Map<String, Boolean> response = new HashMap<>();
-        response.put("result", result);
+        response.put("canUse", result);
         return ResponseEntity.ok(response);
     }
-
-    // GET : "/member/{member-id}/questions"?sort=”정렬기준”&page=4 : 사용자 질문 목록 : return List QuestionDto
-    // TODO : 회원이 작성한 질문 목록
-
-    // GET : "/member/{member-id}/answers"?sort=”정렬기준”&page=4 : 사용자 질문 목록 : return List QuestionDto
-    // TODO : 회원이 작성한 답변 목록
 }

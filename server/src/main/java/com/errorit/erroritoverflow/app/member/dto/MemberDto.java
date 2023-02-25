@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class MemberDto {
 
     // 회원가입
@@ -68,6 +70,12 @@ public class MemberDto {
     @Setter
     public static class ResultResponse {
         private Boolean result;
+    }
+
+    @Getter
+    @Setter
+    public static class CheckEmailResponse {
+        private Boolean canUse;
     }
 
     // 회원 작성 질문 목록

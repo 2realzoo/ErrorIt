@@ -83,8 +83,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         // JWS(JSON Web Token Signed) 획득
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
 
-        // :TODO Cookie 에서 값을 꺼내도록 변경
-
         // 서명 검증을 위한 시크릿 키 획득
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
