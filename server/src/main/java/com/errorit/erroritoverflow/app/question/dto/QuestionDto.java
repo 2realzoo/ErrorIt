@@ -41,24 +41,31 @@ public class QuestionDto {
         }
     }
 
+    //질문 리스트
     @Getter
     @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class Response {
+    public static class QuestionResponse {
         private Long questionId;
-        private Long memberId;
-        private String member;
         private String title;
         private String content;
-        private Long views;
-        private int answerCount;
+        private String member;
+        private Long viewCount;
         private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private List<AnswerDto.Response> answers;
-        private List<CommentDto.Response> comments;
+        private LocalDateTime modifiedAt;
     }
 
+    //질문 상세
+    @Getter
+    @Setter
+    public static class QuestionDetailResponse {
+        private Long questionId;
+        private String title;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private String member;
+        private String content;
+        private Long viewCount;
+        private List<CommentDto.Response> comments;
+    }
 
 }
