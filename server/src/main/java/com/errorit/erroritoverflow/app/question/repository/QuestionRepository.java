@@ -1,5 +1,6 @@
 package com.errorit.erroritoverflow.app.question.repository;
 
+import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.ToString;
 import org.springframework.data.domain.Page;
@@ -13,4 +14,5 @@ import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+    Page<Question> findAllByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
 }
