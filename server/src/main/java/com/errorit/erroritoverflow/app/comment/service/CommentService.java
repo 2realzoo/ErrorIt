@@ -49,7 +49,7 @@ public class CommentService {
     // 댓글 생성 : 답글에 추가
     public Comment createByAnswerId(Comment comment, Long memberId, Long answerId) {
         Member findedMember = memberService.findById(memberId);
-        Answer findedAnswer = answerService.find(answerId);
+        Answer findedAnswer = answerService.findById(answerId);
         comment.setAnswer(findedAnswer);
         comment.setMember(findedMember);
         return commentRepository.save(comment);
