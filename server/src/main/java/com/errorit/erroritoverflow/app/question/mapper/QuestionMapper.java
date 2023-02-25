@@ -19,23 +19,19 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface QuestionMapper {
 
+    // Post -> question
     Question questionPostDtoToEntity(QuestionDto.Post requestBody);
+
+    // Patch -> question
     Question questionPatchDtoToEntity(QuestionDto.Patch requestBody);
-    //QuestionDto.Response questionToQuestionResponseDto(Question question);
 
+    // question -> questionDetail
+    @Mapping(source = "member.id", target = "member")
+    QuestionDto.QuestionDetailResponse questionDetailResponseDto(Question question);
 
-    default QuestionDto.Response questionToQuestionResponseDto(Question question) {
-        Member member = question.getMember();
-
-        return QuestionDto.Response.builder()
-                .questionId(question.getQuestionId())
-                .memberId(question.getMember().getId())
-                .member(question.getMember().getName())
-                .content(question.getContent())
-                .createdAt(question.getCreatedAt())
-                .updatedAt(question.getModifiedAt())
-                .build();
-    }
-
-    List<QuestionDto.Response> QuestionListToResponseDtoList(List<Question> questions);
+    //entity에서 member가 Member형식이라 오류남
+    //Question 엔티티의 member를 QuestionDto.QuestionResponse의 member로 매핑
+    @Mapping(source = "member.id", target = "member")
+    QuestionDto.QuestionResponse questionToResponseDto(Question question);
+    List<QuestionDto.QuestionResponse> QuestionListToResponseDtoList(List<Question> questions);
 }

@@ -11,23 +11,6 @@ import java.time.LocalDateTime;
 public class AnswerDto {
     @Getter
     @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class Response {
-        private Long answerId;
-        private Long memberId;
-        private Long questionId;
-        private String member;
-        private String title;
-        private String content;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-
-    }
-
-    @Getter
-    @Setter
     public static class Post{
         private long memberId;
         private long questionId;
@@ -46,4 +29,29 @@ public class AnswerDto {
             this.answerId = answerId;
         }
     }
+
+    //답변 리스트
+    @Setter
+    @Getter
+    public static class AnswerResponse {
+        private Long answerId;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private String member;
+        private String title;
+        private String content;
+    }
+
+    //답변 상세
+    @Setter
+    @Getter
+    public static class AnswerDetailResponse {
+        private Long answerId;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private String member;
+        private String title;
+        private String content;
+    }
+
 }

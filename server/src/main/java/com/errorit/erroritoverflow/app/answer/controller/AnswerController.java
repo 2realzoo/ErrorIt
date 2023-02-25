@@ -32,13 +32,9 @@ public class AnswerController {
 
     @PostMapping("/questions/{question-id}/answers")
     public ResponseEntity postAnswer(@Valid @RequestBody AnswerDto.Post requestDto){
-//        Answer answer = mapper.answerPostDtoToAnswer(requestDto);
-//        Answer createdAnswer = answerService.createAnswer(answer);
-//        return new ResponseEntity<>(mapper.answerEntityToResponseDto(answer)
-//                , HttpStatus.OK);
+
         Answer answer = answerService.createAnswer(
                 mapper.answerPostDtoToAnswer(requestDto));
-
 
         return new ResponseEntity<>(mapper.answerEntityToResponseDto(answer)
                 ,HttpStatus.OK);
