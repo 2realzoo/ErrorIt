@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class MemberAnswersDto {
     private Long answerId;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String member;
     private String content;

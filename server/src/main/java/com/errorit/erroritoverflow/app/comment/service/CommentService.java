@@ -84,7 +84,7 @@ public class CommentService {
     // 작성자가 맞는지 확인
     private void checkOwner(Comment comment, Long memberId) {
         Member findedMember = memberService.findById(memberId);
-        if (!Objects.equals(comment.getMember().getId(), findedMember.getId())) {
+        if (!Objects.equals(comment.getMember().getMemberId(), findedMember.getMemberId())) {
             throw new BusinessLogicException(ExceptionCode.AUTHORIZED_FAIL);
         }
     }

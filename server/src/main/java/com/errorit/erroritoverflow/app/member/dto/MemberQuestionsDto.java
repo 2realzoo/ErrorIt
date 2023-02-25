@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class MemberQuestionsDto {
     private Long questionId;
     private String title;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String member;
     private String content;

@@ -13,7 +13,7 @@ public class RefreshService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public RefreshToken saveOrUpdate(RefreshToken refreshToken) {
-        RefreshToken findedRefreshToken = findByMemberId(refreshToken.getMember().getId());
+        RefreshToken findedRefreshToken = findByMemberId(refreshToken.getMember().getMemberId());
         if (findedRefreshToken != null) {
             return update(refreshToken);
         } else {
@@ -26,11 +26,11 @@ public class RefreshService {
     }
 
     public RefreshToken findByMemberId(Long memberId) {
-        return refreshTokenRepository.findByMemberId(memberId).orElse(null);
+        return refreshTokenRepository.findByMember_MemberId(memberId).orElse(null);
     }
 
     private RefreshToken update(RefreshToken refreshToken) {
-        RefreshToken originalRefreshToken = findByMemberId(refreshToken.getMember().getId());
+        RefreshToken originalRefreshToken = findByMemberId(refreshToken.getMember().getMemberId());
         originalRefreshToken.setKeyValue(refreshToken.getKeyValue());
         return refreshTokenRepository.save(originalRefreshToken);
     }
@@ -38,7 +38,7 @@ public class RefreshService {
     private void delete(Long memberId) {
         RefreshToken refreshToken = findByMemberId(memberId);
         if (refreshToken != null) {
-            refreshTokenRepository.deleteById(refreshToken.getId());
+            refreshTokenRepository.deleteById(refreshToken.getRefreshTokenId());
         }
     }
 }

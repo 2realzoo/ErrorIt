@@ -90,7 +90,7 @@ public class AuthController {
         // 클레임
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", member.getEmail());
-        claims.put("id", member.getId());
+        claims.put("memberId", member.getMemberId());
         claims.put("roles", member.getRoles());
 
         // jwt 제목

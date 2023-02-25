@@ -37,6 +37,6 @@ public class CommentDto {
         private Long commentId;
         private String content;
         private String member;
-        private LocalDateTime createAt;
+        private LocalDateTime createdAt;
     }
 }
