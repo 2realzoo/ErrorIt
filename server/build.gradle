@@ -29,15 +29,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
 
+	// 맵스트럭트 의존성 : 반드시 맵스트럭트를 롬복 위에 위치시킬것
 	implementation 'org.mapstruct:mapstruct:1.5.1.Final'
+	// 맵스트럭트 - 롬복 호환을 위한 의존성
+	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.security:spring-security-test'
