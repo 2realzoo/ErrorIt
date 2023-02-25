@@ -6,6 +6,7 @@ import com.errorit.erroritoverflow.app.comment.dto.CommentDto;
 import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
@@ -13,22 +14,13 @@ import java.util.List;
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CommentMapper {
 
-    Comment commentPostDtoToComment(CommentDto.Post requestBody);
-    Comment commentPatchDtoToComment(CommentDto.Patch requestBody);
-    //CommentDto.Response commentToCommentResponseDto(Comment comment);
+    Comment commentPostDtoToComment(CommentDto.Post post);
 
-    default CommentDto.Response commentToCommentResponseDto(Comment comment) {
-        Member member = comment.getMember();
+    Comment commentPatchDtoToComment(CommentDto.Patch patch);
 
-        return CommentDto.Response.builder()
-                .commentId(comment.getCommentId())
-                .memberId(comment.getMember().getId())
-                .member(comment.getMember().getName())
-                .content(comment.getContent())
-                .createdAt(comment.getCreatedAt())
-                .updatedAt(comment.getModifiedAt())
-                .build();
-    }
+    @Mapping(target = "member", source = "member.name")
+    CommentDto.CommentResponse CommentToResponse(Comment comment);
 
-    List<CommentDto.Response> commentsToCommentsResponseDto(List<Comment> comments);
+    @Mapping(target = "member", source = "member.name")
+    List<CommentDto.CommentResponse> commentListToCommentsResponseDtoList(List<Comment> comments);
 }
