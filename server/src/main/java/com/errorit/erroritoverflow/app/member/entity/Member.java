@@ -13,6 +13,7 @@ import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 @Entity
 @Getter
 @Setter
@@ -23,7 +24,7 @@ public class Member extends Auditable {
     @Column(name = "MEMBER_ID")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "IMAGE_ID")
     private Image image;
 
@@ -61,6 +62,6 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member",  cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private RefreshToken refreshToken;
 }

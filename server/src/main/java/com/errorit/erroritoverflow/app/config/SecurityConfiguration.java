@@ -138,7 +138,7 @@ public class SecurityConfiguration {
                     .addFilter(jwtAuthenticationFilter)
                     // jwtVerificationFilter 가 JwtAuthenticationFilter 가 수행된 바로 다음에 동작하도록 설정
                     // 따라서 인증과정이 수행된 후 인가과정 : jwtVerificationFilter 가 수행된다.
-            //        .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class)
             ;
         }
     }

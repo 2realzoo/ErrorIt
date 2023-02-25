@@ -31,6 +31,11 @@ public class MemberService {
     // 회원 Create
     public Member create(Member member) {
 
+        Boolean checkResult = checkCreateEmail(member.getEmail());
+        if (!checkResult) {
+            throw new BusinessLogicException(ExceptionCode.USER_EXISTS);
+        }
+
         Image image = new Image();
         image.setUrl(DEFAULT_IMAGE_URI);
         member.setImage(image);
@@ -70,14 +75,14 @@ public class MemberService {
     }
 
     // 비밀번호 찾기
-    public Boolean checkFindQuestion(Member findMemberData) {
+    public Member checkFindQuestion(Member findMemberData) {
         Member findedMember = findVerifyMemberByEmail(findMemberData.getEmail());
         if (findedMember.getFindQuestion().equals(findMemberData.getFindQuestion())
-        || findedMember.getFindAnswer().equals(findMemberData.getFindAnswer())
+                || findedMember.getFindAnswer().equals(findMemberData.getFindAnswer())
         ) {
             throw new BusinessLogicException(ExceptionCode.AUTHORIZED_FAIL);
         }
-        return true;
+        return findedMember;
     }
 
     // 비밀번호 변경
