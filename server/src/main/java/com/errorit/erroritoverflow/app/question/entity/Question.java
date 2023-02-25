@@ -2,6 +2,7 @@ package com.errorit.erroritoverflow.app.question.entity;
 
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.audit.Auditable;
+import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,9 +16,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
-public class Question{
+@NoArgsConstructor
+public class Question extends Auditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +34,7 @@ public class Question{
 
     //질문 조회수
     @Column(name = "VIEW_COUNT")
-    private int count;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(nullable = false, name = "MODIFIED_AT")
-    private LocalDateTime modifiedAt = LocalDateTime.now();
+    private int viewCount;
 
 
     //작성자를 member에서 가져옴
@@ -48,30 +43,20 @@ public class Question{
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    public void setMember(Member member){
-        this.member = member;
-        if(!this.member.getQuestions().contains(this)){
-            this.member.getQuestions().add(this);
-        }
-    }
-    public Question(Member member){
-        this.member = member;
-    }
+    //answer와의 관계
+    @ManyToOne
+    @JoinColumn(name = "ANSWER_ID")
+    private Answer answer;
 
+    @ManyToOne
+    @JoinColumn(name = "COMMENT_ID")
+    private Comment comment;
 
     //질문에 달리는 답변 리스트
     @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE})
     private List<Answer> answers = new ArrayList<>();
 
-    public void setAnswer(Answer answer){
-        answers.add(answer);
-        if(answer.getQuestion() != this){
-            answer.setQuestion(this);
-        }
-    }
-
-    //질문에 달리는 답변수
-    public int getAnswerCount() {
-        return this.answers.size();
-    }
+    //질문에 달리는 댓글 리스트
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
 }
