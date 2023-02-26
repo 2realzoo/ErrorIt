@@ -18,7 +18,7 @@ public class RefreshToken extends Auditable {
     private Long refreshTokenId;
 
     @JoinColumn(name = "MEMBER_ID")
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne
     private Member member;
 
     @Column
