@@ -33,7 +33,7 @@ public class QuestionDto {
     //질문 리스트
     @Getter
     @Setter
-    public static class QuestionResponse {
+    public static class QuestionListResponse {
         private Long questionId;
         private String title;
         private String content;
@@ -62,6 +62,6 @@ public class QuestionDto {
     @Setter
     public static class MemberQuestionListResponse {
         private PageInfo pageInfo;
-        private List<QuestionDto.QuestionResponse> questions;
+        private List<QuestionDto.QuestionListResponse> questions;
     }
 }

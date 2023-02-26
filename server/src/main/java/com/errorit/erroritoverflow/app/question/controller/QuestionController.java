@@ -1,5 +1,7 @@
 package com.errorit.erroritoverflow.app.question.controller;
 
+import com.errorit.erroritoverflow.app.answer.dto.AnswerDto;
+import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.comment.dto.CommentDto;
 import com.errorit.erroritoverflow.app.common.response.MultiResponseDto;
 import com.errorit.erroritoverflow.app.member.dto.MemberDto;
@@ -28,7 +30,7 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
     private final QuestionMapper mapper;
-    private final String QUESTION_BASIC_URI = "/questions";
+    //private final String QUESTION_BASIC_URI = "/questions";
 
     //질문 등록
     @PostMapping("questions")
@@ -37,7 +39,7 @@ public class QuestionController {
 
         Question question = mapper.questionPostDtoToEntity(requestDto);
         Question savedQuestion = questionService.createQuestion(question,memberId);
-        QuestionDto.QuestionResponse questionResponse = mapper.questionToResponseDto(savedQuestion);
+        QuestionDto.QuestionDetailResponse questionResponse = mapper.questionToResponseDto(savedQuestion);
 
 //        URI location = UriCreator.createUri(QUESTION_BASIC_URI, savedQuestion.getQuestionId());
 //        return ResponseEntity.created(location).build();
@@ -65,6 +67,16 @@ public class QuestionController {
         questionService.deleteQuestion(questionId,memberId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    // 질문 목록 : 회원이 작성한 질문
+    @GetMapping("/members/{member-id}/questions ")
+    public ResponseEntity getQuestionListByMemberId(@PathVariable("member-id") Long memberId,
+                                                     @RequestParam("sort") String orderBy,
+                                                     @RequestParam("page") int page) {
+        Page<Question> questionListPage = questionService.getQuestionsByMember(memberId, page, orderBy);
+        QuestionDto.MemberQuestionListResponse response = mapper.pageListToMemberQuestionListResponse(questionListPage);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //질문

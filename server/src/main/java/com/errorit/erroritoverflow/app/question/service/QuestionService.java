@@ -76,14 +76,13 @@ public class QuestionService {
 
     //회원이 작성한 질문 목록 조회
     //페이지네이션
-    public List<Question> getQuestionsByMember(Long memberId, int pageNum, String orderBy) {
+    public Page<Question> getQuestionsByMember(Long memberId, int pageNum, String orderBy) {
         Member member = memberService.findById(memberId);
 
         //페이지네이션 : 최신순으로 정렬
         if (orderBy.equals("최신순")) {
             Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
-            Page<Question> questionPage = questionRepository.findAllByMemberIdOrderByCreatedAtDesc(member.getId(), pageable);
-            return questionPage.getContent();
+            return questionRepository.findAllByMemberOrderByCreatedAtDesc(memberId, pageable);
         } else {
             throw new BusinessLogicException(ExceptionCode.BAD_REQUEST);
         }
@@ -99,7 +98,7 @@ public class QuestionService {
         }
 
         // 작성자와 요청자가 동일한지 확인함
-        if (!Objects.equals(question.getMember().getId(), findMember.getId())) {
+        if (!Objects.equals(question.getMember().getMemberId(), findMember.getMemberId())) {
             throw new BusinessLogicException(ExceptionCode.USER_UNAUTHORIZED);
         }
     }
