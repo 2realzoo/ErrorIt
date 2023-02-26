@@ -35,7 +35,7 @@ public class RefreshService {
         return refreshTokenRepository.save(originalRefreshToken);
     }
 
-    private void delete(Long memberId) {
+    public void delete(Long memberId) {
         RefreshToken refreshToken = findByMemberId(memberId);
         if (refreshToken != null) {
             refreshTokenRepository.deleteById(refreshToken.getRefreshTokenId());

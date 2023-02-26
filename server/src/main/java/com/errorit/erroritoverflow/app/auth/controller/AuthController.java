@@ -11,6 +11,7 @@ import com.errorit.erroritoverflow.app.response.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -25,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
@@ -36,7 +38,9 @@ public class AuthController {
 
     // logout
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        Long tokenMemberId = ((Number)request.getAttribute("tokenMemberId")).longValue();
+        refreshService.delete(tokenMemberId);
         return ResponseEntity.ok()
                 .header("Authorization", "")
                 .header(HttpHeaders.SET_COOKIE, ResponseCookie.from(cookieManager.getREFRESH_COOKIE_NAME(), "")
@@ -47,32 +51,40 @@ public class AuthController {
     }
 
     // Access Token 재발급
-    @PostMapping("/auth/members/{member-id}/refresh")
+    @PostMapping("/auth/refresh/members/{member-id}")
     public ResponseEntity<?> resetRefreshToken(@PathVariable("member-id") Long memberId,
                                                HttpServletRequest request) {
 
         // 쿠키 유무 확인
+        log.info("쿠키 유무 확인");
         Cookie refreshCookie = cookieManager.getRefreshCookie(request);
         if (refreshCookie == null) {
+            log.info("쿠키 없음");
             return ResponseEntity.badRequest().build();
         }
 
         // 리플레쉬 토큰 일치확인
+        log.info("토큰값 일치 확인");
         RefreshToken savedRefreshToken = refreshService.findByMemberId(memberId);
         if ( !(savedRefreshToken.getKeyValue().equals(refreshCookie.getValue()))) {
+            log.info("토큰값 불일치");
             return ResponseEntity.badRequest().build();
         }
 
         // 리플레쉬 토큰 유효성 확인
+        log.info("토큰 유효성 확인");
         try {
             jwtTokenizer.verifySignature(refreshCookie.getValue(), jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey()));
         } catch (SignatureException se) {
+            log.info("토큰 유효성 확인 실패 : 토큰 검증 실패 ");
             ErrorResponse errorResponse = ErrorResponse.of(ExceptionCode.ACCESS_TOKEN_INVALID);
             return ResponseEntity.badRequest().body(errorResponse);
         } catch (ExpiredJwtException ee) {
+            log.info("토큰 유효성 확인 실패 : 토큰 만료 ");
             ErrorResponse errorResponse = ErrorResponse.of(ExceptionCode.ACCESS_TOKEN_EXPIRED);
             return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
+            log.info("토큰 유효성 확인 실패");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 

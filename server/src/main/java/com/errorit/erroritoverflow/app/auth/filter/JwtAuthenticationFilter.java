@@ -6,9 +6,13 @@ import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
 import com.errorit.erroritoverflow.app.auth.refresh.entity.RefreshToken;
 import com.errorit.erroritoverflow.app.auth.refresh.service.RefreshService;
 import com.errorit.erroritoverflow.app.member.entity.Member;
+import com.errorit.erroritoverflow.app.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -83,8 +87,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // RefreshToken : 쿠키 설정
         cookieManager.generateRefreshCookie(response, refreshToken);
 
+        Map<String, Object> body = new HashMap<>();
+        body.put("memberId", member.getMemberId());
+        body.put("imageUri", member.getImage().getUrl());
+
         // 응답 코드
-        response.setStatus(200);
+        Gson gson = new Gson();
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);    // MediaType 지정
+        response.setStatus(HttpStatus.OK.value());          // 응답할 상태코드 지정 : OK
+        //  Gson 을 이용해 ErrorResponse 객체를 JSON 포맷 문자열로 변환 후, 출력 스트림을 생성
+        response.getWriter().write(gson.toJson(body, Map.class));
 
         // 추가 처리 핸들러 호출
         // AuthenticationSuccessHandler 의 onAuthenticationSuccess() 메서드를 호출
