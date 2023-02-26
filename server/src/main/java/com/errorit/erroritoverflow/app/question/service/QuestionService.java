@@ -3,9 +3,7 @@ package com.errorit.erroritoverflow.app.question.service;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import com.errorit.erroritoverflow.app.member.entity.Member;
-import com.errorit.erroritoverflow.app.member.repository.MemberRepository;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
-import com.errorit.erroritoverflow.app.question.dto.QuestionDto;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import com.errorit.erroritoverflow.app.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,40 +29,78 @@ public class QuestionService {
 
     //질문 생성
     public Question createQuestion(Question question, Long memberId) {
-        //서비스를 이용하도록 수정
         Member member = memberService.findById(memberId);
-        //member부분을 넣어줌
         question.setMember(member);
         return questionRepository.save(question);
     }
 
+    // 질문 조회
+    public Question findById(Long questionId) {
+        return findVerifyQuestion(questionId);
+    }
+
     //질문 수정
-    public Question updateQuestion(long memberId,
-                                   long questionId,
-                                   Question question) {
-        Question updateQuestion = find(questionId);
-        verifyMember(updateQuestion, memberId);
+    public Question updateQuestion(Question question, Long memberId) {
+        Question originalQuestion = findVerifyQuestion(question.getQuestionId());
+        checkOwner(originalQuestion, memberId);
 
-        //수정사항 반영
-        updateQuestion.setTitle(question.getTitle());
-        updateQuestion.setContent(question.getContent());
-        updateQuestion.setModifiedAt(LocalDateTime.now());
+        // 수정사항 반영
+        Optional.ofNullable(question.getTitle()).ifPresent(originalQuestion::setTitle);
+        Optional.ofNullable(question.getContent()).ifPresent(originalQuestion::setTitle);
 
-        return questionRepository.save(updateQuestion);
+        return questionRepository.save(originalQuestion);
     }
 
     //질문 삭제
-    public void deleteQuestion(Long questionId, Long memberId) {
+    public Long deleteQuestion(Long questionId, Long memberId) {
         //삭제할 질문 있는지 확인
-        Question deletedQuestion = find(questionId);
+        Question deletedQuestion = findVerifyQuestion(questionId);
         // 삭제를 요청한 맴버가 작성자인지 확인
-        verifyMember(deletedQuestion, memberId);
+        checkOwner(deletedQuestion, memberId);
         questionRepository.delete(deletedQuestion);
+        return questionId;
     }
 
-    //질문 찾기
-    public Question find(long questionId) {
-        Optional<Question> findQuestion = this.questionRepository.findById(questionId);
+    //질문 페이지네이션
+    public Page<Question> getQuestions(int pageNum, String orderBy){
+        pageNum -= 1;
+        //질문 페이지네이션 : 최신순
+        if (orderBy.equals("최신순")){
+            Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
+            return questionRepository.findAll(pageable);
+        }
+        //질문 페이지네이션 : 조회순
+        else if(orderBy.equals("조회순")){
+            Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("viewCount").descending());
+            return questionRepository.findAll(pageable);
+        }
+        else {
+            throw new BusinessLogicException(ExceptionCode.BAD_REQUEST);
+        }
+    }
+
+    // 회원이 작성한 질문 목록 조회
+    public Page<Question> getQuestionsByMember(int pageNum, String orderBy, Long memberId) {
+
+        Member member = memberService.findById(memberId);
+        pageNum -= 1;
+
+        //페이지네이션 : 최신순으로 정렬
+        if (orderBy.equals("최신순")) {
+            Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
+            return questionRepository.findAllByMember_MemberIdOrderByCreatedAtDesc(memberId, pageable);
+        //페이지네이션 : 조회순으로 정렬
+        } else if (orderBy.equals("조회순")) {
+            Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("viewCount").descending());
+            return questionRepository.findAllByMember_MemberIdOrderByViewCountDesc(memberId, pageable);
+        } else {
+            throw new BusinessLogicException(ExceptionCode.BAD_REQUEST);
+        }
+    }
+
+    // 유효한 질문인지 조회
+    private Question findVerifyQuestion(long questionId) {
+        Optional<Question> findQuestion = questionRepository.findById(questionId);
         if (findQuestion.isPresent()) {
             return findQuestion.get();
         } else {
@@ -74,50 +108,17 @@ public class QuestionService {
         }
     }
 
-    //회원이 작성한 질문 목록 조회
-    //페이지네이션
-    public Page<Question> getQuestionsByMember(Long memberId, int pageNum, String orderBy) {
-        Member member = memberService.findById(memberId);
-
-        //페이지네이션 : 최신순으로 정렬
-        if (orderBy.equals("최신순")) {
-            Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
-            return questionRepository.findAllByMemberOrderByCreatedAtDesc(memberId, pageable);
-        } else {
-            throw new BusinessLogicException(ExceptionCode.BAD_REQUEST);
-        }
-    }
-
-
-    //질문 작성자가 맞는지 확인함
-    private void verifyMember(Question question, long memberId) {
+    // 질문 작성자가 맞는지 확인함
+    private void checkOwner(Question question, long memberId) {
         // 회원이 존재하는지 확인함
         Member findMember = memberService.findById(memberId);
-        if (findMember == null) {
-            throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
-        }
 
         // 작성자와 요청자가 동일한지 확인함
         if (!Objects.equals(question.getMember().getMemberId(), findMember.getMemberId())) {
-            throw new BusinessLogicException(ExceptionCode.USER_UNAUTHORIZED);
+            throw new BusinessLogicException(ExceptionCode.AUTHORIZED_FAIL);
         }
     }
 
-    //질문 페이지네이션
-    public Page<Question> questionPageByQuestionId(int pageNum, String orderBy){
-        //질문 페이지네이션 : 최신순
-        if (orderBy.equals("최신순")){
-            Pageable pageable = PageRequest.of(pageNum - 1, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
-            return questionRepository.findAll(pageable);
-        }
-        //질문 페이지네이션 : 조회수순
-        else if(orderBy.equals("조회수순")){
-            Pageable pageable = PageRequest.of(pageNum - 1, PAGE_ELEMENT_SIZE, Sort.by("viewCount").descending());
-            return questionRepository.findAll(pageable);
-        }
-        else {
-            throw new BusinessLogicException(ExceptionCode.BAD_REQUEST);
-        }
-    }
+
 
 }

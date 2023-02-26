@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    Page<Question> findAllByMemberOrderByCreatedAtDesc(Long member, Pageable pageable);
+    Page<Question> findAllByMember_MemberIdOrderByCreatedAtDesc(Long member, Pageable pageable);
+    Page<Question> findAllByMember_MemberIdOrderByViewCountDesc(Long member, Pageable pageable);
 }
