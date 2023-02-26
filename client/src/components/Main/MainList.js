@@ -16,7 +16,9 @@ const MainList = () => {
 
   useEffect(() => {
     axios
-      .get("/api/questions")
+      .get("/api/questions", {
+        headers: { "ngrok-skip-browser-warning": "12" },
+      })
       .then((res) => {
         console.log(res.data);
         setQuestionList(res.data.questions);
@@ -28,13 +30,19 @@ const MainList = () => {
   return (
     <>
       <M.SortContainer>
-        <M.Sort className={sortTag === "Newest" ? "selected" : ""} onClick={() => setSortTag("Newest")}>
+        <M.Sort
+          className={sortTag === "Newest" ? "selected" : ""}
+          onClick={() => setSortTag("Newest")}>
           Newest
         </M.Sort>
-        <M.Sort className={sortTag === "View" ? "selected" : ""} onClick={() => setSortTag("View")}>
+        <M.Sort
+          className={sortTag === "View" ? "selected" : ""}
+          onClick={() => setSortTag("View")}>
           View
         </M.Sort>
-        <M.Sort className={sortTag === "Score" ? "selected" : ""} onClick={() => setSortTag("Score")}>
+        <M.Sort
+          className={sortTag === "Score" ? "selected" : ""}
+          onClick={() => setSortTag("Score")}>
           Score
         </M.Sort>
       </M.SortContainer>

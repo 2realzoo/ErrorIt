@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { currentPage, isLogin, userInfo } from "../reducers/actions";
+import { currentPage, isLogin, memberId, userInfo } from "../reducers/actions";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import axios from "axios";
@@ -60,7 +60,9 @@ function Login() {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const { memberIdReducer } = useSelector((state) => state);
   dispatch(currentPage("Users"));
+  console.log(memberIdReducer);
 
   const handleSubmit = () => {
     const regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
@@ -75,25 +77,25 @@ function Login() {
       alert("Please enter your ID and password.");
     } else {
       return axios
-        .post("/api/member/login", loginInfo)
+        .post("/api/login", loginInfo, {
+          headers: { "ngrok-skip-browser-warning": "12" },
+        })
         .then((res) => {
           dispatch(isLogin(true));
           setErrorMessage("");
-          dispatch(res);
+          dispatch(memberId(res.data.memberId));
         })
         .then(() => {
+          console.log();
           navigate("/");
         })
         .catch((err) => {
           setErrorMessage("login failed");
           alert("login failed");
+          console.log(err);
         });
     }
   };
-
-  useEffect(() => {
-    console.log(errorMessage);
-  }, [errorMessage]);
 
   const handleChange = (e) => {
     e.target.type === "email"
@@ -103,15 +105,6 @@ function Login() {
           password: e.target.value,
         });
   };
-  // const handleEmailVaild = (e) => {
-  //   const regexp = new RegExp("[A-Za-z0-9]+@[a-z]+.[a-z]{2,3}");
-  //   if (!regexp.test(e.target.value)) {
-  //     alert("Fill it out in email format.");
-  //     setTimeout(() => {
-  //       e.target.focus();
-  //     }, 100);
-  //   }
-  // };
 
   return (
     <Container>

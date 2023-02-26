@@ -112,7 +112,9 @@ function SignUp() {
       alert("Please select a password-finding question.");
     } else {
       return axios
-        .post("/member", userInfoReducer)
+        .post("/api/members", userInfoReducer, {
+          headers: { "ngrok-skip-browser-warning": "12" },
+        })
         .then((res) => {
           dispatch(userInfo({}));
           setPwdInfo({ pwd: "", confirmPw: "" });
@@ -171,7 +173,7 @@ function SignUp() {
 
   const onDuplicationCheck = () => {
     return axios
-      .post("api/members/password", {
+      .post("/api/members/password", {
         email: userInfoReducer.email,
       })
       .then((res) => {
@@ -237,6 +239,9 @@ function SignUp() {
               id="password"
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, pwd: e.target.value });
+                dispatch(
+                  userInfo({ ...userInfoReducer, password: e.target.value })
+                );
                 handleVaild(e);
               }}></Input>
             {vaild.password ? (
@@ -258,6 +263,7 @@ function SignUp() {
               id="confirmPassword"
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, confirmPw: e.target.value });
+
                 handleVaild(e);
               }}></Input>
             {vaild.confirmPw ? (

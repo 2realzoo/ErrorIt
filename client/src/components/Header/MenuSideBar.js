@@ -59,7 +59,8 @@ const Itemflex = styled.span`
   padding-right: 5px;
 `;
 const NavLink = styled.a`
-  display: block;
+  display: flex;
+  align-items: center;
   font-weight: bold;
   color: var(--black-900);
   background: var(--black-050);
@@ -70,6 +71,9 @@ const NavLink = styled.a`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--fs-body1);
+  .globe-icon {
+    margin-left: 8px;
+  }
 `;
 function MenuSideBar() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -101,8 +105,10 @@ function MenuSideBar() {
             )}
             {currentPageReducer === "Question" ? (
               <SelectedItem>
-                <NavLink>Questions</NavLink>
-                <FaGlobeAsia />
+                <NavLink>
+                  Questions
+                  <FaGlobeAsia className="globe-icon" />
+                </NavLink>
               </SelectedItem>
             ) : (
               <NavItemWrapper>
