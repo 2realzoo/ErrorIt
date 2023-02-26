@@ -40,6 +40,10 @@ public interface AnswerMapper {
 
     @Mapping(source = "member.name", target = "member")
     default AnswerDto.MemberAnswerListResponse pageListToMemberAnswerListResponse(Page<Answer> answers){
+        if ( answers == null ) {
+            return null;
+        }
+
         AnswerDto.MemberAnswerListResponse response = new AnswerDto.MemberAnswerListResponse();
         response.setPageInfo(PageInfo.of(answers));
         response.setAnswers(answerListToResponseDtoList(answers.getContent()));

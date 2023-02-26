@@ -2,25 +2,19 @@ package com.errorit.erroritoverflow.app.comment.service;
 
 import com.errorit.erroritoverflow.app.answer.entity.Answer;
 import com.errorit.erroritoverflow.app.answer.service.AnswerService;
-import com.errorit.erroritoverflow.app.comment.dto.CommentDto;
 import com.errorit.erroritoverflow.app.comment.entity.Comment;
 import com.errorit.erroritoverflow.app.comment.repository.CommentRepository;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import com.errorit.erroritoverflow.app.member.entity.Member;
-import com.errorit.erroritoverflow.app.member.repository.MemberRepository;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
 import com.errorit.erroritoverflow.app.question.entity.Question;
 import com.errorit.erroritoverflow.app.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +34,7 @@ public class CommentService {
     // 댓글 생성 : 질문에 추가
     public Comment createByQuestionId(Comment comment, Long memberId, Long questionId) {
         Member findedMember = memberService.findById(memberId);
-        Question findedQuestion = questionService.find(questionId);
+        Question findedQuestion = questionService.findById(questionId);
         comment.setQuestion(findedQuestion);
         comment.setMember(findedMember);
         return commentRepository.save(comment);

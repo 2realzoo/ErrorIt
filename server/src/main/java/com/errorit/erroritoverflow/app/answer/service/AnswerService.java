@@ -33,7 +33,7 @@ public class AnswerService {
     // 답글 추가
     public Answer createAnswerByQuestionId(Answer answer, Long memberId, Long questionId) {
         Member findedMember = memberService.findById(memberId);
-        Question findedQuestion = questionService.find(questionId);
+        Question findedQuestion = questionService.findById(questionId);
         answer.setMember(findedMember);
         answer.setQuestion(findedQuestion);
         return answerRepository.save(answer);
@@ -57,6 +57,7 @@ public class AnswerService {
 
     // 답글 목록 : 질문
     public Page<Answer> findAnswerListByQuestionId(Long questionId, int page, String orderBy) {
+        page -= 1;
         if (orderBy.equals("최신순")) {
             return answerRepository.findAllByQuestion_QuestionIdOrderByCreatedAt(
                     questionId,
@@ -69,6 +70,7 @@ public class AnswerService {
 
     // 답글 목록 : 회원
     public Page<Answer> findAnswerListByMemberId(Long memberId, int page, String orderBy) {
+        page -= 1;
         if (orderBy.equals("최신순")) {
             return answerRepository.findAllByMember_MemberIdOrderByCreatedAt(
                     memberId,

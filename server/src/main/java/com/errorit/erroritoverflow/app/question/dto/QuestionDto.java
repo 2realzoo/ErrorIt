@@ -1,67 +1,73 @@
 package com.errorit.erroritoverflow.app.question.dto;
 
-import com.errorit.erroritoverflow.app.answer.dto.AnswerDto;
 import com.errorit.erroritoverflow.app.comment.dto.CommentDto;
 import com.errorit.erroritoverflow.app.common.pagenation.PageInfo;
-import com.errorit.erroritoverflow.app.member.dto.MemberDto;
-import com.errorit.erroritoverflow.app.question.entity.Question;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class QuestionDto {
 
+    // 요청 : 질문 추가
     @Getter
     @Setter
     public static class Post{
-        private long memberId;
+        private Long memberId;
         private String title;
         private String content;
     }
 
+    // 요청 : 질문 수정
     @Getter
     @Setter
     public static class Patch{
-        private long questionId;
+        private Long memberId;
         private String title;
         private String content;
     }
 
-    //질문 리스트
+    // 요청 : 질문 삭제
     @Getter
     @Setter
-    public static class QuestionListResponse {
-        private Long questionId;
-        private String title;
-        private String content;
-        private String member;
-        private Long viewCount;
-        private LocalDateTime createdAt;
-        private LocalDateTime modifiedAt;
+    public static class Delete {
+        private Long memberId;
     }
 
-    //질문 상세
+    // 응답 : 질문 상세
     @Getter
     @Setter
     public static class QuestionDetailResponse {
         private Long questionId;
         private String title;
+        private String content;
+        private String member;
+        private Long viewCount;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private String member;
-        private String content;
-        private Long viewCount;
         private List<CommentDto.CommentResponse> comments;
     }
 
-    // 회원이 작성한 질문 목록
+    // 응답 : 질문 목록
     @Getter
     @Setter
-    public static class MemberQuestionListResponse {
+    public static class PageQuestionListResponse {
         private PageInfo pageInfo;
-        private List<QuestionDto.QuestionListResponse> questions;
+        private List<QuestionElementResponse> questions;
+    }
+
+    // 질문 목록 응답에 포함될 응답 객체
+    @Getter
+    @Setter
+    public static class QuestionElementResponse {
+        private Long questionId;
+        private String title;
+        private String content;
+        private String member;
+        private Long viewCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private int answers; // 답글 수
     }
 }
