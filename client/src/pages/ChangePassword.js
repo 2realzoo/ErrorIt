@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import FormContainer from "./commons/FormContainer";
-import FormWrapper from "./commons/Form";
+import FormWrapper from "./commons/FormWrapper";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
@@ -34,9 +34,7 @@ function ChangePassword() {
 
   useEffect(() => {
     if (passwords.newPassword !== passwords.confirmPassword) {
-      setInformMessage(
-        "New password and confirmation password are different. Please check your password."
-      );
+      setInformMessage("New password and confirmation password are different. Please check your password.");
     } else {
       setInformMessage("");
     }
@@ -51,26 +49,13 @@ function ChangePassword() {
         <FormContainer>
           <FormWrapper>
             <Label for="newPassword">New password</Label>
-            <Input
-              onChange={handleInputChange}
-              id="newPassword"
-              type="password"></Input>
-            <Notice color="var(--fc-light)">
-              Passwords must contain at least eight characters, including at
-              least 1 letter and 1 number.
-            </Notice>
+            <Input onChange={handleInputChange} id="newPassword" type="password"></Input>
+            <Notice color="var(--fc-light)">Passwords must contain at least eight characters, including at least 1 letter and 1 number.</Notice>
           </FormWrapper>
           <FormWrapper>
             <Label for="confirmPassword">Confirm new password</Label>
-            <Input
-              onChange={handleInputChange}
-              id="confirmPassword"
-              type="password"></Input>
-            {informMessage.length > 0 ? (
-              <Notice color="red">{informMessage}</Notice>
-            ) : (
-              <></>
-            )}
+            <Input onChange={handleInputChange} id="confirmPassword" type="password"></Input>
+            {informMessage.length > 0 ? <Notice color="red">{informMessage}</Notice> : <></>}
           </FormWrapper>
           {informMessage.length === 0 ? (
             <Button onClick={handleSubmit} pageName="ChangePassword">
