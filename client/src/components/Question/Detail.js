@@ -124,7 +124,6 @@ function Detail({ QorA, data, idValue, loginMemberId }) {
     setCommentValue(e.target.value);
   };
   const commentSubmitHandler = () => {
-    localStorage.getItem("jwtToken");
     axios
       .post(
         `/api/questions/${idValue}/answers`,
