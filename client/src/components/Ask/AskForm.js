@@ -41,18 +41,22 @@ const AskForm = () => {
   };
   const submitQuestion = () => {
     const questionData = {
-      memberId: "memberId",
+      memberId: sessionStorage.getItem("memberId"),
       title: titleInput.current.value,
       content: contentInput.current.value,
     };
-    console.log(questionData);
-    // axios 나중에 api 풀리면 풀어야지..
-    //   .post("/api/questions", questionData)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     navigate("/question", { state: res.data.questionId });
-    //   })
-    //   .catch((err) => err);
+    axios
+      .post("/api/questions", questionData, {
+        headers: {
+          "ngrok-skip-browser-warning": "12",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        // navigate("/question", { state: res.data.questionId });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

@@ -117,9 +117,7 @@ function Login() {
         </Logo>
         <FormContainer pageName="Login">
           <Form>
-            <Label
-              marginTop="calc(var(--su4) / 2)"
-              marginBottom="calc(var(--su4) / 2)">
+            <Label marginTop="calc(var(--su4) / 2)" marginBottom="calc(var(--su4) / 2)">
               Email
             </Label>
             <Input type="email" onChange={handleChange}></Input>
