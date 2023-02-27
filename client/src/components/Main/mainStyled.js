@@ -23,7 +23,6 @@ export const Sort = styled.div`
   &:first-child {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    border-right: none;
   }
   &:last-child {
     border-top-right-radius: 3px;

@@ -1,36 +1,34 @@
-import styled from "styled-components";
-
-const SettingContainer = styled.div`
-  width: 100%;
-  display: flex;
-  padding-top: 20px;
-`;
-const SettingBar = styled.div`
-  width: 20%;
-  max-width: 200px;
-  flex-grow: 1;
-`;
-const SettingComponent = styled.div`
-  width: 80%;
-  height: 80vh;
-  flex-grow: 2;
-`;
-const BarMenu = styled.ul``;
-const Menu = styled.li``;
+import { useState } from "react";
+import * as S from "./mypageStyle";
+import MypageEdit from "./MypageEdit";
+import MypageDelete from "./MypageDelete";
+import MypagePassword from "./MypagePassword";
 
 const MypageSetting = () => {
+  const [setting, setSetting] = useState("Edit");
+
   return (
-    <SettingContainer>
-      <SettingBar>
+    <S.SettingContainer>
+      <S.SettingBar>
         <h5>PERSONAL INFORMATION</h5>
-        <BarMenu>
-          <Menu>Edit profile</Menu>
-          <Menu>Change Passsword</Menu>
-          <Menu>Delete profile</Menu>
-        </BarMenu>
-      </SettingBar>
-      <SettingComponent></SettingComponent>
-    </SettingContainer>
+        <S.BarMenu>
+          <S.Menu className={setting === "Edit" ? "active" : ""} onClick={() => setSetting("Edit")}>
+            Edit profile
+          </S.Menu>
+          <S.Menu className={setting === "Change" ? "active" : ""} onClick={() => setSetting("Change")}>
+            Change Passsword
+          </S.Menu>
+          <S.Menu className={setting === "Delete" ? "active" : ""} onClick={() => setSetting("Delete")}>
+            Delete profile
+          </S.Menu>
+        </S.BarMenu>
+      </S.SettingBar>
+      <S.SettingComponent>
+        {setting === "Edit" ? <MypageEdit /> : <></>}
+        {setting === "Change" ? <MypagePassword /> : <></>}
+        {setting === "Delete" ? <MypageDelete /> : <></>}
+      </S.SettingComponent>
+    </S.SettingContainer>
   );
 };
 
