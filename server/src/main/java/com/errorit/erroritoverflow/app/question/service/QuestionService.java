@@ -35,11 +35,11 @@ public class QuestionService {
     }
 
     //질문 조회수
-    public Question viewCountQuestion(Long questionId){
-        Question question = findVerifyQuestion(questionId);
-        question.setViewCount(question.getViewCount() + 1);
+    public Question findQuestionDetail(Long questionId){
+        Question findedQuestion = findVerifyQuestion(questionId);
+        findedQuestion.setViewCount(findedQuestion.getViewCount() + 1);
 
-        return questionRepository.save(question);
+        return questionRepository.save(findedQuestion);
     }
 
 
