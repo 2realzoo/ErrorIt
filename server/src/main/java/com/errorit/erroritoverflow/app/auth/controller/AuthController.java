@@ -38,21 +38,6 @@ public class AuthController {
     private final CookieManager cookieManager;
     private final MemberService memberService;
 
-    // logout
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
-        log.info("===========로그아웃 컨트롤러 시작===============");
-        Long tokenMemberId = ((Number)request.getAttribute("tokenMemberId")).longValue();
-        refreshService.delete(tokenMemberId);
-        return ResponseEntity.ok()
-                .header("Authorization", "")
-                .header(HttpHeaders.SET_COOKIE, ResponseCookie.from(cookieManager.getREFRESH_COOKIE_NAME(), "")
-                                .httpOnly(true)
-                                .maxAge(1)
-                                .toString())
-                .build();
-    }
-
     // Access Token 재발급
     @PostMapping("/auth/refresh/members/{member-id}")
     public ResponseEntity<?> resetRefreshToken(@PathVariable("member-id") Long memberId,

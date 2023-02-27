@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
+// 로그인 한 사용자 본인의 정보만 접근 가능하도록 하는 인터셉터
 @Slf4j
 public class ResourceCheckInterceptor implements HandlerInterceptor {
 
