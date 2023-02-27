@@ -5,7 +5,7 @@ import Pagination from "react-js-pagination";
 import axios from "axios";
 
 const MainList = () => {
-  const [sortTag, setSortTag] = useState("Newest");
+  const [sortTag, setSortTag] = useState("최신순");
   const [questionList, setQuestionList] = useState([]);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({});
@@ -15,36 +15,33 @@ const MainList = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("/api/questions", {
-        headers: { "ngrok-skip-browser-warning": "12" },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setQuestionList(res.data.questions);
-        setPageInfo(res.data.pageInfo);
-      })
-      .catch((err) => err);
+    const REQ_PARAM = { sort: sortTag, page: page };
+    axios({
+      method: "GET",
+      url: "/api/questions",
+      params: REQ_PARAM,
+      headers: {
+        "ngrok-skip-browser-warning": "12",
+      },
+    }).then((res) => {
+      console.log(res.data);
+      setQuestionList(res.data.questions);
+      setPageInfo(res.data.pageInfo);
+    });
   }, []);
 
   return (
     <>
       <M.SortContainer>
-        <M.Sort
-          className={sortTag === "Newest" ? "selected" : ""}
-          onClick={() => setSortTag("Newest")}>
+        <M.Sort className={sortTag === "최신순" ? "selected" : ""} onClick={() => setSortTag("최신순")}>
           Newest
         </M.Sort>
-        <M.Sort
-          className={sortTag === "View" ? "selected" : ""}
-          onClick={() => setSortTag("View")}>
+        <M.Sort className={sortTag === "조회순" ? "selected" : ""} onClick={() => setSortTag("조회순")}>
           View
         </M.Sort>
-        <M.Sort
-          className={sortTag === "Score" ? "selected" : ""}
-          onClick={() => setSortTag("Score")}>
+        {/* <M.Sort className={sortTag === "Score" ? "selected" : ""} onClick={() => setSortTag("Score")}>
           Score
-        </M.Sort>
+        </M.Sort>  // 추천 기능 구현시 활성화*/}
       </M.SortContainer>
       {questionList &&
         questionList.map((el, id) => {

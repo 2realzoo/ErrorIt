@@ -173,3 +173,111 @@ export const Tag = styled.div`
     background: var(--theme-tag-hover-background-color);
   }
 `;
+
+/* ========================== MypageSetting's Styles ===========================*/
+
+export const SettingContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding-top: 20px;
+`;
+export const SettingBar = styled.div`
+  width: 20%;
+  max-width: 160px;
+  flex-grow: 1;
+  h5 {
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-left: 10px;
+  }
+  margin-right: 30px;
+`;
+export const SettingComponent = styled.div`
+  width: 80%;
+  height: 80vh;
+  flex-grow: 2;
+`;
+export const BarMenu = styled.ul``;
+export const Menu = styled.li`
+  width: 100%;
+  height: 30px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  border-radius: 20px;
+  padding-left: 10px;
+  line-height: 28px;
+  cursor: pointer;
+  :hover {
+    background: var(--black-075);
+  }
+  &.active {
+    color: white;
+    background: var(--theme-primary-color);
+    :hover {
+      background: hsl(var(--theme-primary-color-h), var(--theme-primary-color-s), calc(var(--theme-primary-color-l) - 10%));
+    }
+  }
+`;
+
+/* ========================== MypageEdit's Styles ===========================*/
+
+export const EditContainer = styled.div`
+  width: 100%;
+  h2 {
+    font-size: 28px;
+    border-bottom: 1px solid var(--black-075);
+    margin-top: -5px;
+    padding-bottom: 16px;
+  }
+  h3 {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-size: 20px;
+  }
+`;
+export const EditBox = styled.div`
+  width: 100%;
+  border: 1px solid var(--black-075);
+  border-radius: 3px;
+  padding: 1rem;
+  p {
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  input {
+    border: 1px solid var(--black-075);
+    border-radius: 3px;
+    width: 100%;
+    font-size: 14px;
+    padding: 0.4rem 0.8rem;
+    margin-bottom: 10px;
+  }
+  textarea {
+    resize: vertical;
+    border: 1px solid var(--black-075);
+    border-radius: 3px;
+    width: 100%;
+    height: 200px;
+    padding: 0.8rem;
+  }
+`;
+export const SubmitBnt = styled.div`
+  width: 110px;
+  height: 40px;
+  border-radius: 3px;
+  color: var(--theme-button-primary-color);
+  box-shadow: inset 0 2px 0 0 hsla(0, 0%, 100%, 0.7);
+  background: var(--theme-button-primary-background-color);
+  text-decoration: none;
+  text-align: center;
+  outline: none;
+  position: relative;
+  line-height: 40px;
+  font-size: 14px;
+  margin-top: 20px;
+  cursor: pointer;
+  :hover {
+    background: var(--theme-button-primary-hover-background-color);
+  }
+`;
