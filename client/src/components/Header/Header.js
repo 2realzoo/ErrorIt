@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import MenuSideBar from "./MenuSideBar";
 import HeaderSearch from "./HeaderSearch";
 import Button from "./Button";
-import { isLogin } from "../../reducers/actions";
 import logo from "../../asset/stackoverflow_logo_icon.png";
 import axios from "axios";
 import Gravatar from "react-gravatar";
@@ -114,15 +113,21 @@ const UserImg = styled.a`
 `;
 
 function Header() {
-  const { isLoginReducer, userInfoReducer } = useSelector((state) => state);
+  const { userInfoReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isHintOpen, setIsHintOpen] = useState(false);
+  const imageUri = sessionStorage.getItem("imageUri");
 
   const handleLogout = () => {
     return axios
-      .post("/api/logout")
-      .then((res) => dispatch(isLogin(false)))
+      .post("/api/logout", {
+        headers: {
+          "ngrok-skip-browser-warning": "12",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+      })
+      .then((res) => sessionStorage.clear())
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
   };
@@ -142,15 +147,19 @@ function Header() {
           <LogoText fontWeight="800"> Overflow</LogoText>
         </Logo>
         <HeaderSearch isHintOpen={isHintOpen} />
-        {isLoginReducer ? (
+        {sessionStorage.getItem("memberId") ? (
           <>
             <UserImg href="/user">
-              <Gravatar
-                email={userInfoReducer.email}
-                default="identicon"
-                size={33}
-                className="user-img"
-              />
+              {imageUri === "default" ? (
+                <Gravatar
+                  email={userInfoReducer.email}
+                  default="identicon"
+                  size={33}
+                  className="user-img"
+                />
+              ) : (
+                <Img src="imageUri"></Img>
+              )}
             </UserImg>
             <Button onClick={handleLogout} marginLeft="4px" marginRight="13px">
               Log out

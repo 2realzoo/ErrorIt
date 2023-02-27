@@ -83,10 +83,16 @@ function Login() {
         .then((res) => {
           dispatch(isLogin(true));
           setErrorMessage("");
-          dispatch(memberId(res.data.memberId));
+          window.localStorage.setItem(
+            "jwtToken",
+            JSON.stringify(res.headers.authorization)
+          );
+          window.sessionStorage.setItem("memberId", res.data.memberId);
+          window.sessionStorage.setItem("imageUri", res.data.imageUri);
+          console.log(res);
+          // dispatch(memberId(res.data.memberId));
         })
         .then(() => {
-          console.log();
           navigate("/");
         })
         .catch((err) => {
@@ -128,7 +134,6 @@ function Login() {
             </LabelWrapper>
             <Input type="password" onChange={handleChange}></Input>
           </Form>
-
           <Button onClick={handleSubmit}>login</Button>
         </FormContainer>
         <GuideWrapper>
