@@ -42,7 +42,10 @@ public class QuestionController {
     @GetMapping("/questions/{question-id}")
     public ResponseEntity<QuestionDto.QuestionDetailResponse> getQuestionDetail(@PathVariable("question-id") Long questionId) {
         Question findedQuestion = questionService.findById(questionId);
+        // 조회수 증가
+        questionService.viewCountQuestion(questionId);
         QuestionDto.QuestionDetailResponse response = mapper.questionToQuestionDetailResponse(findedQuestion);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
