@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import AnswerMain from "../components/Question/AnswerMain";
@@ -9,14 +9,16 @@ const QuestionComponent = styled.div`
   max-width: 1200px;
   margin: 50px auto;
   min-height: 100vh;
-`;
+`
 
 function Question() {
   const location = useLocation();
+  const [loginMemberId, setLoginMemberId] = useState(sessionStorage.getItem("memberId"));
+  console.log(location)
   return (
     <QuestionComponent>
-      <QuestionMain idValue={location.state.questionId}></QuestionMain>
-      <AnswerMain idValue={location.state.questionId}></AnswerMain>
+      <QuestionMain idValue={location.state.questionId} loginMemberId={loginMemberId}></QuestionMain>
+      <AnswerMain idValue={location.state.questionId} loginMemberId={loginMemberId}></AnswerMain>
     </QuestionComponent>
   );
 }

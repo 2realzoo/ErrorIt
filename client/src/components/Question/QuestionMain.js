@@ -4,12 +4,10 @@ import * as Q from "./QuestionStyled";
 import Detail from "./Detail";
 import QuestionTitle from "../QuestionTitle";
 
-function Questions({ idValue }) {
+function Questions({ idValue, loginMemberId }) {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [loginMemberId, setLoginMemberId] = useState("");
   useEffect(() => {
-    setLoginMemberId(sessionStorage.getItem("memberId"));
     axios
       .get(`/api/questions/${idValue}`, {
         headers: { "ngrok-skip-browser-warning": "12" },
