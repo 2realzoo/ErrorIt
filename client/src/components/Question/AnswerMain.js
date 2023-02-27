@@ -26,7 +26,7 @@ const ButtonContainer = styled.div`
   width: 130px;
 `;
 
-function AnswerMain({ idValue }) {
+function AnswerMain({ idValue, loginMemberId }) {
   const [answers, setAnswers] = useState([]);
   const [addanswerValue, setAddanswersValue] = useState("");
 
@@ -43,25 +43,46 @@ function AnswerMain({ idValue }) {
   }, []);
   console.log(answers);
 
-  const addanswerValueHandler = (data) => {
+  const answerValueHandler = (data) => {
     setAddanswersValue(data.target.value);
+  };
+
+  const addAnswerValueHandler = () => {
+    axios
+      .post(
+        `/api/questions/${idValue}/answers`,
+        {
+          memberId: loginMemberId,
+          content: addanswerValue,
+        },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => err);
   };
 
   return (
     <AnswerMainContainer>
       <AnswerCount>{answers.length} Answers</AnswerCount>
       {answers.map((el) => {
-        return <Detail data={el} QorA="answerId"></Detail>;
+        return <Detail data={el} QorA="answerId" idValue={idValue}  loginMemberId={loginMemberId}></Detail>;
       })}
       <AddAnswerContainer>
         <AddAnswerTitle>Your Answer</AddAnswerTitle>
         <AddAnswerForm
           onChange={(data) => {
-            addanswerValueHandler(data);
+            answerValueHandler(data);
           }}
         ></AddAnswerForm>
         <ButtonContainer>
-          <Button children="Post Your Answer"></Button>
+          <Button children="Post Your Answer" onClick={addAnswerValueHandler}></Button>
         </ButtonContainer>
       </AddAnswerContainer>
     </AnswerMainContainer>
