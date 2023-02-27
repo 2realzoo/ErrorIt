@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
 import AlertPage from "../components/AlertPage";
+import useRedirect from "../util/useRedirect";
 
 const Alert = () => {
+  useRedirect();
   const params = useParams();
   const signup = {
     title: "Member registration completed",

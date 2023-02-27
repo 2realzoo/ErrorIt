@@ -1,10 +1,6 @@
 import styled, { css } from "styled-components";
 
 const StyledWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100%;
   flex-shrink: 0;
   ${(props) => {
@@ -15,7 +11,9 @@ const StyledWrapper = styled.div`
           padding-bottom: 24vh;
         `;
       case "SignUp":
-        return css``;
+        return css`
+          min-height: 530px;
+        `;
       case "CheckUser":
         return css`
           padding-top: 17vh;

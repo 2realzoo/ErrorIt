@@ -6,13 +6,16 @@ import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import Notice from "./commons/Notice";
 import FormContainer from "./commons/FormContainer";
-import Form from "./commons/Form";
+import FormWrapper from "./commons/FormWrapper";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
+import Caption from "./commons/Caption";
+import Select from "./commons/Select";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiFillCheckCircle } from "react-icons/ai";
+import useRedirect from "../util/useRedirect";
 
 const SignUpTitle = styled.div`
   font-size: 1.3rem;
@@ -21,18 +24,6 @@ const SignUpTitle = styled.div`
   margin-bottom: var(--su24);
   margin-left: auto;
   margin-right: auto;
-`;
-const Select = styled.select`
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.3em 0.5em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
-  width: 100%;
 `;
 const LinkedWord = styled.a`
   color: var(--theme-link-color);
@@ -47,16 +38,6 @@ const GuideWrapper = styled.div`
   margin-bottom: 24px;
   margin-left: auto;
   margin-right: auto;
-`;
-const Caption = styled.a`
-  font-size: var(--fs-caption);
-  --_li-fc: var(--theme-link-color);
-  --_li-fc-hover: var(--theme-link-color-hover);
-  --_li-fc-visited: var(--theme-link-color-visited);
-  color: var(--_li-fc);
-  cursor: pointer;
-  text-decoration: none;
-  user-select: auto;
 `;
 const EmailBox = styled.div`
   display: flex;
@@ -88,6 +69,7 @@ const EmailCheckBtn = styled.button`
 `;
 
 function SignUp() {
+  // useRedirect()
   const { userInfoReducer } = useSelector((state) => state);
   const [errorMessage, setErrorMessage] = useState("");
   const [vaild, setVaild] = useState({
@@ -171,7 +153,8 @@ function SignUp() {
   //   console.log(vaild);
   // }, [vaild]);
 
-  const onDuplicationCheck = () => {
+  const onDuplicationCheck = (e) => {
+    e.preventDefault();
     return axios
       .post("/api/members/password", {
         email: userInfoReducer.email,
@@ -191,7 +174,7 @@ function SignUp() {
           Create your Stack Overflow account. It’s free and only takes a minute.
         </SignUpTitle>
         <FormContainer>
-          <Form>
+          <FormWrapper>
             <Label htmlfor="displayName">Display name</Label>
             <Input
               type="text"
@@ -199,8 +182,8 @@ function SignUp() {
               onChange={(e) =>
                 dispatch(userInfo({ ...userInfoReducer, name: e.target.value }))
               }></Input>
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <EmailBox>
               <Label htmlfor="emailAddress">Email</Label>
               {emailCheck ? (
@@ -231,8 +214,8 @@ function SignUp() {
                 Please fill it out according to the email form.
               </Notice>
             )}
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label htmlfor="password">Password</Label>
             <Input
               type="password"
@@ -255,8 +238,8 @@ function SignUp() {
               Passwords must contain at least eight characters, including at
               least 1 letter and 1 number.
             </Notice>
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label htmlfor="confirmPassword">Confirm password</Label>
             <Input
               type="password"
@@ -273,8 +256,8 @@ function SignUp() {
                 Password and confirmation password must be same.
               </Notice>
             )}
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label htmlfor="findQuestion">Password Finding Question</Label>
             <Select
               id="findQuestion"
@@ -302,8 +285,8 @@ function SignUp() {
                 다시 태어나면 되고 싶은 것은?
               </option>
             </Select>
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label htmlfor="findAnswer">Password Finding Answer</Label>
             <Input
               type="text"
@@ -317,7 +300,7 @@ function SignUp() {
             <Notice color="var(--fc-light)">
               This Question and Answer are used to find the password
             </Notice>
-          </Form>
+          </FormWrapper>
           {userInfoReducer.findAnswer !== "" &&
           vaild.email !== 1 &&
           vaild.email &&
@@ -325,6 +308,7 @@ function SignUp() {
           vaild.password !== 1 &&
           vaild.confirmPw &&
           vaild.confirmPw !== 1 ? (
+            //  &&emailCheck
             <Button
               onClick={(e) => {
                 handleSignUp(e);

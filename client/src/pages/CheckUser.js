@@ -5,28 +5,18 @@ import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import Notice from "./commons/Notice";
 import FormContainer from "./commons/FormContainer";
-import Form from "./commons/Form";
+import FormWrapper from "./commons/Form";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
 import axios from "axios";
+import Select from "./commons/Select";
 import { useDispatch } from "react-redux";
-import { currentPage, memberId } from "../reducers/actions";
-
-const Select = styled.select`
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.3em 0.5em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
-  width: 100%;
-`;
+import { currentPage } from "../reducers/actions";
+import useRedirect from "../util/useRedirect";
 
 function CheckUser() {
+  // useRedirect();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -47,7 +37,7 @@ function CheckUser() {
       return axios
         .post("/api/members/password", userInfo)
         .then((res) => {
-          dispatch(memberId(res.memberId));
+          sessionStorage.setItem("memberId", res.data.memberId);
           navigate("/change-password");
         })
         .catch((err) => {
@@ -86,7 +76,7 @@ function CheckUser() {
             Forgot your account’s password?Please answer the email and the
             questions you chose when signing up. You can change your password.
           </Notice>
-          <Form>
+          <FormWrapper>
             <Label htmlfor="emailAddress">Email</Label>
             <Input
               onChange={(e) => {
@@ -101,8 +91,8 @@ function CheckUser() {
                 Please fill it out according to the email form.
               </Notice>
             )}
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label htmlfor="findQuestion">Password Finding Question</Label>
             <Select onChange={handleVaild} id="findQuestion">
               <option defaultChecked value="">
@@ -113,8 +103,8 @@ function CheckUser() {
               <option>가장 기억에 남는 선생님 성함은?</option>
               <option>다시 태어나면 되고 싶은 것은?</option>
             </Select>
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label htmlfor="findAnswer">Password Finding Answer</Label>
             <Input
               id="findAnswer"
@@ -124,7 +114,7 @@ function CheckUser() {
             <Notice color="var(--fc-light)">
               This Question and Answer are used to find the password
             </Notice>
-          </Form>
+          </FormWrapper>
           {vaild.email &&
           vaild.email !== 1 &&
           vaild.findAnswer &&

@@ -51,7 +51,6 @@ input:-webkit-autofill:active {
   background: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: white;
 }
 textarea {
   resize: none;

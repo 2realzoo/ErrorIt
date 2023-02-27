@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import FormContainer from "./commons/FormContainer";
-import Form from "./commons/Form";
+import FormWrapper from "./commons/Form";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
@@ -49,7 +49,7 @@ function ChangePassword() {
     <Container>
       <Wrapper>
         <FormContainer>
-          <Form>
+          <FormWrapper>
             <Label for="newPassword">New password</Label>
             <Input
               onChange={handleInputChange}
@@ -59,8 +59,8 @@ function ChangePassword() {
               Passwords must contain at least eight characters, including at
               least 1 letter and 1 number.
             </Notice>
-          </Form>
-          <Form>
+          </FormWrapper>
+          <FormWrapper>
             <Label for="confirmPassword">Confirm new password</Label>
             <Input
               onChange={handleInputChange}
@@ -71,7 +71,7 @@ function ChangePassword() {
             ) : (
               <></>
             )}
-          </Form>
+          </FormWrapper>
           {informMessage.length === 0 ? (
             <Button onClick={handleSubmit} pageName="ChangePassword">
               Submit
