@@ -3,23 +3,15 @@ import styled, { css } from "styled-components";
 const StyledContainer = styled.div`
   max-width: 100%;
   width: 100%;
-  height: 93vh;
-  display: flex;
-  flex-direction: column;
+  height: 100vh;
   justify-content: center;
-  flex: 1 0 auto;
   background-color: var(--black-050);
-  overflow: visible;
+  overflow: hidden;
 
   ${(props) => {
     switch (props.pageName) {
       case "SignUp":
-        return css`
-          height: 100%;
-          padding: var(--su24);
-          padding-left: var(--su16);
-          padding-right: var(--su16);
-        `;
+        return css``;
       case "Check":
         return css`
           justify-content: center;

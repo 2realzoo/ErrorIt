@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const StyledFormContainer = styled.div`
+const StyledFormContainer = styled.form`
   box-shadow: var(--bs-xl);
   padding: var(--su24);
   margin-bottom: var(--su24);
