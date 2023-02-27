@@ -43,7 +43,6 @@ public class MemberDto {
     @Getter
     @Setter
     public static class UpdatePassword {
-        private Long memberId;
         private String password;
     }
 

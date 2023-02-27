@@ -4,14 +4,12 @@ import com.errorit.erroritoverflow.app.member.dto.*;
 import com.errorit.erroritoverflow.app.member.entity.Member;
 import com.errorit.erroritoverflow.app.member.mapper.MemberMapper;
 import com.errorit.erroritoverflow.app.member.service.MemberService;
-import com.errorit.erroritoverflow.app.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,13 +68,17 @@ public class MemberController {
     // 비밀번호 찾기 시도
     @PostMapping("/password")
     public ResponseEntity<Map<String, Long>> findPassword(@RequestBody MemberDto.FindPassword findPasswordDto) {
+
         Member findMemberData = memberMapper.findPasswordToMember(findPasswordDto);
         Member findedMember = memberService.checkFindQuestion(findMemberData);
+        String accessToken = memberService.delegateTempAccessToken(findedMember);
 
         Map<String, Long> response = new HashMap<>();
         response.put("memberId", findedMember.getMemberId());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + accessToken)
+                .body(response);
     }
 
     // 비밀번호 변경
@@ -95,4 +97,6 @@ public class MemberController {
         response.put("canUse", result);
         return ResponseEntity.ok(response);
     }
+
+
 }

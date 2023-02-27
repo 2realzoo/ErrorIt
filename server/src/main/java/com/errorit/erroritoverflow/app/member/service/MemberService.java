@@ -1,6 +1,7 @@
 package com.errorit.erroritoverflow.app.member.service;
 
 import com.errorit.erroritoverflow.app.auth.CustomAuthorityUtils;
+import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
 import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
 import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import com.errorit.erroritoverflow.app.image.entity.Image;
@@ -12,8 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Transactional
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+    private final JwtTokenizer jwtTokenizer;
 
     // 디폴트 이미지 URI
     @Value("${image.default-image.uri}")
@@ -103,6 +104,24 @@ public class MemberService {
     public Boolean checkCreateEmail(String email) {
         Optional<Member> memberOptional = memberRepository.findByEmail(email);
         return memberOptional.isEmpty();
+    }
+
+    public String delegateTempAccessToken(Member member) {
+        // 클레임
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", member.getEmail());
+        claims.put("memberId", member.getMemberId());
+        claims.put("roles", member.getRoles());
+        // jwt 제목
+        String subject = member.getEmail();
+        // 임시토큰 만료시간
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getTempAccessTokenExpirationMinutes());
+        // 시크릿키
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        // accessToken 생성
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        return accessToken;
     }
 
     // Id 로 회원 검색
