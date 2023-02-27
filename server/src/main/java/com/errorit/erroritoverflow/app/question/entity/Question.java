@@ -30,7 +30,7 @@ public class Question extends Auditable{
 
     //질문 조회수
     @Column
-    private Long viewCount;
+    private Long viewCount = 0L;
 
     //작성자를 member에서 가져옴
     //연관관계

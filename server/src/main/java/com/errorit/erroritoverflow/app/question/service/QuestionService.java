@@ -34,6 +34,15 @@ public class QuestionService {
         return questionRepository.save(question);
     }
 
+    //질문 조회수
+    public Question viewCountQuestion(Long questionId){
+        Question question = findVerifyQuestion(questionId);
+        question.setViewCount(question.getViewCount() + 1);
+
+        return questionRepository.save(question);
+    }
+
+
     // 질문 조회
     public Question findById(Long questionId) {
         return findVerifyQuestion(questionId);
