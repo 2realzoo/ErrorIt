@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -39,6 +41,7 @@ public class AuthController {
     // logout
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
+        log.info("===========로그아웃 컨트롤러 시작===============");
         Long tokenMemberId = ((Number)request.getAttribute("tokenMemberId")).longValue();
         refreshService.delete(tokenMemberId);
         return ResponseEntity.ok()
