@@ -37,6 +37,7 @@ public class AnswerDto {
     @Setter
     public static class AnswerResponse {
         private Long answerId;
+        private Long questionId;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private String member;
