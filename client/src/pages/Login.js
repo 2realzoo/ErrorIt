@@ -83,10 +83,7 @@ function Login() {
         .then((res) => {
           dispatch(isLogin(true));
           setErrorMessage("");
-          window.localStorage.setItem(
-            "jwtToken",
-            JSON.stringify(res.headers.authorization)
-          );
+          window.localStorage.setItem("jwtToken", res.headers.authorization);
           window.sessionStorage.setItem("memberId", res.data.memberId);
           window.sessionStorage.setItem("imageUri", res.data.imageUri);
           console.log(res);
@@ -120,9 +117,7 @@ function Login() {
         </Logo>
         <FormContainer pageName="Login">
           <Form>
-            <Label
-              marginTop="calc(var(--su4) / 2)"
-              marginBottom="calc(var(--su4) / 2)">
+            <Label marginTop="calc(var(--su4) / 2)" marginBottom="calc(var(--su4) / 2)">
               Email
             </Label>
             <Input type="email" onChange={handleChange}></Input>

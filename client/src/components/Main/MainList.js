@@ -48,13 +48,13 @@ const MainList = () => {
           return (
             <MainQuestion
               key={el.questionId}
-              createAt={el.createAt}
+              createAt={el.createdAt}
               answers={el.answers}
               member={el.member}
               questionId={el.questionId}
-              tags={el.tags}
               title={el.title}
               viewCount={el.viewCount}
+              content={el.content}
             />
           );
         })}
