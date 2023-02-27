@@ -140,7 +140,7 @@ function Header() {
   return (
     <HeaderContainer>
       <HeaderWrapper>
-        <MenuSideBar />
+        {sessionStorage.getItem.memberId ? <></> : <MenuSideBar />}
         <Logo href="/">
           <Img className="logo-img" src={logo} alt="로고이미지" />
           <LogoText>ErrorIt</LogoText>
@@ -149,7 +149,7 @@ function Header() {
         <HeaderSearch isHintOpen={isHintOpen} />
         {sessionStorage.getItem("memberId") ? (
           <>
-            <UserImg href="/user">
+            <UserImg href="/mypage">
               {imageUri === "default" ? (
                 <Gravatar
                   email={userInfoReducer.email}
