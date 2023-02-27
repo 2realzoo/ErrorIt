@@ -59,10 +59,12 @@ public class MemberService {
     // 회원 Update
     public Member update(Member updateMember){
         Member originalMember = findVerifyMemberById(updateMember.getMemberId());
-        Optional.ofNullable(updateMember.getName())
-                .ifPresent(originalMember::setName);
-        Optional.ofNullable(updateMember.getIntro())
-                .ifPresent(originalMember::setIntro);
+//        Optional.ofNullable(updateMember.getName())
+//                .ifPresent(originalMember::setName);
+//        Optional.ofNullable(updateMember.getIntro())
+//                .ifPresent(originalMember::setIntro);
+        originalMember.setName(updateMember.getName());
+        originalMember.setIntro(updateMember.getIntro());
 
         return memberRepository.save(originalMember);
     }
