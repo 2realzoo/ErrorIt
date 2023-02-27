@@ -9,15 +9,14 @@ const QuestionComponent = styled.div`
   max-width: 1200px;
   margin: 50px auto;
   min-height: 100vh;
-`
+`;
 
 function Question() {
   const location = useLocation();
-  console.log(location)
   return (
     <QuestionComponent>
-      <QuestionMain></QuestionMain>
-      <AnswerMain></AnswerMain>
+      <QuestionMain idValue={location.state.questionId}></QuestionMain>
+      <AnswerMain idValue={location.state.questionId}></AnswerMain>
     </QuestionComponent>
   );
 }

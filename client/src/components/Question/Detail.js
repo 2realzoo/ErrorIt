@@ -17,6 +17,7 @@ const DetailContainer = styled.div`
 `;
 const QuestionDetail = styled.div`
   font-size: medium;
+  white-space: pre-wrap;
 `;
 
 const SideMenu = styled.div`
@@ -27,7 +28,7 @@ const SideMenu = styled.div`
   align-items: center;
   font-size: 20px;
   color: var(--black-300);
-  >*{
+  > * {
     margin-top: 20px;
   }
 `;
@@ -36,11 +37,11 @@ const RecoContianer = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 35px;
-  >b{
+  > b {
     color: var(--black);
     font-size: 25px;
   }
-`
+`;
 
 const MainMenu = styled.div`
   width: 100%;
@@ -70,6 +71,13 @@ const UserInfo = styled.div`
   border-radius: var(--br-sm);
   padding: 5px 6px 7px 7px;
 `;
+const UserName = styled.div`
+  margin: 2px 10px 0 0;
+  text-align: end;
+  font-weight: 500;
+  color: var(--black-500);
+`;
+
 const CreatedAt = styled.div`
   font-size: small;
   color: var(--black-200);
@@ -101,12 +109,11 @@ const SubmitCommentBtn = styled.button`
   padding: 5px;
 `;
 
-function Detail({ QorA, data }) {
+function Detail({ QorA, data, idValue, loginMemberId }) {
   const [isOpenLoginPopup, setisOpenLoginPopup] = useState(false);
   const [isOpenCommentForm, setIsOpenCommentForm] = useState(false);
   const [commentValue, setCommentValue] = useState("");
   const userAddOnArr = ["Share", "Edit", "Follow"];
-  console.log(data.comments);
   const openLoginPopupHandler = () => {
     setisOpenLoginPopup(!isOpenLoginPopup);
   };
@@ -117,15 +124,19 @@ function Detail({ QorA, data }) {
     setCommentValue(e.target.value);
   };
   const commentSubmitHandler = () => {
+    localStorage.getItem("jwtToken");
     axios
       .post(
-        "/api/questions/123123/answers",
+        `/api/questions/${idValue}/answers`,
         {
-          memberId: 123123,
+          memberId: loginMemberId,
           content: commentValue,
         },
         {
-          headers: { "ngrok-skip-browser-warning": "12" },
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
         }
       )
       .then((res) => {
@@ -133,21 +144,20 @@ function Detail({ QorA, data }) {
       })
       .catch((err) => err);
   };
-  console.log(commentValue);
 
   return (
-    <DetailContainer key={data.question.QorA}>
+    <DetailContainer key={data.QorA}>
       <SideMenu>
         <RecoContianer>
           <BsFillCaretUpFill />
           <b>0</b>
           <BsFillCaretDownFill />
         </RecoContianer>
-          <BsBookmarkCheck />
+        <BsBookmarkCheck />
         <BsArrowCounterclockwise />
       </SideMenu>
       <MainMenu>
-        <QuestionDetail>{data.question.content}</QuestionDetail>
+        <QuestionDetail>{data.content}</QuestionDetail>
         <UserBoxContainer>
           <UserAddOn>
             <ul>
@@ -159,8 +169,9 @@ function Detail({ QorA, data }) {
           <UserInfoConainer>
             <UserInfo>
               <CreatedAt>
-                asked {new Date(data.question.createAt).toDateString()}
+                asked {new Date(data.createdAt).toDateString()}
               </CreatedAt>
+              <UserName>{data.member}</UserName>
             </UserInfo>
           </UserInfoConainer>
         </UserBoxContainer>

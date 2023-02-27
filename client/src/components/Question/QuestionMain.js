@@ -4,12 +4,14 @@ import * as Q from "./QuestionStyled";
 import Detail from "./Detail";
 import QuestionTitle from "../QuestionTitle";
 
-function Questions() {
+function Questions({ idValue }) {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [loginMemberId, setLoginMemberId] = useState("");
   useEffect(() => {
+    setLoginMemberId(sessionStorage.getItem("memberId"));
     axios
-      .get("/api/questions/123123", {
+      .get(`/api/questions/${idValue}`, {
         headers: { "ngrok-skip-browser-warning": "12" },
       })
       .then((res) => {
@@ -24,24 +26,27 @@ function Questions() {
       {isLoading ? (
         <>
           <Q.QuestionHeader>
-            <QuestionTitle TitleContents={data.question.title}></QuestionTitle>
+            <QuestionTitle TitleContents={data.title}></QuestionTitle>
           </Q.QuestionHeader>
           <Q.SubAttribute>
             <ul>
               <li>
-                <span>Asked</span>{" "}
-                {new Date(data.question.createAt).toDateString()}
+                <span>Asked</span> {new Date(data.createdAt).toDateString()}
               </li>
               <li>
-                <span>Modified</span>{" "}
-                {new Date(data.question.modifiedAt).toDateString()}
+                <span>Modified</span> {new Date(data.modifiedAt).toDateString()}
               </li>
               <li>
-                <span>Viewed</span> {data.question.viewCount}
+                <span>Viewed</span> {data.viewCount}
               </li>
             </ul>
           </Q.SubAttribute>
-            <Detail QorA='questionId' data={data}></Detail>
+          <Detail
+            QorA="questionId"
+            idValue={idValue}
+            data={data}
+            loginMemberId={loginMemberId}
+          ></Detail>
         </>
       ) : null}
     </Q.QuestionContainer>
