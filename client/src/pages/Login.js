@@ -62,7 +62,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const { memberIdReducer } = useSelector((state) => state);
   dispatch(currentPage("Users"));
-  console.log(memberIdReducer);
+  // console.log(memberIdReducer);
 
   const handleSubmit = () => {
     const regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
@@ -86,7 +86,7 @@ function Login() {
           window.localStorage.setItem("jwtToken", res.headers.authorization);
           window.sessionStorage.setItem("memberId", res.data.memberId);
           window.sessionStorage.setItem("imageUri", res.data.imageUri);
-          console.log(res);
+          // console.log(res);
           // dispatch(memberId(res.data.memberId));
         })
         .then(() => {
