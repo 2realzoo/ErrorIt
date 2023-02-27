@@ -54,7 +54,7 @@ const AskForm = () => {
       })
       .then((res) => {
         console.log(res.data);
-        // navigate("/question", { state: res.data.questionId });
+        navigate("/question", { state: { questionId: res.data.questionId } });
       })
       .catch((err) => console.log(err));
   };

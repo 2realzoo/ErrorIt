@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const Container = styled.div`
   width: 100%;
@@ -33,12 +33,18 @@ const WriteBtn = styled.div`
 `;
 
 const QuestionTitle = ({ TitleContents }) => {
+  const navigate = useNavigate();
+  const linkToWrite = () => {
+    if (sessionStorage.getItem("memberId")) {
+      navigate("/ask");
+    } else {
+      alert("질문 작성은 로그인 후 가능합니다");
+    }
+  };
   return (
     <Container>
       <Title>{TitleContents}</Title>
-      <Link to={"/ask"}>
-        <WriteBtn>Ask Question</WriteBtn>
-      </Link>
+      <WriteBtn onClick={linkToWrite}>Ask Question</WriteBtn>
     </Container>
   );
 };
