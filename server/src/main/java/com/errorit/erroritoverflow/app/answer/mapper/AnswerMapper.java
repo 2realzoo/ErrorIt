@@ -18,12 +18,12 @@ public interface AnswerMapper {
     Answer answerPostDtoToAnswer(AnswerDto.Post post);
     Answer answerPatchDtoToAnswer(AnswerDto.Patch patch);
 
+    // entity -> AnswerResponse
     @Mapping(source = "member.name", target = "member")
     default AnswerDto.AnswerResponse answerToResponseDto(Answer answer) {
         if ( answer == null ) {
             return null;
         }
-
         AnswerDto.AnswerResponse answerResponse = new AnswerDto.AnswerResponse();
         answerResponse.setMember( answer.getMember().getName());
         answerResponse.setAnswerId( answer.getAnswerId() );
@@ -35,18 +35,41 @@ public interface AnswerMapper {
         return answerResponse;
     };
 
+    // entity -> MemberAnswerResponse
+    @Mapping(source = "member.name", target = "member")
+    default AnswerDto.MemberAnswerResponse answerToMemberAnswerResponse(Answer answer) {
+        if ( answer == null ) {
+            return null;
+        }
+        AnswerDto.MemberAnswerResponse answerResponse = new AnswerDto.MemberAnswerResponse();
+        answerResponse.setAnswerId( answer.getAnswerId() );
+        answerResponse.setQuestionId( answer.getQuestion().getQuestionId());
+        answerResponse.setMember( answer.getMember().getName());
+        answerResponse.setCreatedAt( answer.getCreatedAt() );
+        answerResponse.setModifiedAt( answer.getModifiedAt() );
+        answerResponse.setContent( answer.getContent() );
+        answerResponse.setComments(commentListToCommentResponseList(answer.getComments()));
+
+        return answerResponse;
+    };
+
+    // List<Answer> -> List<AnswerResponse>
     @Mapping(source = "member.name", target = "member")
     List<AnswerDto.AnswerResponse> answerListToResponseDtoList(List<Answer> answers);
 
+    // List<Answer> -> List<MemberAnswerResponse>
+    @Mapping(source = "member.name", target = "questionId")
+    List<AnswerDto.MemberAnswerResponse> answerListToMemberAnswerResponseList(List<Answer> answers);
+
+    // Page<Answer> -> MemberAnswerListResponse
     @Mapping(source = "member.name", target = "member")
     default AnswerDto.MemberAnswerListResponse pageListToMemberAnswerListResponse(Page<Answer> answers){
         if ( answers == null ) {
             return null;
         }
-
         AnswerDto.MemberAnswerListResponse response = new AnswerDto.MemberAnswerListResponse();
         response.setPageInfo(PageInfo.of(answers));
-        response.setAnswers(answerListToResponseDtoList(answers.getContent()));
+        response.setAnswers(answerListToMemberAnswerResponseList(answers.getContent()));
         return response;
     }
 
