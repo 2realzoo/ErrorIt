@@ -14,13 +14,16 @@ const QuestionContainer = styled.div`
   width: 100%;
   max-width: 1100px;
   margin-top: 30px;
+  &.logined {
+    max-width: 1300px;
+  }
 `;
 
 function Main() {
   return (
     <MainComponent>
-      <Sidebar />
-      <QuestionContainer>
+      {sessionStorage.getItem("memberId") ? <Sidebar /> : <></>}
+      <QuestionContainer className={sessionStorage.getItem("memberId") ? "" : "logined"}>
         <QuestionTitle TitleContents="All Questions" />
         <MainList />
       </QuestionContainer>

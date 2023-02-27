@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaGlobeAsia } from "react-icons/fa";
 import { currentPage } from "../reducers/actions";
+import { useNavigate } from "react-router";
 
 const BarContainer = styled.div`
   width: 200px;
@@ -43,9 +43,7 @@ const Menus = styled.li`
 const Sidebar = () => {
   const { currentPageReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const handlePageHome = (page) => {
-    dispatch(currentPage("Question"));
-  };
+  const navigate = useNavigate();
   return (
     <BarContainer>
       <MenuContainer>
@@ -53,13 +51,30 @@ const Sidebar = () => {
           <Menus
             className={currentPageReducer === "Question" ? "active" : ""}
             onClick={() => {
-              handlePageHome();
+              dispatch(currentPage("Question"));
+              navigate("/");
             }}
           >
             Questions <FaGlobeAsia className="questionIcon" />
           </Menus>
-          <Menus className={currentPageReducer === "Tags" ? "active" : ""}>Tags</Menus>
-          <Menus className={currentPageReducer === "Users" ? "active" : ""}>Users</Menus>
+          <Menus
+            className={currentPageReducer === "Tags" ? "active" : ""}
+            onClick={() => {
+              dispatch(currentPage("Tags"));
+              navigate("/");
+            }}
+          >
+            Tags
+          </Menus>
+          <Menus
+            className={currentPageReducer === "Users" ? "active" : ""}
+            onClick={() => {
+              dispatch(currentPage("Question"));
+              navigate("/mypage");
+            }}
+          >
+            Users
+          </Menus>
         </MenuList>
       </MenuContainer>
     </BarContainer>

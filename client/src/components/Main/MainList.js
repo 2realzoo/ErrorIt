@@ -28,7 +28,7 @@ const MainList = () => {
       setQuestionList(res.data.questions);
       setPageInfo(res.data.pageInfo);
     });
-  }, []);
+  }, [sortTag, page]);
 
   return (
     <>

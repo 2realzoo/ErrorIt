@@ -8,9 +8,7 @@ export const TitleContainer = styled.div`
   position: relative;
   display: flex;
 `;
-export const UserImg = styled.img.attrs({
-  src: `${userImg}`,
-})`
+export const UserImg = styled.img`
   width: 130px;
   height: 130px;
   border-radius: 3px;
@@ -42,8 +40,8 @@ export const EditBnt = styled.div`
   line-height: 32px;
   text-align: center;
   position: absolute;
-  top: 0;
-  right: 20px;
+  top: 10px;
+  right: 30px;
   font-size: 14px;
   color: var(--black-600);
   cursor: pointer;
@@ -279,5 +277,73 @@ export const SubmitBnt = styled.div`
   cursor: pointer;
   :hover {
     background: var(--theme-button-primary-hover-background-color);
+  }
+`;
+
+export const PageContainer = styled.div`
+  margin: 50px 0 100px 50px;
+  .pagination {
+    display: flex;
+    justify-content: left;
+    margin-top: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    border: 1px solid var(--black-075);
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    &:first-child {
+      width: 46px;
+    }
+    &:last-child {
+      width: 46px;
+    }
+    &.disabled {
+      display: none;
+    }
+
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      text-align: center;
+      line-height: 28px;
+      font-size: 12px;
+    }
+    &:not(.active) {
+      a {
+        :hover {
+          background: var(--black-100);
+        }
+      }
+    }
+  }
+
+  ul.pagination li.active a {
+    color: white;
+    cursor: default;
+  }
+
+  ul.pagination li.active {
+    background-color: var(--theme-primary-color);
+  }
+
+  .page-selection {
+    width: 48px;
+    height: 30px;
+    color: #337ab7;
   }
 `;
