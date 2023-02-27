@@ -29,6 +29,10 @@ public class JwtTokenizer {
     private String secretKey; // JWT 생성시 필요 정보 : 시크릿 키
 
     @Getter
+    @Value("${jwt.temp-access-token-expiration-minutes}")
+    private int tempAccessTokenExpirationMinutes; // JWT 생성시 필요 정보 : Temp AccessToken 만료시간
+
+    @Getter
     @Value("${jwt.access-token-expiration-minutes}")
     private int accessTokenExpirationMinutes; // JWT 생성시 필요 정보 : AccessToken 만료시간
 
