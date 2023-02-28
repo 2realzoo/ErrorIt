@@ -177,6 +177,26 @@ export const Tag = styled.div`
   }
 `;
 
+export const DeleteBnt = styled.div`
+  width: 60px;
+  height: 28px;
+  border: 1px solid var(--black-300);
+  border-radius: 3px;
+  line-height: 26px;
+  text-align: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: var(--black-600);
+  background-color: var(--black-025);
+  cursor: pointer;
+  :hover {
+    background: var(--black-050);
+    color: var(--black-800);
+  }
+`;
+
 /* ========================== MypageSetting's Styles ===========================*/
 
 export const SettingContainer = styled.div`
