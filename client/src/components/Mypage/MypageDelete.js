@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
 import * as D from "./mypageStyle";
+import Refresh from "../../util/Refresh";
 
 const DeleteBox = styled.div`
   width: 100%;
@@ -52,16 +53,28 @@ const DeleteBnt = styled.div`
 
 const MypageDelete = ({ userInfo }) => {
   const [delCheck, setDelCheck] = useState(false);
-
-  const deleteProfile = () => {
-    if (delCheck) {
-      axios
+  const deleteReq = async () => {
+    const axiosReq = () => {
+      return axios
         .delete(`/api/members/${userInfo.memberId}`, {
           headers: {
             "ngrok-skip-browser-warning": "12",
             Authorization: localStorage.getItem("jwtToken"),
           },
         })
+        .then((res) => res)
+        .catch((err) => err);
+    };
+    let result = await axiosReq();
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosReq();
+    }
+    return result.data;
+  };
+  const deleteProfile = () => {
+    if (delCheck) {
+      deleteReq
         .then((res) => {
           console.log(res.data);
           window.location.replace("/");

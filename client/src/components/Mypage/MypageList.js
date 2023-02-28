@@ -4,6 +4,7 @@ import * as L from "./mypageStyle";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Pagination from "react-js-pagination";
+import Refresh from "../../util/Refresh";
 
 const MypageList = ({ title, type }) => {
   const { mypageReducer } = useSelector((state) => state);
@@ -15,27 +16,41 @@ const MypageList = ({ title, type }) => {
   const handlePageChange = (page) => {
     setPage(page);
   };
+  const getList = async (end, param) => {
+    const axiosGet = () => {
+      return axios({
+        method: "GET",
+        url: end,
+        params: param,
+        headers: {
+          "ngrok-skip-browser-warning": "12",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+      })
+        .then((res) => res)
+        .catch((err) => err);
+    };
+    let result = await axiosGet();
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosGet();
+    }
+    return result.data;
+  };
+
   useEffect(() => {
     const endpoint = mypageReducer === "Questions" ? `/api/members/${userId}/questions` : `/api/members/${userId}/answers`;
     const REQ_PARAM = { sort: sort, page: page };
-    axios({
-      method: "GET",
-      url: endpoint,
-      params: REQ_PARAM,
-      headers: {
-        "ngrok-skip-browser-warning": "12",
-        Authorization: localStorage.getItem("jwtToken"),
-      },
-    }).then((res) => {
-      console.log(res.data);
-      if (res.data.questions) {
-        setList(res.data.questions);
+    getList(endpoint, REQ_PARAM).then((res) => {
+      console.log(res);
+      if (res.questions) {
+        setList(res.questions);
       } else {
-        setList(res.data.answers);
+        setList(res.answers);
       }
-      setPageInfo(res.data.pageInfo);
+      setPageInfo(res.pageInfo);
     });
-  }, [mypageReducer]);
+  }, [mypageReducer, sort, page]);
 
   return (
     <L.ListContainer>

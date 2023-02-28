@@ -8,6 +8,7 @@ import MypageCategory from "../components/Mypage/MypageCategory";
 import MypageList from "../components/Mypage/MypageList";
 import MypageSetting from "../components/Mypage/MypageSetting";
 import axios from "axios";
+import Refresh from "../util/Refresh";
 
 const MyComponent = styled.div`
   width: 90%;
@@ -29,19 +30,30 @@ const Mypage = () => {
   const userId = sessionStorage.getItem("memberId");
   const [userInfo, setUserInfo] = useState({});
 
+  const getUser = async () => {
+    const axiosGet = () => {
+      return axios({
+        method: "GET",
+        url: `/api/members/${userId}`,
+        headers: {
+          "ngrok-skip-browser-warning": "12",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+      })
+        .then((res) => res)
+        .catch((err) => err);
+    };
+    let result = await axiosGet();
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosGet();
+    }
+    return result.data;
+  };
+
   useEffect(() => {
     dispatch(currentPage("Users"));
-    axios({
-      method: "GET",
-      url: `/api/members/${userId}`,
-      headers: {
-        "ngrok-skip-browser-warning": "12",
-        Authorization: localStorage.getItem("jwtToken"),
-      },
-    }).then((res) => {
-      console.log(res.data);
-      setUserInfo(res.data);
-    });
+    getUser().then((res) => setUserInfo(res));
   }, []);
 
   return (
