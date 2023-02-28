@@ -9,6 +9,7 @@ import MypageList from "../components/Mypage/MypageList";
 import MypageSetting from "../components/Mypage/MypageSetting";
 import axios from "axios";
 import Refresh from "../util/Refresh";
+import axiosCall from "../util/axiosCall";
 
 const MyComponent = styled.div`
   width: 90%;
@@ -31,22 +32,10 @@ const Mypage = () => {
   const [userInfo, setUserInfo] = useState({});
 
   const getUser = async () => {
-    const axiosGet = () => {
-      return axios({
-        method: "GET",
-        url: `/api/members/${userId}`,
-        headers: {
-          "ngrok-skip-browser-warning": "12",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-      })
-        .then((res) => res)
-        .catch((err) => err);
-    };
-    let result = await axiosGet();
+    let result = await axiosCall(`/api/members/${userId}`, "GET");
     while (result.response && result.response.data.status === 401) {
       await Refresh();
-      result = await axiosGet();
+      result = await axiosCall(`/api/members/${userId}`, "GET");
     }
     return result.data;
   };
@@ -62,9 +51,21 @@ const Mypage = () => {
       <PageContainer>
         <MypageTitle userInfo={userInfo} />
         <MypageCategory />
-        {mypageReducer === "Questions" ? <MypageList title="Questions" type="questions" userInfo={userInfo} /> : <></>}
-        {mypageReducer === "Answers" ? <MypageList title="Answers" type="answers" userInfo={userInfo} /> : <></>}
-        {mypageReducer === "Edit" ? <MypageSetting userInfo={userInfo} /> : <></>}
+        {mypageReducer === "Questions" ? (
+          <MypageList title="Questions" type="questions" userInfo={userInfo} />
+        ) : (
+          <></>
+        )}
+        {mypageReducer === "Answers" ? (
+          <MypageList title="Answers" type="answers" userInfo={userInfo} />
+        ) : (
+          <></>
+        )}
+        {mypageReducer === "Edit" ? (
+          <MypageSetting userInfo={userInfo} />
+        ) : (
+          <></>
+        )}
       </PageContainer>
     </MyComponent>
   );

@@ -9,31 +9,11 @@ const StyledContainer = styled.div`
   display: flex;
   flex: 1 0 auto;
   margin: -50px auto 0 auto;
-  ${(props) => {
-    switch (props.pageName) {
-      case "SignUp":
-        return css``;
-      case "Check":
-        return css`
-          justify-content: center;
-        `;
-      case "AlertChange":
-        return css`
-          align-items: center;
-          padding-bottom: 10rem;
-        `;
-      default:
-        return;
-    }
-  }};
+  align-items: center;
 `;
 
-function Container({ children, pageName, ...rest }) {
-  return (
-    <StyledContainer pageName={pageName} {...rest}>
-      {children}
-    </StyledContainer>
-  );
+function Container({ children, ...rest }) {
+  return <StyledContainer {...rest}>{children}</StyledContainer>;
 }
 
 export default Container;
