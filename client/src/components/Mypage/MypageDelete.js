@@ -50,15 +50,23 @@ const DeleteBnt = styled.div`
   }
 `;
 
-const MypageDelete = () => {
+const MypageDelete = ({ userInfo }) => {
   const [delCheck, setDelCheck] = useState(false);
 
   const deleteProfile = () => {
     if (delCheck) {
-      console.log("진행시켜!");
-      // axios.delete('/api/members/{memberid}').then((res) => {
-      //   console.log(res.data)
-      // })
+      axios
+        .delete(`/api/members/${userInfo.memberId}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          window.location.replace("/");
+        })
+        .catch((err) => console.log(err));
     }
   };
   return (

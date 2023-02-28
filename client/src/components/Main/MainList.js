@@ -8,7 +8,7 @@ const MainList = () => {
   const [sortTag, setSortTag] = useState("최신순");
   const [questionList, setQuestionList] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageInfo, setPageInfo] = useState({});
+  const [pageInfo, setPageInfo] = useState({ totalElements: 0 });
 
   const handlePageChange = (page) => {
     setPage(page);
@@ -16,6 +16,7 @@ const MainList = () => {
 
   useEffect(() => {
     const REQ_PARAM = { sort: sortTag, page: page };
+
     axios({
       method: "GET",
       url: "/api/questions",
@@ -28,6 +29,7 @@ const MainList = () => {
       setQuestionList(res.data.questions);
       setPageInfo(res.data.pageInfo);
     });
+    window.scrollTo(0, 0);
   }, [sortTag, page]);
 
   return (
@@ -62,7 +64,7 @@ const MainList = () => {
         <Pagination
           activePage={page}
           itemsCountPerPage={10}
-          totalItemsCount={pageInfo.totalElement}
+          totalItemsCount={pageInfo.totalElements}
           pageRangeDisplayed={5}
           prevPageText={"Prev"}
           nextPageText={"Next"}

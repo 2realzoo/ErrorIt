@@ -1,10 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as E from "./mypageStyle";
 
-const MypageEdit = () => {
-  const [name, setName] = useState("나중에 info받아서 초기값설정해");
-  const [intro, setIntro] = useState("나중에 info받아서 초기값설정해");
+const MypageEdit = ({ userInfo }) => {
+  const [name, setName] = useState(userInfo.name);
+  const [intro, setIntro] = useState("");
 
   const submitPatch = () => {
     const setting = {
@@ -12,10 +12,24 @@ const MypageEdit = () => {
       intro: intro,
     };
     console.log(setting);
-    // axios.patch('/api/members/{memberid}', setting).then((res) => {
-    //   console.log(res.data)
-    // })
+    axios
+      .patch(`/api/members/${userInfo.memberId}`, setting, {
+        headers: {
+          "ngrok-skip-browser-warning": "12",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        window.location.replace("/mypage");
+      })
+      .catch((err) => console.log(err));
   };
+  useEffect(() => {
+    if (userInfo.intro) {
+      setIntro(userInfo.intro);
+    }
+  }, []);
 
   return (
     <E.EditContainer>

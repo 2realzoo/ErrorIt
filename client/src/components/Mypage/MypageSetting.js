@@ -4,7 +4,7 @@ import MypageEdit from "./MypageEdit";
 import MypageDelete from "./MypageDelete";
 import MypagePassword from "./MypagePassword";
 
-const MypageSetting = () => {
+const MypageSetting = ({ userInfo }) => {
   const [setting, setSetting] = useState("Edit");
 
   return (
@@ -24,9 +24,9 @@ const MypageSetting = () => {
         </S.BarMenu>
       </S.SettingBar>
       <S.SettingComponent>
-        {setting === "Edit" ? <MypageEdit /> : <></>}
-        {setting === "Change" ? <MypagePassword /> : <></>}
-        {setting === "Delete" ? <MypageDelete /> : <></>}
+        {setting === "Edit" ? <MypageEdit userInfo={userInfo} /> : <></>}
+        {setting === "Change" ? <MypagePassword userInfo={userInfo} /> : <></>}
+        {setting === "Delete" ? <MypageDelete userInfo={userInfo} /> : <></>}
       </S.SettingComponent>
     </S.SettingContainer>
   );
