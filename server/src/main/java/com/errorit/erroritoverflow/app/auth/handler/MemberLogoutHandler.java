@@ -2,6 +2,8 @@ package com.errorit.erroritoverflow.app.auth.handler;
 
 import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
 import com.errorit.erroritoverflow.app.auth.refresh.service.RefreshService;
+import com.errorit.erroritoverflow.app.exception.BusinessLogicException;
+import com.errorit.erroritoverflow.app.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,19 +24,23 @@ public class MemberLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         log.info("로그아웃 헨들러 실행");
-        String jws = request.getHeader("Authorization").replace("Bearer ", "");
+        try {
+            String jws = request.getHeader("Authorization").replace("Bearer ", "");
+            log.info("Accesstoken = {}", jws);
+            // 서명 검증을 위한 시크릿 키 획득
+            String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        // 서명 검증을 위한 시크릿 키 획득
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+            // 서명 검증 및 claims 획득
+            Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
-        // 서명 검증 및 claims 획득
-        Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
+            // DB 의 Refresh 정보 삭제
+            refreshService.delete(((Number)claims.get("memberId")).longValue());
 
-        // DB 의 Refresh 정보 삭제
-        refreshService.delete(((Number)claims.get("memberId")).longValue());
-
-        // 응답 구성
-        response.setHeader("Authorization", "");
-        response.setStatus(HttpStatus.OK.value());
+            // 응답 구성
+            response.setHeader("Authorization", "");
+            response.setStatus(HttpStatus.OK.value());
+        } catch (NullPointerException e) {
+            throw new BusinessLogicException(ExceptionCode.TOKEN_NOT_FOUND);
+        }
     }
 }
