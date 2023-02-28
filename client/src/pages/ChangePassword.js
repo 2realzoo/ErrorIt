@@ -18,7 +18,9 @@ function ChangePassword() {
   const [informMessage, setInformMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  dispatch(currentPage("Users"));
+  useEffect(() => {
+    dispatch(currentPage("Users"));
+  }, []);
 
   const handleInputChange = (e) => {
     const regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
@@ -49,15 +51,20 @@ function ChangePassword() {
         return;
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     return axios
-      .patch(`/api/members/${sessionStorage.getItem("memberId")}`, pwdInfo, {
-        headers: {
-          "ngrok-skip-browser-warning": "12",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-      })
+      .patch(
+        `/api/members/${sessionStorage.getItem("memberId")}/password`,
+        pwdInfo,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        }
+      )
       .then((res) => {
         navigate("/alert/change");
       })
