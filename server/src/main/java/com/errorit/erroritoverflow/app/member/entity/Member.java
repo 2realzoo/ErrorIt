@@ -51,15 +51,15 @@ public class Member extends Auditable {
     private String findAnswer;
 
     // 질문
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",  cascade = CascadeType.REMOVE)
     private List<Question> questions = new ArrayList<>();
 
     // 답변
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Answer> answers = new ArrayList<>();
 
     // 댓글
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToOne(mappedBy = "member",  cascade = CascadeType.REMOVE)

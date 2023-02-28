@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.HashMap;
@@ -58,8 +59,10 @@ public class AnswerController {
     // 답변 삭제
     @DeleteMapping("/answers/{answer-id}")
     public ResponseEntity<Map<String, Long>> deleteAnswer(@PathVariable("answer-id") Long answerId,
-                                          @RequestBody AnswerDto.Delete answerDto) {
-        Long deletedAnswerId = answerService.delete(answerId, answerDto.getMemberId());
+                                                          HttpServletRequest request) {
+
+        Long tokenMemberId = ((Number)request.getAttribute("tokenMemberId")).longValue();
+        Long deletedAnswerId = answerService.delete(answerId, tokenMemberId);
         Map<String, Long> response = new HashMap<>();
         response.put("deletedAnswerId" , deletedAnswerId);
         return new ResponseEntity<>(response, HttpStatus.OK);

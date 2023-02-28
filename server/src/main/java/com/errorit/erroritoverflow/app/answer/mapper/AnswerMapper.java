@@ -26,7 +26,8 @@ public interface AnswerMapper {
         }
         AnswerDto.AnswerResponse answerResponse = new AnswerDto.AnswerResponse();
         answerResponse.setOwnerName( answer.getMember().getName());
-        answerResponse.setAnswerId( answer.getAnswerId() );
+        answerResponse.setAnswerId( answer.getAnswerId());
+        answerResponse.setQuestionId(answer.getQuestion().getQuestionId());
         // ownerId(작성자회원Id) 필드를 추가
         answerResponse.setOwnerId(answer.getMember().getMemberId());
         answerResponse.setCreatedAt( answer.getCreatedAt() );
