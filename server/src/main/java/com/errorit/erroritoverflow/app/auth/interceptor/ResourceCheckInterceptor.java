@@ -2,6 +2,8 @@ package com.errorit.erroritoverflow.app.auth.interceptor;
 
 
 import com.errorit.erroritoverflow.app.auth.util.ErrorResponder;
+import com.errorit.erroritoverflow.app.utils.UriParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -17,8 +19,7 @@ public class ResourceCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Map<String, String> pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping. URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-        Long memberId = Long.parseLong(pathVariables.get("member-id"));
+        Long memberId = UriParser.getMemberId(request);
         Long tokenMemberId = ((Number)request.getAttribute("tokenMemberId")).longValue();
         if (memberId.equals(tokenMemberId)) {
             return true;

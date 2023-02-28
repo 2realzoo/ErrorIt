@@ -1,4 +1,4 @@
-package com.errorit.erroritoverflow.app.auth.handler;
+package com.errorit.erroritoverflow.app.auth.interceptor;
 
 import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
 import com.errorit.erroritoverflow.app.auth.refresh.service.RefreshService;
@@ -9,24 +9,21 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-public class MemberLogoutHandler implements LogoutHandler {
+public class LogoutHandlerInterceptor implements HandlerInterceptor {
 
     private final RefreshService refreshService;
     private final JwtTokenizer jwtTokenizer;
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.info("로그아웃 헨들러 실행");
         try {
             String jws = request.getHeader("Authorization").replace("Bearer ", "");
@@ -43,20 +40,25 @@ public class MemberLogoutHandler implements LogoutHandler {
             // 응답 구성
             response.setHeader("Authorization", "");
             response.setStatus(HttpStatus.OK.value());
-            log.info("로그아웃 핸들러 응답 OK 전송 ");
+            log.info("로그아웃 핸들러 인터셉터 응답 OK 구성 ");
 
         } catch (NullPointerException e) {
-            log.info("로그아웃 핸들러 NullPointerException ");
+            log.info("로그아웃 핸들러 인터셉터 NullPointerException ");
             ErrorResponder.sendErrorResponseByExceptionCode(response, ExceptionCode.BAD_REQUEST);
+            return false;
         } catch (SignatureException se) {
-            log.info("로그아웃 핸들러 SignatureException ");
+            log.info("로그아웃 핸들러 인터셉터 SignatureException ");
             ErrorResponder.sendErrorResponseByExceptionCode(response, ExceptionCode.ACCESS_TOKEN_INVALID);
+            return false;
         } catch (ExpiredJwtException ee) {
-            log.info("로그아웃 핸들러 ExpiredJwtException ");
+            log.info("로그아웃 핸들러 인터셉터 ExpiredJwtException ");
             ErrorResponder.sendErrorResponseByExceptionCode(response, ExceptionCode.ACCESS_TOKEN_EXPIRED);
+            return false;
         } catch (Exception e) {
-            log.info("로그아웃 핸들러 Exception ");
+            log.info("로그아웃 핸들러 인터셉터 Exception ");
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 }
