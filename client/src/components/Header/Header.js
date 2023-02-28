@@ -170,7 +170,7 @@ function Header() {
           </>
         ) : (
           <>
-            <a href="http://localhost:3000/login">
+            <a href="/login">
               <Button
                 hoverBackgroundColor="var(--_bu-filled-bg-hover)"
                 marginLeft="0.5rem">
