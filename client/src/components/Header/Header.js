@@ -121,16 +121,18 @@ function Header() {
   const imageUri = sessionStorage.getItem("imageUri");
 
   const handleLogout = async () => {
-    const result = await axiosCall("/api/logout");
+    const result = await axiosCall("/api/logout", "get");
     if (result === 200) {
       sessionStorage.clear();
       localStorage.clear();
       navigate("/");
+      return;
     } else if (result === 401) {
       await Refresh();
       await handleLogout();
     } else {
       alert("Logout failed");
+      return;
     }
   };
   window.addEventListener("click", (e) => {

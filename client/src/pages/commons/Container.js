@@ -3,12 +3,12 @@ import styled, { css } from "styled-components";
 const StyledContainer = styled.div`
   max-width: 100%;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   justify-content: center;
   background-color: var(--black-050);
   display: flex;
   flex: 1 0 auto;
-  margin: 0 auto;
+  margin: -50px auto 0 auto;
   ${(props) => {
     switch (props.pageName) {
       case "SignUp":
@@ -19,6 +19,7 @@ const StyledContainer = styled.div`
         `;
       case "AlertChange":
         return css`
+          align-items: center;
           padding-bottom: 10rem;
         `;
       default:
