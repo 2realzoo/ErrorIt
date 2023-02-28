@@ -53,11 +53,12 @@ function ChangePassword() {
   };
 
   const handleSubmit = async (e) => {
+    let memberId = sessionStorage.getItem("memberId");
     e.preventDefault();
     return axios
       .patch(
-        `/api/members/${sessionStorage.getItem("memberId")}/password`,
-        pwdInfo,
+        `/api/members/${memberId}/password`,
+        { memberId, password: pwdInfo.pwd },
         {
           headers: {
             "ngrok-skip-browser-warning": "12",
@@ -71,6 +72,7 @@ function ChangePassword() {
       .catch((err) => {
         if (err.response.status === 401) {
           alert("time out! try again");
+          navigate("/check-user");
         }
       });
   };

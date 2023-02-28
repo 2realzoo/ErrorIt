@@ -121,10 +121,10 @@ function Header() {
   const imageUri = sessionStorage.getItem("imageUri");
 
   const handleLogout = async () => {
-    let result = await axiosCall("/api/logout", "get");
+    let result = await axiosCall("/api/logout", "GET");
     while (result.response && result.response.data.status === 401) {
       await Refresh();
-      result = await axiosCall("/api/logout", "get");
+      result = await axiosCall("/api/logout", "GET");
       console.log(result);
     }
     if (result.status === 200) {
@@ -136,7 +136,7 @@ function Header() {
     return result;
   };
   window.addEventListener("click", (e) => {
-    e.target.className.includes("search-box")
+    e.target.className.includes("search-box") && e.target.className
       ? setIsHintOpen(true)
       : setIsHintOpen(false);
   });

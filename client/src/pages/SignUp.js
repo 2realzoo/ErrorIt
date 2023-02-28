@@ -122,6 +122,13 @@ function SignUp() {
   const handleVaild = (e) => {
     let regexp;
     switch (e.target.id) {
+      case "displayName":
+        if (e.target.value.length > 0) {
+          setVaild({ ...vaild, name: true });
+        } else {
+          setVaild({ ...vaild, name: false });
+        }
+        break;
       case "emailAddress":
         regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
         if (emailCheck === true && e.target.id !== emailCheck.checkedEmail) {
@@ -158,8 +165,8 @@ function SignUp() {
   };
 
   useEffect(() => {
-    console.log(emailCheck);
-  }, [emailCheck]);
+    console.log(vaild);
+  }, [vaild]);
 
   const onDuplicationCheck = (e) => {
     e.preventDefault();
@@ -193,9 +200,12 @@ function SignUp() {
             <Input
               type="text"
               id="displayName"
-              onChange={(e) =>
-                dispatch(userInfo({ ...userInfoReducer, name: e.target.value }))
-              }></Input>
+              onChange={(e) => {
+                dispatch(
+                  userInfo({ ...userInfoReducer, name: e.target.value })
+                );
+                handleVaild(e);
+              }}></Input>
           </FormWrapper>
           <FormWrapper>
             <EmailBox>
@@ -323,7 +333,9 @@ function SignUp() {
           vaild.password !== 1 &&
           vaild.confirmPw &&
           vaild.confirmPw !== 1 &&
-          emailCheck.canUse ? (
+          emailCheck.canUse &&
+          vaild.name !== 1 &&
+          vaild.name ? (
             <Button
               onClick={(e) => {
                 handleSignUp(e);
