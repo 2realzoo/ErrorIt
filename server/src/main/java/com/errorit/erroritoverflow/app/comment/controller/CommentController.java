@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,8 +56,10 @@ public class CommentController {
     // 댓글 삭제
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity<Map<String, Long>> deleteComment(@PathVariable("comment-id") Long commentId,
-                                           @RequestBody CommentDto.Patch commentDto) {
-        Long deletedCommentId = commentService.delete(commentId, commentDto.getMemberId());
+                                                           HttpServletRequest request) {
+        Long tokenMemberId = ((Number) request.getAttribute("tokenMemberId")).longValue();
+        Long deletedCommentId = commentService.delete(commentId,tokenMemberId);
+
         Map<String, Long> response = new HashMap<>();
         response.put("deletedCommentId", deletedCommentId);
         return ResponseEntity.ok().body(response);

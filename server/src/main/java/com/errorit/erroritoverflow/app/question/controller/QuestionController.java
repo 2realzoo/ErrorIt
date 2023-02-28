@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,8 +67,10 @@ public class QuestionController {
     //질문 삭제
     @DeleteMapping("/questions/{question-id}")
     public ResponseEntity<Map<String, Long>> deleteQuestion(@PathVariable("question-id") Long questionId,
-                                         @RequestBody QuestionDto.Delete requestDto){
-        Long deleteQuestion = questionService.deleteQuestion(questionId, requestDto.getMemberId());
+                                                            HttpServletRequest request){
+
+        Long tokenMemberId = ((Number) request.getAttribute("tokenMemberId")).longValue();
+        Long deleteQuestion = questionService.deleteQuestion(questionId, tokenMemberId);
         Map<String, Long> response = new HashMap<>();
         response.put("questionId", deleteQuestion);
 
