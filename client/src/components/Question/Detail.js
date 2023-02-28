@@ -108,25 +108,41 @@ const SubmitCommentBtn = styled.button`
   border-radius: var(--br-sm);
   padding: 5px;
 `;
+const EditContentContainer = styled.textarea`
+  width: 100%;
+`
 
-function Detail({ QorA, data, idValue, loginMemberId }) {
+function Detail({ QorA, data, idValue, loginMemberId,setData }) {
   const [isOpenLoginPopup, setisOpenLoginPopup] = useState(false);
   const [isOpenCommentForm, setIsOpenCommentForm] = useState(false);
+  const [isOpenEditContent, setIsOpenEditContent] = useState(false);
   const [commentValue, setCommentValue] = useState("");
-  const userAddOnArr = ["Share", "Edit", "Follow"];
+  const [questionContentValue, setQuestionContentValue] = useState(data.content)
   const openLoginPopupHandler = () => {
-    setisOpenLoginPopup(!isOpenLoginPopup);
+    if(loginMemberId){
+
+    }else{
+      setisOpenLoginPopup(!isOpenLoginPopup);
+    }
   };
   const openCommentHandler = () => {
-    setIsOpenCommentForm(!isOpenCommentForm);
+    if(loginMemberId){
+      setIsOpenCommentForm(true);
+    }else{
+    }
   };
+  
   const commentValueHandler = (e) => {
     setCommentValue(e.target.value);
   };
+
   const commentSubmitHandler = () => {
-    axios
+    if(commentValue.length <= 0){
+      alert('길이좀')
+    }else{
+      axios
       .post(
-        `/api/questions/${idValue}/answers`,
+        `/api/questions/${idValue}/comments`,
         {
           memberId: loginMemberId,
           content: commentValue,
@@ -139,10 +155,28 @@ function Detail({ QorA, data, idValue, loginMemberId }) {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        const obj = Object.assign({},data)
+        obj.comments.push(res.data)
+        console.log(obj)
+        setData(obj)
+        setCommentValue("")
+        setIsOpenCommentForm(false);
       })
       .catch((err) => err);
+    }
   };
+
+  const editContentHandler = () =>{
+    return loginMemberId ? setIsOpenEditContent(true) : setisOpenLoginPopup(true)
+  }
+
+  const contentValueHandler = (e) => {
+    console.log(questionContentValue)
+    console.log(e.target.scrollHeight)
+    console.log(e.target.style.height)
+    e.target.style.height = e.target.scrollHeight+'px'
+    setQuestionContentValue(e.target.value)
+  }
 
   return (
     <DetailContainer key={data.QorA}>
@@ -156,13 +190,17 @@ function Detail({ QorA, data, idValue, loginMemberId }) {
         <BsArrowCounterclockwise />
       </SideMenu>
       <MainMenu>
-        <QuestionDetail>{data.content}</QuestionDetail>
+        <QuestionDetail>{isOpenEditContent ?
+          <EditContentContainer value={questionContentValue} onChange={(e)=>{contentValueHandler(e)}}>
+
+          </EditContentContainer>
+        :data.content}</QuestionDetail>
         <UserBoxContainer>
           <UserAddOn>
             <ul>
-              {userAddOnArr.map((el) => {
-                return <li onClick={openLoginPopupHandler}>{el}</li>;
-              })}
+              <li onClick={openLoginPopupHandler}>Share</li>
+              <li onClick={editContentHandler}>Edit</li>
+              <li onClick={openLoginPopupHandler}>Follow</li>
             </ul>
           </UserAddOn>
           <UserInfoConainer>
@@ -187,14 +225,13 @@ function Detail({ QorA, data, idValue, loginMemberId }) {
             <SubmitCommentBtn
               onClick={() => {
                 commentSubmitHandler();
-                openCommentHandler();
               }}
             >
               Submit
             </SubmitCommentBtn>
           </AddCommentContainer>
         ) : (
-          <CommentAddBtn onClick={openCommentHandler}>
+          <CommentAddBtn onClick={()=>{openCommentHandler(); openLoginPopupHandler();}}>
             Add a comment
           </CommentAddBtn>
         )}

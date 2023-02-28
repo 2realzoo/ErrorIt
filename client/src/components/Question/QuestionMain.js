@@ -40,6 +40,7 @@ function Questions({ idValue, loginMemberId }) {
             </ul>
           </Q.SubAttribute>
           <Detail
+            setData={setData}
             QorA="questionId"
             idValue={idValue}
             data={data}

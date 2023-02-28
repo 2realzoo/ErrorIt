@@ -41,7 +41,6 @@ function AnswerMain({ idValue, loginMemberId }) {
       })
       .catch((err) => err);
   }, []);
-  console.log(answers);
 
   const answerValueHandler = (data) => {
     setAddanswersValue(data.target.value);
