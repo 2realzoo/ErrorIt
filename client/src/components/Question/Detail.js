@@ -16,6 +16,7 @@ const DetailContainer = styled.div`
   display: flex;
 `;
 const QuestionDetail = styled.div`
+  margin-top: 30px;
   font-size: medium;
   white-space: pre-wrap;
 `;
@@ -67,7 +68,7 @@ const UserInfoConainer = styled.div`
 `;
 const UserInfo = styled.div`
   width: 200px;
-  background-color: var(--blue-100);
+  background-color: ${(props) => props.backG || "var(--blue-100)"};
   border-radius: var(--br-sm);
   padding: 5px 6px 7px 7px;
 `;
@@ -84,7 +85,7 @@ const CreatedAt = styled.div`
 `;
 const CommentAddBtn = styled.button`
   color: var(--black-200);
-  margin-top: 10px;
+  margin: 10px 0 39px 0;
 `;
 const AddCommentContainer = styled.div`
   display: flex;
@@ -117,6 +118,7 @@ function Detail({ QorA, data, idValue, loginMemberId,setData }) {
   const [isOpenCommentForm, setIsOpenCommentForm] = useState(false);
   const [isOpenEditContent, setIsOpenEditContent] = useState(false);
   const [commentValue, setCommentValue] = useState("");
+  const [detailData, setDetailData] = useState(data)
   const [questionContentValue, setQuestionContentValue] = useState(data.content)
   const openLoginPopupHandler = () => {
     if(loginMemberId){
@@ -142,7 +144,7 @@ function Detail({ QorA, data, idValue, loginMemberId,setData }) {
     }else{
       axios
       .post(
-        `/api/questions/${idValue}/comments`,
+        `/api/${QorA === 'questionId'? 'questions' :'answers'}/${idValue}/comments`,
         {
           memberId: loginMemberId,
           content: commentValue,
@@ -155,10 +157,10 @@ function Detail({ QorA, data, idValue, loginMemberId,setData }) {
         }
       )
       .then((res) => {
-        const obj = Object.assign({},data)
+        const obj = Object.assign({},detailData)
         obj.comments.push(res.data)
         console.log(obj)
-        setData(obj)
+        setDetailData(obj)
         setCommentValue("")
         setIsOpenCommentForm(false);
       })
@@ -179,7 +181,7 @@ function Detail({ QorA, data, idValue, loginMemberId,setData }) {
   }
 
   return (
-    <DetailContainer key={data.QorA}>
+    <DetailContainer key={detailData.QorA}>
       <SideMenu>
         <RecoContianer>
           <BsFillCaretUpFill />
@@ -194,7 +196,7 @@ function Detail({ QorA, data, idValue, loginMemberId,setData }) {
           <EditContentContainer value={questionContentValue} onChange={(e)=>{contentValueHandler(e)}}>
 
           </EditContentContainer>
-        :data.content}</QuestionDetail>
+        :detailData.content}</QuestionDetail>
         <UserBoxContainer>
           <UserAddOn>
             <ul>
@@ -204,15 +206,15 @@ function Detail({ QorA, data, idValue, loginMemberId,setData }) {
             </ul>
           </UserAddOn>
           <UserInfoConainer>
-            <UserInfo>
+            <UserInfo backG={QorA==="questionId"? 'var(--blue-100)' : 'white'}>
               <CreatedAt>
-                asked {new Date(data.createdAt).toDateString()}
+                asked {new Date(detailData.createdAt).toDateString()}
               </CreatedAt>
-              <UserName>{data.member}</UserName>
+              <UserName>{detailData.member}</UserName>
             </UserInfo>
           </UserInfoConainer>
         </UserBoxContainer>
-        {data.comments.map((el) => {
+        {detailData.comments.map((el) => {
           return <Comment comments={el}></Comment>;
         })}
         {isOpenCommentForm ? (
