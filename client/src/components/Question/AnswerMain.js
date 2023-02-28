@@ -8,9 +8,12 @@ const AnswerMainContainer = styled.div`
   margin-top: 15px;
 `;
 const AnswerCount = styled.h2`
-  font-size: 20px;
+  margin: 60px 0 30px 0;
+  font-size: 25px;
 `;
-const AddAnswerContainer = styled.div``;
+const AddAnswerContainer = styled.div`
+  margin-top: 20px;
+`;
 const AddAnswerTitle = styled.h2`
   font-size: 20px;
 `;
@@ -31,13 +34,17 @@ function AnswerMain({ idValue, loginMemberId }) {
   const [addanswerValue, setAddanswersValue] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`/api/questions/${idValue}/answers`, {
-        headers: { "ngrok-skip-browser-warning": "12" },
-      })
+    axios({
+      method: "GET",
+      url: `/api/questions/${idValue}/answers`,
+      params: { sort: "latest" },
+      headers: {
+        "ngrok-skip-browser-warning": "12",
+      },
+    })
       .then((res) => {
         console.log(res.data);
-        setAnswers(res.data.answers);
+        setAnswers(res.data);
       })
       .catch((err) => err);
   }, []);
@@ -71,7 +78,14 @@ function AnswerMain({ idValue, loginMemberId }) {
     <AnswerMainContainer>
       <AnswerCount>{answers.length} Answers</AnswerCount>
       {answers.map((el) => {
-        return <Detail data={el} QorA="answerId" idValue={idValue}  loginMemberId={loginMemberId}></Detail>;
+        return (
+          <Detail
+            data={el}
+            QorA="answerId"
+            idValue={idValue}
+            loginMemberId={loginMemberId}
+          ></Detail>
+        );
       })}
       <AddAnswerContainer>
         <AddAnswerTitle>Your Answer</AddAnswerTitle>
@@ -81,7 +95,10 @@ function AnswerMain({ idValue, loginMemberId }) {
           }}
         ></AddAnswerForm>
         <ButtonContainer>
-          <Button children="Post Your Answer" onClick={addAnswerValueHandler}></Button>
+          <Button
+            children="Post Your Answer"
+            onClick={addAnswerValueHandler}
+          ></Button>
         </ButtonContainer>
       </AddAnswerContainer>
     </AnswerMainContainer>
