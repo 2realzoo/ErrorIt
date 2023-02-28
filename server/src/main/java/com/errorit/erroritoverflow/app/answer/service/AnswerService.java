@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionService questionService;
     private final MemberService memberService;
+    private final String ORDER_BY_LATEST = "latest";
+    private final String ORDER_BY_POPULAR = "popular";
 
     // 답글 추가
     public Answer createAnswerByQuestionId(Answer answer, Long memberId, Long questionId) {
@@ -56,13 +59,9 @@ public class AnswerService {
     }
 
     // 답글 목록 : 질문
-    public Page<Answer> findAnswerListByQuestionId(Long questionId, int page, String orderBy) {
-        page -= 1;
-        if (orderBy.equals("최신순")) {
-            return answerRepository.findAllByQuestion_QuestionIdOrderByCreatedAt(
-                    questionId,
-                    PageRequest.of(page, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending())
-            );
+    public List<Answer> findAnswerListByQuestionId(Long questionId, String orderBy) {
+        if (orderBy.equals(ORDER_BY_LATEST)) {
+                return answerRepository.findAllByQuestion_QuestionIdOrderByCreatedAt(questionId);
         } else {
             throw new BusinessLogicException(ExceptionCode.BAD_REQUEST);
         }
@@ -71,7 +70,7 @@ public class AnswerService {
     // 답글 목록 : 회원
     public Page<Answer> findAnswerListByMemberId(Long memberId, int page, String orderBy) {
         page -= 1;
-        if (orderBy.equals("최신순")) {
+        if (orderBy.equals(ORDER_BY_LATEST)) {
             return answerRepository.findAllByMember_MemberIdOrderByCreatedAt(
                     memberId,
                     PageRequest.of(page, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending())
