@@ -12,10 +12,8 @@ import Input from "./commons/Input";
 import Button from "./commons/Button";
 import { useNavigate } from "react-router-dom";
 import logo from "../asset/stackoverflow_logo_icon.png";
-import RefreshToken from "../components/RefreshToken";
 import Caption from "./commons/Caption";
 import useRedirect from "../util/useRedirect";
-import { Cookies } from "react-cookie";
 
 const Logo = styled.a`
   margin: 0 8px 0 8px;
@@ -135,7 +133,6 @@ function Login() {
         <GuideWrapper>
           Don’t have an account?&nbsp;
           <Caption href="/signup">Sign up</Caption>
-          <RefreshToken />
         </GuideWrapper>
       </Wrapper>
     </Container>

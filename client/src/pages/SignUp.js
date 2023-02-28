@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { currentPage, userInfo } from "../reducers/actions";
@@ -80,10 +80,14 @@ function SignUp() {
     findQuestion: 1,
     findAnswer: 1,
   });
-  const [emailCheck, setEmailCheck] = useState(false);
+  const [emailCheck, setEmailCheck] = useState({
+    canUse: false,
+    checkedEmail: "",
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
+  const emailInput = useRef();
   dispatch(currentPage("Users"));
 
   const handleSignUp = (e) => {
@@ -117,8 +121,8 @@ function SignUp() {
     switch (e.target.id) {
       case "emailAddress":
         regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
-        if (emailCheck === true) {
-          setEmailCheck(false);
+        if (emailCheck === true && e.target.id !== emailCheck.checkedEmail) {
+          setEmailCheck({ canUse: false, checkedEmail: "" });
         }
         regexp.test(e.target.value)
           ? setVaild({ ...vaild, email: true })
@@ -150,19 +154,27 @@ function SignUp() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(vaild);
-  // }, [vaild]);
+  useEffect(() => {
+    console.log(userInfoReducer);
+  }, [userInfoReducer]);
 
   const onDuplicationCheck = (e) => {
     e.preventDefault();
     return axios
-      .post("/api/members/password", {
+      .post("/api/members/email", {
         email: userInfoReducer.email,
       })
       .then((res) => {
-        setEmailCheck(res.data.canUse);
-        console.log("ok");
+        if (res.data.canUse) {
+          setEmailCheck({ canUse: true, checkedEmail: emailInput.value });
+          alert("Email duplicate verification completed");
+        } else {
+          setEmailCheck({ canUse: false, checkedEmail: "" });
+          alert("It's a duplicate email. Please check your email");
+        }
+      })
+      .then((res) => {
+        console.log(emailCheck);
       })
       .catch((err) => {
         console.log(err);
@@ -188,7 +200,7 @@ function SignUp() {
           <FormWrapper>
             <EmailBox>
               <Label htmlfor="emailAddress">Email</Label>
-              {emailCheck ? (
+              {emailCheck.canUse ? (
                 <AiFillCheckCircle className="check-icon" />
               ) : vaild.email ? (
                 <EmailCheckBtn onClick={onDuplicationCheck}>
@@ -199,6 +211,7 @@ function SignUp() {
               )}
             </EmailBox>
             <Input
+              ref={emailInput}
               type="email"
               id="emailAddress"
               onBlur={handleVaild}
