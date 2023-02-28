@@ -29,6 +29,7 @@ const StyledButton = styled.button`
         return css`
           &:disabled {
             cursor: default;
+            background-color: var(--black-300);
           }
         `;
       case "ChangePassword":

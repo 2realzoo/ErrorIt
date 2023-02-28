@@ -13,6 +13,9 @@ const StyledInput = styled.input`
   color: var(--fc-dark);
   font-size: var(--fs-body1);
   font-family: inherit;
+  &:disabled {
+    background-color: var(--black-75);
+  }
 `;
 
 function Input({ children, ...rest }) {

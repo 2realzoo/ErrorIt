@@ -66,6 +66,9 @@ const EmailCheckBtn = styled.button`
   &:hover {
     background-color: var(--_bu-filled-bg-hover);
   }
+  &:disabled {
+    background-color: var(--black-100);
+  }
 `;
 
 function SignUp() {
@@ -87,7 +90,7 @@ function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
-  const emailInput = useRef();
+
   dispatch(currentPage("Users"));
 
   const handleSignUp = (e) => {
@@ -155,8 +158,8 @@ function SignUp() {
   };
 
   useEffect(() => {
-    console.log(userInfoReducer);
-  }, [userInfoReducer]);
+    console.log(emailCheck);
+  }, [emailCheck]);
 
   const onDuplicationCheck = (e) => {
     e.preventDefault();
@@ -166,15 +169,12 @@ function SignUp() {
       })
       .then((res) => {
         if (res.data.canUse) {
-          setEmailCheck({ canUse: true, checkedEmail: emailInput.value });
+          setEmailCheck({ canUse: true, checkedEmail: userInfoReducer.email });
           alert("Email duplicate verification completed");
         } else {
           setEmailCheck({ canUse: false, checkedEmail: "" });
           alert("It's a duplicate email. Please check your email");
         }
-      })
-      .then((res) => {
-        console.log(emailCheck);
       })
       .catch((err) => {
         console.log(err);
@@ -210,17 +210,20 @@ function SignUp() {
                 <EmailCheckBtn disabled></EmailCheckBtn>
               )}
             </EmailBox>
-            <Input
-              ref={emailInput}
-              type="email"
-              id="emailAddress"
-              onBlur={handleVaild}
-              onChange={(e) => {
-                dispatch(
-                  userInfo({ ...userInfoReducer, email: e.target.value })
-                );
-                handleVaild(e);
-              }}></Input>
+            {emailCheck.canUse ? (
+              <Input disabled></Input>
+            ) : (
+              <Input
+                type="email"
+                id="emailAddress"
+                onBlur={handleVaild}
+                onChange={(e) => {
+                  dispatch(
+                    userInfo({ ...userInfoReducer, email: e.target.value })
+                  );
+                  handleVaild(e);
+                }}></Input>
+            )}
 
             {vaild.email ? (
               <></>
@@ -322,8 +325,8 @@ function SignUp() {
           vaild.password &&
           vaild.password !== 1 &&
           vaild.confirmPw &&
-          vaild.confirmPw !== 1 ? (
-            //  &&emailCheck
+          vaild.confirmPw !== 1 &&
+          emailCheck.canUse ? (
             <Button
               onClick={(e) => {
                 handleSignUp(e);
