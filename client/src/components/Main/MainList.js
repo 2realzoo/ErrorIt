@@ -64,7 +64,7 @@ const MainList = () => {
         <Pagination
           activePage={page}
           itemsCountPerPage={10}
-          totalItemsCount={pageInfo.totalElements}
+          totalItemsCount={pageInfo?.totalElements}
           pageRangeDisplayed={5}
           prevPageText={"Prev"}
           nextPageText={"Next"}
