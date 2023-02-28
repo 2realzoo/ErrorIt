@@ -68,7 +68,11 @@ function ChangePassword() {
       .then((res) => {
         navigate("/alert/change");
       })
-      .catch((err) => console.log(err, localStorage.getItem("jwtToken")));
+      .catch((err) => {
+        if (err.response.status === 401) {
+          alert("time out! try again");
+        }
+      });
   };
   return (
     <Container>
