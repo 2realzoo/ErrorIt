@@ -25,8 +25,10 @@ public interface AnswerMapper {
             return null;
         }
         AnswerDto.AnswerResponse answerResponse = new AnswerDto.AnswerResponse();
-        answerResponse.setMember( answer.getMember().getName());
+        answerResponse.setOwnerName( answer.getMember().getName());
         answerResponse.setAnswerId( answer.getAnswerId() );
+        // ownerId(작성자회원Id) 필드를 추가
+        answerResponse.setOwnerId(answer.getMember().getMemberId());
         answerResponse.setCreatedAt( answer.getCreatedAt() );
         answerResponse.setModifiedAt( answer.getModifiedAt() );
         answerResponse.setContent( answer.getContent() );
@@ -44,7 +46,9 @@ public interface AnswerMapper {
         AnswerDto.MemberAnswerResponse answerResponse = new AnswerDto.MemberAnswerResponse();
         answerResponse.setAnswerId( answer.getAnswerId() );
         answerResponse.setQuestionId( answer.getQuestion().getQuestionId());
-        answerResponse.setMember( answer.getMember().getName());
+        // ownerId(작성자회원Id) 필드를 추가
+        answerResponse.setOwnerId(answer.getMember().getMemberId());
+        answerResponse.setOwnerName( answer.getMember().getName());
         answerResponse.setCreatedAt( answer.getCreatedAt() );
         answerResponse.setModifiedAt( answer.getModifiedAt() );
         answerResponse.setContent( answer.getContent() );
@@ -73,9 +77,9 @@ public interface AnswerMapper {
         return response;
     }
 
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(source = "member.name", target = "ownerName")
     CommentDto.CommentResponse commentToCommentResponse(Comment comment);
 
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(source = "member.name", target = "ownerName")
     List<CommentDto.CommentResponse> commentListToCommentResponseList(List<Comment> comments);
 }

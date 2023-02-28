@@ -38,9 +38,10 @@ public class AnswerDto {
     public static class AnswerResponse {
         private Long answerId;
         private Long questionId;
+        private Long ownerId;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private String member;
+        private String ownerName;
         private String content;
         private List<CommentDto.CommentResponse> comments;
     }
@@ -58,9 +59,10 @@ public class AnswerDto {
     public static class MemberAnswerResponse {
         private Long answerId;
         private Long questionId;
+        private Long ownerId;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
-        private String member;
+        private String ownerName;
         private String content;
         private List<CommentDto.CommentResponse> comments;
     }

@@ -40,9 +40,10 @@ public class QuestionDto {
     @Setter
     public static class QuestionDetailResponse {
         private Long questionId;
+        private Long ownerId;
         private String title;
         private String content;
-        private String member;
+        private String ownerName;
         private Long viewCount;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
@@ -62,9 +63,10 @@ public class QuestionDto {
     @Setter
     public static class QuestionElementResponse {
         private Long questionId;
+        private Long ownerId;
         private String title;
         private String content;
-        private String member;
+        private String ownerName;
         private Long viewCount;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
