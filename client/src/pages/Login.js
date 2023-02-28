@@ -73,7 +73,7 @@ function Login() {
     } else {
       return axios
         .post(
-          "https://1ef4-1-227-164-12.jp.ngrok.io/login",
+          "/api/login",
           { email, password },
           {
             headers: { "ngrok-skip-browser-warning": "12" },
