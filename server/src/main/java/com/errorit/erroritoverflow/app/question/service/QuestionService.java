@@ -56,8 +56,11 @@ public class QuestionService {
         checkOwner(originalQuestion, memberId);
 
         // 수정사항 반영
-        Optional.ofNullable(question.getTitle()).ifPresent(originalQuestion::setTitle);
-        Optional.ofNullable(question.getContent()).ifPresent(originalQuestion::setTitle);
+//        Optional.ofNullable(question.getTitle()).ifPresent(originalQuestion::setTitle);
+//        Optional.ofNullable(question.getContent()).ifPresent(originalQuestion::setContent);
+
+        originalQuestion.setTitle(question.getTitle());
+        originalQuestion.setContent(question.getContent());
 
         return questionRepository.save(originalQuestion);
     }
