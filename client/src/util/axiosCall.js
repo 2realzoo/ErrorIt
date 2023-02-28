@@ -8,7 +8,9 @@ const axiosCall = (url, method) => {
       "ngrok-skip-browser-warning": "12",
       Authorization: localStorage.getItem("jwtToken"),
     },
-  }).then((res) => res.status);
+  })
+    .then((res) => res)
+    .catch((err) => err);
 };
 
 export default axiosCall;

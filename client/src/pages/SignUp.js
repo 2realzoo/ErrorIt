@@ -207,24 +207,21 @@ function SignUp() {
                   Duplicate check
                 </EmailCheckBtn>
               ) : (
-                <EmailCheckBtn disabled></EmailCheckBtn>
+                <EmailCheckBtn disabled>Duplicate check</EmailCheckBtn>
               )}
             </EmailBox>
-            {emailCheck.canUse ? (
-              <Input disabled></Input>
-            ) : (
-              <Input
-                type="email"
-                id="emailAddress"
-                onBlur={handleVaild}
-                onChange={(e) => {
-                  dispatch(
-                    userInfo({ ...userInfoReducer, email: e.target.value })
-                  );
-                  handleVaild(e);
-                }}></Input>
-            )}
-
+            <Input
+              disabled={emailCheck.canUse}
+              pageName="SignUp"
+              type="email"
+              id="emailAddress"
+              onBlur={handleVaild}
+              onChange={(e) => {
+                dispatch(
+                  userInfo({ ...userInfoReducer, email: e.target.value })
+                );
+                handleVaild(e);
+              }}></Input>
             {vaild.email ? (
               <></>
             ) : (
