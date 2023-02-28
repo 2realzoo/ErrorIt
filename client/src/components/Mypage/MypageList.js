@@ -8,7 +8,7 @@ import Pagination from "react-js-pagination";
 const MypageList = ({ title, type }) => {
   const { mypageReducer } = useSelector((state) => state);
   const userId = sessionStorage.getItem("memberId");
-  const [sort, setSort] = useState("최신순");
+  const [sort, setSort] = useState("latest");
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({ totalElements: 0 });
@@ -41,11 +41,11 @@ const MypageList = ({ title, type }) => {
     <L.ListContainer>
       <h3>{title}</h3>
       <L.SortContainer>
-        <L.Sort className={sort === "최신순" ? "selected" : ""} onClick={() => setSort("최신순")}>
-          Newest
+        <L.Sort className={sort === "latest" ? "selected" : ""} onClick={() => setSort("latest")}>
+          Latest
         </L.Sort>
-        <L.Sort className={sort === "조회순" ? "selected" : ""} onClick={() => setSort("조회순")}>
-          View
+        <L.Sort className={sort === "popular" ? "selected" : ""} onClick={() => setSort("popular")}>
+          Most Viewed
         </L.Sort>
       </L.SortContainer>
       <L.Lists>

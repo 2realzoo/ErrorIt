@@ -5,7 +5,7 @@ import Pagination from "react-js-pagination";
 import axios from "axios";
 
 const MainList = () => {
-  const [sortTag, setSortTag] = useState("최신순");
+  const [sortTag, setSortTag] = useState("latest");
   const [questionList, setQuestionList] = useState([]);
   const [page, setPage] = useState(1);
   const [pageInfo, setPageInfo] = useState({ totalElements: 0 });
@@ -35,11 +35,11 @@ const MainList = () => {
   return (
     <>
       <M.SortContainer>
-        <M.Sort className={sortTag === "최신순" ? "selected" : ""} onClick={() => setSortTag("최신순")}>
-          Newest
+        <M.Sort className={sortTag === "latest" ? "selected" : ""} onClick={() => setSortTag("latest")}>
+          Latest
         </M.Sort>
-        <M.Sort className={sortTag === "조회순" ? "selected" : ""} onClick={() => setSortTag("조회순")}>
-          View
+        <M.Sort className={sortTag === "popular" ? "selected" : ""} onClick={() => setSortTag("popular")}>
+          Most Viewed
         </M.Sort>
         {/* <M.Sort className={sortTag === "Score" ? "selected" : ""} onClick={() => setSortTag("Score")}>
           Score

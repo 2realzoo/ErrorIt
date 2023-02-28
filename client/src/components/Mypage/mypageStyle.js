@@ -352,3 +352,12 @@ export const PageContainer = styled.div`
     color: #337ab7;
   }
 `;
+
+export const NoticeText = styled.p`
+  color: var(--red-600);
+  font-size: 12px;
+  display: none;
+  &.active {
+    display: block;
+  }
+`;

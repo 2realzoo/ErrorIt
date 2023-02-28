@@ -1,35 +1,65 @@
 import { useState, useRef } from "react";
 import * as P from "./mypageStyle";
+import axios from "axios";
 
-const MypagePassword = () => {
+const MypagePassword = ({ userInfo }) => {
   const [checked, setChecked] = useState(false);
   const [newPwd, setNewPwd] = useState("");
   const [pwdCheck, setPwdCheck] = useState("");
   const [currentPwd, setCurrentPwd] = useState("");
+  const [pwdReg, setPwdReg] = useState(true);
+  const [checkReg, setCheckReg] = useState(true);
   const newPass = useRef();
 
   const changePwd = () => {
-    // const setting = { memberId: "", password: newPwd };
-    if (newPwd != pwdCheck) {
-      alert("새로운 비밀번호와 비밀번호 확인이 서로 다릅니다");
+    const setting = { password: newPwd };
+    if (newPwd != pwdCheck || !pwdReg || !checkReg) {
+      alert("비밀번호 양식이 맞지 않습니다. 다시 확인해주세요");
       newPass.current.focus();
     } else {
-      // axios.patch('/api/members/{memberid}/password', setting).then((res) => {
-      //   console.log(res.data)
-      // })
+      axios
+        .patch(`/api/members/${sessionStorage.getItem("memberId")}/password`, setting, {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        })
+        .then((res) => {
+          alert("비밀번호가 변경되었습니다");
+          window.location.replace("/mypage");
+        })
+        .catch((err) => {
+          alert("비밀번호 변경에 실패했습니다");
+        });
     }
   };
   const checkPwd = () => {
-    // const info = { email: "", password: currentPwd };
-    setChecked(true);
-    // axios
-    //   .post("/api/login", info, {
-    //     headers: { "ngrok-skip-browser-warning": "12" },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     //성공이면 setChecked true 실패면 alert (님 비번 틀림)
-    //   });
+    const info = { email: userInfo.email, password: currentPwd };
+    axios
+      .post("/api/login", info, {
+        headers: { "ngrok-skip-browser-warning": "12" },
+      })
+      .then((res) => {
+        window.localStorage.setItem("jwtToken", res.headers.authorization);
+        setChecked(true);
+      })
+      .catch((err) => {
+        alert("비밀번호 확인에 실패했습니다. 다시 확인해주세요");
+      });
+  };
+
+  const passwordCheck = (e) => {
+    const regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
+    switch (e.target.id) {
+      case "newPassword":
+        regexp.test(e.target.value) ? setPwdReg(true) : setPwdReg(false);
+        break;
+      case "newPwdCheck":
+        e.target.value === newPwd ? setCheckReg(true) : setCheckReg(false);
+        break;
+      default:
+        return;
+    }
   };
 
   return (
@@ -40,9 +70,28 @@ const MypagePassword = () => {
         <>
           <P.EditBox>
             <p>New Password</p>
-            <input type="password" placeholder="Enter your NEW password" value={newPwd} onChange={(e) => setNewPwd(e.target.value)} ref={newPass} />
+            <input
+              type="password"
+              placeholder="Enter your NEW password"
+              value={newPwd}
+              id="newPassword"
+              onChange={(e) => setNewPwd(e.target.value)}
+              ref={newPass}
+              onKeyUp={passwordCheck}
+            />
+            <P.NoticeText className={pwdReg ? "" : "active"}>
+              Passwords must contain at least eight characters, including at least 1 letter and 1 number.
+            </P.NoticeText>
             <p>Password Check</p>
-            <input type="password" placeholder="Enter your NEW password again" value={pwdCheck} onChange={(e) => setPwdCheck(e.target.value)} />
+            <input
+              type="password"
+              placeholder="Enter your NEW password again"
+              value={pwdCheck}
+              id="newPwdCheck"
+              onChange={(e) => setPwdCheck(e.target.value)}
+              onKeyUp={passwordCheck}
+            />
+            <P.NoticeText className={checkReg ? "" : "active"}>New password and confirmation password are different. Please check your password.</P.NoticeText>
           </P.EditBox>
           <P.SubmitBnt onClick={changePwd}>Submit</P.SubmitBnt>
         </>
