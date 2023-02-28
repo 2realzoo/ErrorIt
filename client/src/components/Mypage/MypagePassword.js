@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import * as P from "./mypageStyle";
 import axios from "axios";
+import Refresh from "../../util/Refresh";
 
 const MypagePassword = ({ userInfo }) => {
   const [checked, setChecked] = useState(false);
@@ -11,19 +12,33 @@ const MypagePassword = ({ userInfo }) => {
   const [checkReg, setCheckReg] = useState(true);
   const newPass = useRef();
 
+  const patchReq = async (data) => {
+    const axiosPatch = (data) => {
+      return axios
+        .patch(`/api/members/${sessionStorage.getItem("memberId")}/password`, data, {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
+    };
+    let result = await axiosPatch();
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosPatch();
+    }
+    return result.data;
+  };
+
   const changePwd = () => {
     const setting = { password: newPwd };
     if (newPwd != pwdCheck || !pwdReg || !checkReg) {
       alert("비밀번호 양식이 맞지 않습니다. 다시 확인해주세요");
       newPass.current.focus();
     } else {
-      axios
-        .patch(`/api/members/${sessionStorage.getItem("memberId")}/password`, setting, {
-          headers: {
-            "ngrok-skip-browser-warning": "12",
-            Authorization: localStorage.getItem("jwtToken"),
-          },
-        })
+      patchReq(setting)
         .then((res) => {
           alert("비밀번호가 변경되었습니다");
           window.location.replace("/mypage");

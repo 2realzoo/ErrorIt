@@ -1,24 +1,38 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as E from "./mypageStyle";
+import Refresh from "../../util/Refresh";
 
 const MypageEdit = ({ userInfo }) => {
   const [name, setName] = useState(userInfo.name);
   const [intro, setIntro] = useState("");
+
+  const patchReq = async (data) => {
+    const axiosPatch = () => {
+      return axios
+        .patch(`/api/members/${userInfo.memberId}`, data, {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
+    };
+    let result = await axiosPatch();
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosPatch();
+    }
+    return result.data;
+  };
 
   const submitPatch = () => {
     const setting = {
       name: name,
       intro: intro,
     };
-    console.log(setting);
-    axios
-      .patch(`/api/members/${userInfo.memberId}`, setting, {
-        headers: {
-          "ngrok-skip-browser-warning": "12",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-      })
+    patchReq(setting)
       .then((res) => {
         console.log(res.data);
         window.location.replace("/mypage");
