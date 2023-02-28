@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const axiosCall = (url, method) => {
+const axiosCall = (url, method, data = null) => {
   return axios({
-    method: method,
-    url: url,
+    method,
+    url,
+    data,
     headers: {
       "ngrok-skip-browser-warning": "12",
       Authorization: localStorage.getItem("jwtToken"),
