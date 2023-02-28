@@ -31,9 +31,11 @@ public interface QuestionMapper {
         }
         QuestionDto.QuestionDetailResponse response = new QuestionDto.QuestionDetailResponse();
         response.setQuestionId(question.getQuestionId());
+        // ownerId(작성자회원Id) 필드를 추가
+        response.setOwnerId(question.getMember().getMemberId());
         response.setTitle(question.getTitle());
         response.setContent(question.getContent());
-        response.setMember(question.getMember().getName());
+        response.setOwnerName(question.getMember().getName());
         response.setViewCount(question.getViewCount());
         response.setCreatedAt(question.getCreatedAt());
         response.setModifiedAt(question.getModifiedAt());
@@ -50,7 +52,9 @@ public interface QuestionMapper {
         response.setQuestionId(question.getQuestionId());
         response.setTitle(question.getTitle());
         response.setContent(question.getContent());
-        response.setMember(question.getMember().getName());
+        // ownerId(작성자회원Id) 필드를 추가
+        response.setOwnerId(question.getMember().getMemberId());
+        response.setOwnerName(question.getMember().getName());
         response.setViewCount(question.getViewCount());
         response.setCreatedAt(question.getCreatedAt());
         response.setModifiedAt(question.getModifiedAt());
@@ -75,11 +79,11 @@ public interface QuestionMapper {
     }
 
     // 댓글 -> 댓글 응답객체
-    @Mapping(target = "member", source = "member.name")
+    @Mapping(target = "ownerName", source = "member.name")
     CommentDto.CommentResponse CommentToResponse(Comment comment);
 
     // 댓글 리스트 -> 댓글 응답객체 리스트
-    @Mapping(target = "member", source = "member.name")
+    @Mapping(target = "ownerName", source = "member.name")
     List<CommentDto.CommentResponse> commentListToCommentsResponseDtoList(List<Comment> comments);
 
 }

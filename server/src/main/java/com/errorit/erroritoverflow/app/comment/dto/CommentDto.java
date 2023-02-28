@@ -35,8 +35,9 @@ public class CommentDto {
     @Setter
     public static class CommentResponse {
         private Long commentId;
+        private Long ownerId;
         private String content;
-        private String member;
+        private String ownerName;
         private LocalDateTime createdAt;
     }
 }
