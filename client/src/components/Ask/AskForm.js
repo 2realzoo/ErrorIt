@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import AskTipBox from "./AskTipBox";
 import { titleTip, contentTip, tagTip } from "./AskTips";
 import * as A from "./askStyled";
+import Refresh from "../../util/Refresh";
 
 const AskForm = () => {
   const [chapter, setChapter] = useState(1);
@@ -39,24 +40,35 @@ const AskForm = () => {
     const filteredTagList = tagList.filter((tagItem) => tagItem !== deleteTagItem);
     setTagList(filteredTagList);
   };
+  const submit = async (data) => {
+    const axiosPost = () => {
+      return axios
+        .post("/api/questions", data, {
+          headers: {
+            "ngrok-skip-browser-warning": "12",
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        })
+        .then((res) => res)
+        .catch((err) => err);
+    };
+    let result = await axiosPost();
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosPost();
+    }
+    return result.data;
+  };
   const submitQuestion = () => {
     const questionData = {
       memberId: sessionStorage.getItem("memberId"),
       title: titleInput.current.value,
       content: contentInput.current.value,
     };
-    axios
-      .post("/api/questions", questionData, {
-        headers: {
-          "ngrok-skip-browser-warning": "12",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        navigate("/question", { state: { questionId: res.data.questionId } });
-      })
-      .catch((err) => console.log(err));
+    submit(questionData).then((res) => {
+      console.log(res);
+      navigate("/question", { state: { questionId: res.questionId } });
+    });
   };
 
   return (

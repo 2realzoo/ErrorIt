@@ -29,6 +29,7 @@ const StyledButton = styled.button`
         return css`
           &:disabled {
             cursor: default;
+            background-color: var(--black-300);
           }
         `;
       case "ChangePassword":
@@ -53,8 +54,12 @@ const StyledButton = styled.button`
   }}
 `;
 
-function Button({ children, ...rest }) {
-  return <StyledButton {...rest}>{children}</StyledButton>;
+function Button({ children, pageName, ...rest }) {
+  return (
+    <StyledButton pageName={pageName} {...rest}>
+      {children}
+    </StyledButton>
+  );
 }
 
 export default Button;
