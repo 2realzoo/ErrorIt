@@ -19,7 +19,7 @@ const CommentContainer = styled.div`
 function Comment({comments}) {
       return(
         <CommentContainer key={comments.commentId}>
-          <p>{comments.content} - <span>{comments.member}</span> {new Date(comments.createAt).toDateString()}</p>
+          <p>{comments.content} - <span>{comments.member}</span> ({new Date(comments.createdAt).toDateString()})</p>
         </CommentContainer>
       )
 }

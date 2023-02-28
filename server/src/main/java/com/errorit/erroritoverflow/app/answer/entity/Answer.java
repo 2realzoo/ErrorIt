@@ -19,9 +19,6 @@ public class Answer extends Auditable{
     private Long answerId;
 
     @Column
-    private String title;
-
-    @Column
     private String content;
 
     @ManyToOne

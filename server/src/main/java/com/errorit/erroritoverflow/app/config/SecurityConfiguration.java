@@ -4,10 +4,7 @@ import com.errorit.erroritoverflow.app.auth.CustomAuthorityUtils;
 import com.errorit.erroritoverflow.app.auth.cookie.CookieManager;
 import com.errorit.erroritoverflow.app.auth.filter.JwtAuthenticationFilter;
 import com.errorit.erroritoverflow.app.auth.filter.JwtVerificationFilter;
-import com.errorit.erroritoverflow.app.auth.handler.MemberAccessDeniedHandler;
-import com.errorit.erroritoverflow.app.auth.handler.MemberAuthenticationEntryPoint;
-import com.errorit.erroritoverflow.app.auth.handler.MemberAuthenticationFailureHandler;
-import com.errorit.erroritoverflow.app.auth.handler.MemberAuthenticationSuccessHandler;
+import com.errorit.erroritoverflow.app.auth.handler.*;
 import com.errorit.erroritoverflow.app.auth.jwt.JwtTokenizer;
 import com.errorit.erroritoverflow.app.auth.refresh.service.RefreshService;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +76,15 @@ public class SecurityConfiguration {
                 .and()
                 .apply(new CustomFilterConfigurer())
 
+                // 로그아웃 처리 설정
+                .and()
+                .logout()
+                .logoutUrl("/logout") // 로그아웃 처리 URL
+                // .logoutSuccessUrl("/") // logoutSuccessHandler 가 등록되면 무시된다.
+                .addLogoutHandler(new MemberLogoutHandler(refreshService, jwtTokenizer)) // 로그아웃시 특정 작업을 수정하기 위한 핸들러 등록
+                .invalidateHttpSession(true) // 세션 무효화 옵션 : 기본값 true
+                .deleteCookies(cookieManager.getREFRESH_COOKIE_NAME())
+                .logoutSuccessHandler(new MemberLogoutSuccessHandler())
 
                 // 접근 권한을 부여
                 .and()
@@ -88,7 +94,7 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.POST, "/members/password").permitAll()
                                 .antMatchers(HttpMethod.POST, "/members/email").permitAll()
 
-                                .antMatchers(HttpMethod.GET, "/logout").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/logout").hasRole("USER")
                                 .antMatchers(HttpMethod.GET, "/members/*").hasRole("USER")
                                 .antMatchers(HttpMethod.DELETE, "/members/*").hasRole("USER")
                                 .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
@@ -158,7 +164,12 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // 모든 출처(Origin) 에 대한 스크립트 기반의 HTTP 통신을 허용
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        // configuration.setAllowedOrigins(Arrays.asList("*"));
+
+        // Access-Control-Allow-Credentials 허용
+        configuration.setAllowCredentials(true);
+        configuration.addAllowedOriginPattern("*"); // setAllowCredentials 적용으로 인해 setAllowedOrigins 대신 사용
+
         // 파라미터로 지정한 HTTP Method 에 대한 HTTP 통신을 허용
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
         // CorsConfigurationSource 인터페이스의 구현 클래스 생성

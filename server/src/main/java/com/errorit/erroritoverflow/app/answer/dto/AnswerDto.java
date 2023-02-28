@@ -37,6 +37,7 @@ public class AnswerDto {
     @Setter
     public static class AnswerResponse {
         private Long answerId;
+        private Long questionId;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
         private String member;
@@ -51,11 +52,24 @@ public class AnswerDto {
         private List<AnswerResponse> answers;
     }
 
+    // 회원이 작성한 답글 응답
+    @Getter
+    @Setter
+    public static class MemberAnswerResponse {
+        private Long answerId;
+        private Long questionId;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+        private String member;
+        private String content;
+        private List<CommentDto.CommentResponse> comments;
+    }
+
     // 회원이 작성한 답글 목록 응답
     @Getter
     @Setter
     public static class MemberAnswerListResponse {
         private PageInfo pageInfo;
-        private List<AnswerResponse> answers;
+        private List<MemberAnswerResponse> answers;
     }
 }
