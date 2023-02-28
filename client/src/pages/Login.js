@@ -13,7 +13,7 @@ import Button from "./commons/Button";
 import { useNavigate } from "react-router-dom";
 import logo from "../asset/stackoverflow_logo_icon.png";
 import Caption from "./commons/Caption";
-import useRedirect from "../util/useRedirect";
+import Redirect from "../util/Redirect";
 
 const Logo = styled.a`
   margin: 0 8px 0 8px;

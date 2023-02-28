@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { currentPage, userInfo } from "../reducers/actions";
@@ -15,7 +15,7 @@ import Select from "./commons/Select";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiFillCheckCircle } from "react-icons/ai";
-import useRedirect from "../util/useRedirect";
+import Redirect from "../util/Redirect";
 
 const SignUpTitle = styled.div`
   font-size: 1.3rem;
@@ -45,7 +45,7 @@ const EmailBox = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   .check-icon {
-    color: green;
+    color: #31b404;
     font-size: 1.1rem;
   }
 `;
@@ -72,9 +72,8 @@ const EmailCheckBtn = styled.button`
 `;
 
 function SignUp() {
-  // useRedirect()
+  // Redirect("login")
   const { userInfoReducer } = useSelector((state) => state);
-  const [errorMessage, setErrorMessage] = useState("");
   const [vaild, setVaild] = useState({
     name: 1,
     email: 1,
@@ -108,13 +107,12 @@ function SignUp() {
         .then((res) => {
           dispatch(userInfo({}));
           setPwdInfo({ pwd: "", confirmPw: "" });
-          setErrorMessage("");
         })
         .then(() => {
+          sessionStorage.setItem("signUpComplete", true);
           navigate("/alert/change");
         })
         .catch((err) => {
-          setErrorMessage("Sign up failed");
           alert("Sign up failed");
         });
     }

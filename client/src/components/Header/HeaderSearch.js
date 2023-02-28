@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { TbSearch } from "react-icons/tb";
 import SearchHintBox from "./SearchHint";
@@ -38,14 +38,6 @@ const SearchInput = styled.input`
   width: 100%;
 `;
 function HeaderSearch({ isHintOpen }) {
-  const [isActive, setIsActive] = useState(false);
-  // const handleClickSearch = () => {
-  //   setIsActive(true);
-  // };
-  // const handleDisableSearch = () => {
-  //   setIsActive(false);
-  // };
-
   return (
     <Container className="search-box">
       <Search className="search-box">

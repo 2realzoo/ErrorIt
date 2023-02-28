@@ -1,11 +1,18 @@
 import { useParams } from "react-router-dom";
 import Container from "./commons/Container";
 import AlertPage from "../components/AlertPage";
-import useRedirect from "../util/useRedirect";
+import Redirect from "../util/Redirect";
 
 const Alert = () => {
-  // useRedirect();
   const params = useParams();
+  if (params.type === "change") {
+    Redirect("changePassword");
+    sessionStorage.removeItem("changePassword");
+  } else if (params.type === "signup") {
+    Redirect("signUp");
+    sessionStorage.removeItem("signUpComplete");
+  }
+
   const signup = {
     title: "Member registration completed",
     content: ["You have completed your membership.", "Please log in."],

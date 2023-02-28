@@ -121,11 +121,10 @@ function Header() {
   const imageUri = sessionStorage.getItem("imageUri");
 
   const handleLogout = async () => {
-    let result = await axiosCall("/api/logout", "GET");
+    let result = await axiosCall("/api/logout", "POST");
     while (result.response && result.response.data.status === 401) {
       await Refresh();
-      result = await axiosCall("/api/logout", "GET");
-      console.log(result);
+      result = await axiosCall("/api/logout", "POST");
     }
     if (result.status === 200) {
       sessionStorage.clear();
