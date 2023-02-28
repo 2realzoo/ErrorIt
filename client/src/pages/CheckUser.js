@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import Notice from "./commons/Notice";
@@ -13,10 +12,10 @@ import axios from "axios";
 import Select from "./commons/Select";
 import { useDispatch } from "react-redux";
 import { currentPage } from "../reducers/actions";
-import useRedirect from "../util/useRedirect";
+import Redirect from "../util/Redirect";
 
 function CheckUser() {
-  // useRedirect();
+  // Redirect("login");
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     email: "",
@@ -41,6 +40,7 @@ function CheckUser() {
           console.log(res);
           localStorage.setItem("jwtToken", res.headers.authorization);
           sessionStorage.setItem("memberId", res.data.memberId);
+          sessionStorage.setItem("checkedUser", true);
           navigate("/change-password");
         })
         .catch((err) => {
@@ -53,13 +53,19 @@ function CheckUser() {
     switch (e.target.id) {
       case "emailAddress":
         regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
-        regexp.test(e.target.value) ? setVaild({ ...vaild, email: true }) : setVaild({ ...vaild, email: false });
+        regexp.test(e.target.value)
+          ? setVaild({ ...vaild, email: true })
+          : setVaild({ ...vaild, email: false });
         break;
       case "findQuestion":
-        e.target.value === "" ? setVaild({ ...vaild, findQuestion: false }) : setVaild({ ...vaild, findQuestion: true });
+        e.target.value === ""
+          ? setVaild({ ...vaild, findQuestion: false })
+          : setVaild({ ...vaild, findQuestion: true });
         break;
       case "findAnswer":
-        e.target.value === "" ? setVaild({ ...vaild, findAnswer: false }) : setVaild({ ...vaild, findAnswer: true });
+        e.target.value === ""
+          ? setVaild({ ...vaild, findAnswer: false })
+          : setVaild({ ...vaild, findAnswer: true });
         break;
       default:
         return;
@@ -69,7 +75,10 @@ function CheckUser() {
     <Container>
       <Wrapper pageName="CheckUser">
         <FormContainer>
-          <Notice>Forgot your account’s password?Please answer the email and the questions you chose when signing up. You can change your password.</Notice>
+          <Notice>
+            Forgot your account’s password?Please answer the email and the
+            questions you chose when signing up. You can change your password.
+          </Notice>
           <FormWrapper>
             <Label htmlfor="emailAddress">Email</Label>
             <Input
@@ -77,9 +86,14 @@ function CheckUser() {
                 handleVaild(e);
                 setUserInfo({ ...userInfo, email: e.target.value });
               }}
-              id="emailAddress"
-            ></Input>
-            {vaild.email ? <></> : <Notice color="red">Please fill it out according to the email form.</Notice>}
+              id="emailAddress"></Input>
+            {vaild.email ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the email form.
+              </Notice>
+            )}
           </FormWrapper>
           <FormWrapper>
             <Label htmlfor="findQuestion">Password Finding Question</Label>
@@ -95,10 +109,19 @@ function CheckUser() {
           </FormWrapper>
           <FormWrapper>
             <Label htmlfor="findAnswer">Password Finding Answer</Label>
-            <Input id="findAnswer" onChange={handleVaild} type="text" placeholder="type your answer"></Input>
-            <Notice color="var(--fc-light)">This Question and Answer are used to find the password</Notice>
+            <Input
+              id="findAnswer"
+              onChange={handleVaild}
+              type="text"
+              placeholder="type your answer"></Input>
+            <Notice color="var(--fc-light)">
+              This Question and Answer are used to find the password
+            </Notice>
           </FormWrapper>
-          {vaild.email && vaild.email !== 1 && vaild.findAnswer && vaild.findAnswer !== 1 ? (
+          {vaild.email &&
+          vaild.email !== 1 &&
+          vaild.findAnswer &&
+          vaild.findAnswer !== 1 ? (
             <Button onClick={handleSubmit} pageName="CheckUser">
               Submit
             </Button>

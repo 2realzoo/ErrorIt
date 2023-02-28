@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { currentPage } from "../reducers/actions";
 import axios from "axios";
+import useRedirect from "../util/Redirect";
 
 function ChangePassword() {
   const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
@@ -18,6 +19,7 @@ function ChangePassword() {
   const [informMessage, setInformMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useRedirect("CheckUser");
   useEffect(() => {
     dispatch(currentPage("Users"));
   }, []);
@@ -67,6 +69,8 @@ function ChangePassword() {
         }
       )
       .then((res) => {
+        sessionStorage.removeItem("checkedUser");
+        sessionStorage.setItem("changePassword", true);
         navigate("/alert/change");
       })
       .catch((err) => {
