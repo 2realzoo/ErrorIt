@@ -20,3 +20,9 @@ export const SubAttribute = styled.div`
     }
   }
 `;
+
+export const  QuestionTitleTextArea = styled.textarea`
+  font-size: 38px;
+  font-weight: 400;
+  width: 100%;
+`
