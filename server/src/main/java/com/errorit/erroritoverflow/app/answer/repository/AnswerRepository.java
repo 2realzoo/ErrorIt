@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer,Long> {
-    Page<Answer> findAllByQuestion_QuestionIdOrderByCreatedAt(Long memberId, Pageable pageable);
+    List<Answer> findAllByQuestion_QuestionIdOrderByCreatedAt(Long memberId);
     Page<Answer> findAllByMember_MemberIdOrderByCreatedAt(Long memberId, Pageable pageable);
 }

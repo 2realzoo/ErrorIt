@@ -26,6 +26,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final MemberService memberService;
     private final int PAGE_ELEMENT_SIZE = 10;
+    private final String ORDER_BY_LATEST = "latest";
+    private final String ORDER_BY_POPULAR = "popular";
 
     //질문 생성
     public Question createQuestion(Question question, Long memberId) {
@@ -74,12 +76,12 @@ public class QuestionService {
     public Page<Question> getQuestions(int pageNum, String orderBy){
         pageNum -= 1;
         //질문 페이지네이션 : 최신순
-        if (orderBy.equals("최신순")){
+        if (orderBy.equals(ORDER_BY_LATEST)){
             Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
             return questionRepository.findAll(pageable);
         }
         //질문 페이지네이션 : 조회순
-        else if(orderBy.equals("조회순")){
+        else if(orderBy.equals(ORDER_BY_POPULAR)){
             Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("viewCount").descending());
             return questionRepository.findAll(pageable);
         }
@@ -95,11 +97,11 @@ public class QuestionService {
         pageNum -= 1;
 
         //페이지네이션 : 최신순으로 정렬
-        if (orderBy.equals("최신순")) {
+        if (orderBy.equals(ORDER_BY_LATEST)) {
             Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("createdAt").descending());
             return questionRepository.findAllByMember_MemberIdOrderByCreatedAtDesc(memberId, pageable);
         //페이지네이션 : 조회순으로 정렬
-        } else if (orderBy.equals("조회순")) {
+        } else if (orderBy.equals(ORDER_BY_POPULAR)) {
             Pageable pageable = PageRequest.of(pageNum, PAGE_ELEMENT_SIZE, Sort.by("viewCount").descending());
             return questionRepository.findAllByMember_MemberIdOrderByViewCountDesc(memberId, pageable);
         } else {

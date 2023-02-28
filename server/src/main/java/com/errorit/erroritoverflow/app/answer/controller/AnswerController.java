@@ -68,10 +68,9 @@ public class AnswerController {
     // 답변 목록 : 질문 상세 페이지
     @GetMapping("/questions/{question-id}/answers")
     public ResponseEntity<?> getAnswerListByQuestionId(@PathVariable("question-id") Long questionId,
-                                                       @RequestParam("sort") String orderBy,
-                                                       @RequestParam("page") int page) {
-        Page<Answer> answerListPage = answerService.findAnswerListByQuestionId(questionId, page, orderBy);
-        AnswerDto.MemberAnswerListResponse response = mapper.pageListToMemberAnswerListResponse(answerListPage);
+                                                       @RequestParam("sort") String orderBy) {
+        List<Answer> answerList = answerService.findAnswerListByQuestionId(questionId, orderBy);
+        List<AnswerDto.AnswerResponse> response = mapper.answerListToResponseDtoList(answerList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
