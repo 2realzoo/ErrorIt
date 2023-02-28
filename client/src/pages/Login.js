@@ -15,6 +15,7 @@ import logo from "../asset/stackoverflow_logo_icon.png";
 import RefreshToken from "../components/RefreshToken";
 import Caption from "./commons/Caption";
 import useRedirect from "../util/useRedirect";
+import { Cookies } from "react-cookie";
 
 const Logo = styled.a`
   margin: 0 8px 0 8px;
@@ -58,7 +59,7 @@ function Login() {
   const { email, password } = userInfoReducer;
   dispatch(currentPage("Users"));
   // console.log(memberIdReducer);
-
+  axios.defaults.withCredentials = true;
   const handleSubmit = (e) => {
     e.preventDefault();
     const regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);

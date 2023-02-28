@@ -2,77 +2,108 @@ import React, { useEffect, useState } from "react";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import FormContainer from "./commons/FormContainer";
-import FormWrapper from "./commons/Form";
+import FormWrapper from "./commons/FormWrapper";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
 import Notice from "./commons/Notice";
-import { Route, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { currentPage } from "../reducers/actions";
+import axios from "axios";
 
 function ChangePassword() {
-  const [passwords, setPasswords] = useState({
-    newPassword: "",
-    confirmPassword: "",
-  });
+  const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
+  const [vaild, setVaild] = useState({ pwd: 1, confirmPw: 1 });
   const [informMessage, setInformMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   dispatch(currentPage("Users"));
+
   const handleInputChange = (e) => {
-    e.target.id === "new-password"
-      ? setPasswords({
-          newPassword: e.target.value,
-          confirmPassword: passwords.confirmPassword,
-        })
-      : setPasswords({
-          newPassword: passwords.newPassword,
-          confirmPassword: e.target.value,
-        });
-  };
-
-  useEffect(() => {
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      setInformMessage(
-        "New password and confirmation password are different. Please check your password."
-      );
-    } else {
-      setInformMessage("");
+    const regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
+    switch (e.target.id) {
+      case "newPassword":
+        let pwdVailds = { pwd: "", confirmPw: "" };
+        regexp.test(e.target.value)
+          ? (pwdVailds.pwd = true)
+          : (pwdVailds.pwd = false);
+        if (vaild.confirmPw !== 1 && e.target.value !== pwdInfo.confirmPw) {
+          pwdVailds.confirmPw = false;
+        } else if (
+          vaild.confirmPw !== 1 &&
+          e.target.value === pwdInfo.confirmPw
+        ) {
+          pwdVailds.confirmPw = true;
+        } else if (vaild.confirmPw === 1) {
+          pwdVailds.confirmPw = 1;
+        }
+        setVaild({ ...vaild, ...pwdVailds });
+        break;
+      case "confirmPassword":
+        pwdInfo.pwd === e.target.value
+          ? setVaild({ ...vaild, confirmPw: true })
+          : setVaild({ ...vaild, confirmPw: false });
+        break;
+      default:
+        return;
     }
-  }, [passwords]);
-
-  const handleSubmit = () => {
-    navigate("/change-password/alert-change");
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    return axios
+      .patch(`/api/members/${sessionStorage.getItem("memberId")}`, pwdInfo, {
+        headers: {
+          "ngrok-skip-browser-warning": "12",
+          Authorization: localStorage.getItem("jwtToken"),
+        },
+      })
+      .then((res) => {
+        navigate("/alert/change");
+      })
+      .catch((err) => console.log(err, localStorage.getItem("jwtToken")));
   };
   return (
     <Container>
       <Wrapper>
         <FormContainer>
           <FormWrapper>
-            <Label for="newPassword">New password</Label>
+            <Label htmlfor="newPassword">New password</Label>
             <Input
-              onChange={handleInputChange}
+              onChange={(e) => {
+                setPwdInfo({ ...pwdInfo, pwd: e.target.value });
+                handleInputChange(e);
+              }}
               id="newPassword"
               type="password"></Input>
             <Notice color="var(--fc-light)">
               Passwords must contain at least eight characters, including at
               least 1 letter and 1 number.
             </Notice>
+            {vaild.pwd ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the password form.
+              </Notice>
+            )}
           </FormWrapper>
           <FormWrapper>
-            <Label for="confirmPassword">Confirm new password</Label>
+            <Label htmlfor="confirmPassword">Confirm new password</Label>
             <Input
               onChange={handleInputChange}
               id="confirmPassword"
               type="password"></Input>
-            {informMessage.length > 0 ? (
-              <Notice color="red">{informMessage}</Notice>
-            ) : (
+            {vaild.confirmPw ? (
               <></>
+            ) : (
+              <Notice color="red">
+                New password and confirmation password are different. Please
+                check your password.
+              </Notice>
             )}
           </FormWrapper>
-          {informMessage.length === 0 ? (
+          {vaild.confirmPw && vaild.pwd ? (
             <Button onClick={handleSubmit} pageName="ChangePassword">
               Submit
             </Button>

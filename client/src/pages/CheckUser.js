@@ -5,7 +5,7 @@ import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import Notice from "./commons/Notice";
 import FormContainer from "./commons/FormContainer";
-import FormWrapper from "./commons/Form";
+import FormWrapper from "./commons/FormWrapper";
 import Label from "./commons/Label";
 import Input from "./commons/Input";
 import Button from "./commons/Button";
@@ -30,13 +30,16 @@ function CheckUser() {
   });
   const dispatch = useDispatch();
   dispatch(currentPage("Users"));
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (!vaild.findQuestion) {
       alert("Please select a password-finding question.");
     } else {
       return axios
         .post("/api/members/password", userInfo)
         .then((res) => {
+          console.log(res);
+          localStorage.setItem("jwtToken", res.headers.authorization);
           sessionStorage.setItem("memberId", res.data.memberId);
           navigate("/change-password");
         })

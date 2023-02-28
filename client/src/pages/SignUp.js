@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { currentPage, memberId, userInfo } from "../reducers/actions";
+import { currentPage, userInfo } from "../reducers/actions";
 import Container from "./commons/Container";
 import Wrapper from "./commons/Wrapper";
 import Notice from "./commons/Notice";
@@ -87,6 +87,7 @@ function SignUp() {
   dispatch(currentPage("Users"));
 
   const handleSignUp = (e) => {
+    e.preventDefault();
     if (userInfoReducer.name === "") {
       alert("Please fill out display name");
     }
@@ -161,6 +162,7 @@ function SignUp() {
       })
       .then((res) => {
         setEmailCheck(res.data.canUse);
+        console.log("ok");
       })
       .catch((err) => {
         console.log(err);
