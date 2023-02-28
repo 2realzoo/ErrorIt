@@ -6,8 +6,9 @@ import MenuSideBar from "./MenuSideBar";
 import HeaderSearch from "./HeaderSearch";
 import Button from "./Button";
 import logo from "../../asset/stackoverflow_logo_icon.png";
-import axios from "axios";
 import Gravatar from "react-gravatar";
+import Refresh from "../../util/Refresh";
+import axiosCall from "../../util/axiosCall";
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -119,17 +120,18 @@ function Header() {
   const [isHintOpen, setIsHintOpen] = useState(false);
   const imageUri = sessionStorage.getItem("imageUri");
 
-  const handleLogout = () => {
-    return axios
-      .post("/api/logout", {
-        headers: {
-          "ngrok-skip-browser-warning": "12",
-          Authorization: localStorage.getItem("jwtToken"),
-        },
-      })
-      .then((res) => sessionStorage.clear())
-      .then(() => navigate("/"))
-      .catch((err) => console.log(err));
+  const handleLogout = async () => {
+    const result = await axiosCall("/api/logout");
+    if (result === 200) {
+      sessionStorage.clear();
+      localStorage.clear();
+      navigate("/");
+    } else if (result === 401) {
+      await Refresh();
+      await handleLogout();
+    } else {
+      alert("Logout failed");
+    }
   };
   window.addEventListener("click", (e) => {
     e.target.className.includes("search-box")
