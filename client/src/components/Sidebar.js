@@ -69,7 +69,7 @@ const Sidebar = () => {
           <Menus
             className={currentPageReducer === "Users" ? "active" : ""}
             onClick={() => {
-              dispatch(currentPage("Question"));
+              dispatch(currentPage("User"));
               navigate("/mypage");
             }}
           >

@@ -5,13 +5,13 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Pagination from "react-js-pagination";
 
-const MypageList = ({ title, userInfo }) => {
+const MypageList = ({ title, type }) => {
   const { mypageReducer } = useSelector((state) => state);
   const userId = sessionStorage.getItem("memberId");
   const [sort, setSort] = useState("최신순");
   const [list, setList] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageInfo, setPageInfo] = useState({});
+  const [pageInfo, setPageInfo] = useState({ totalElements: 0 });
   const handlePageChange = (page) => {
     setPage(page);
   };
@@ -50,14 +50,14 @@ const MypageList = ({ title, userInfo }) => {
       </L.SortContainer>
       <L.Lists>
         {list.map((el, id) => (
-          <MypagePost key={el.questionId} />
+          <MypagePost key={el.modifiedAt} post={el} type={type} />
         ))}
       </L.Lists>
       <L.PageContainer>
         <Pagination
           activePage={page}
           itemsCountPerPage={10}
-          totalItemsCount={0}
+          totalItemsCount={pageInfo.totalElements}
           pageRangeDisplayed={5}
           prevPageText={"Prev"}
           nextPageText={"Next"}

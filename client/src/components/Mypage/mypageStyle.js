@@ -141,6 +141,11 @@ export const PostContainer = styled.div`
   &:last-child {
     border: none;
   }
+  h3 {
+    font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   p {
     color: var(--black-500);
     font-size: 14px;
