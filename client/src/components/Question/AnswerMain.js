@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Detail from "./Detail";
 import Button from "../../pages/commons/Button";
+import LoginPopup from "../LoginPopup";
 
 const AnswerMainContainer = styled.div`
   margin-top: 15px;
@@ -32,6 +33,7 @@ const ButtonContainer = styled.div`
 function AnswerMain({ idValue, loginMemberId }) {
   const [answers, setAnswers] = useState([]);
   const [addanswerValue, setAddanswersValue] = useState("");
+  const [isOpenLoginPopup, setIsOpenLoginPopup] = useState(false);
 
   useEffect(() => {
     axios({
@@ -54,54 +56,62 @@ function AnswerMain({ idValue, loginMemberId }) {
   };
 
   const addAnswerValueHandler = () => {
-    axios
-      .post(
-        `/api/questions/${idValue}/answers`,
-        {
-          memberId: loginMemberId,
-          content: addanswerValue,
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "12",
-            Authorization: localStorage.getItem("jwtToken"),
+    if (loginMemberId) {
+      axios
+        .post(
+          `/api/questions/${idValue}/answers`,
+          {
+            memberId: loginMemberId,
+            content: addanswerValue,
           },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => err);
+          {
+            headers: {
+              "ngrok-skip-browser-warning": "12",
+              Authorization: localStorage.getItem("jwtToken"),
+            },
+          }
+        )
+        .then((res) => {
+          const arr = [...answers, res.data];
+          setAnswers(arr);
+          setAddanswersValue('')
+        })
+        .catch((err) => err);
+    } else {
+      setIsOpenLoginPopup(true)
+    }
   };
 
   return (
-    <AnswerMainContainer>
-      <AnswerCount>{answers.length} Answers</AnswerCount>
-      {answers.map((el) => {
-        return (
-          <Detail
-            data={el}
-            QorA="answerId"
-            idValue={idValue}
-            loginMemberId={loginMemberId}
-          ></Detail>
-        );
-      })}
-      <AddAnswerContainer>
-        <AddAnswerTitle>Your Answer</AddAnswerTitle>
-        <AddAnswerForm
-          onChange={(data) => {
-            answerValueHandler(data);
-          }}
-        ></AddAnswerForm>
-        <ButtonContainer>
-          <Button
-            children="Post Your Answer"
-            onClick={addAnswerValueHandler}
-          ></Button>
-        </ButtonContainer>
-      </AddAnswerContainer>
-    </AnswerMainContainer>
+        <AnswerMainContainer>
+          <AnswerCount>{answers.length} Answers</AnswerCount>
+          {answers.map((el) => {
+            return (
+              <Detail
+                data={el}
+                QorA="answerId"
+                idValue={idValue}
+                loginMemberId={loginMemberId}
+              ></Detail>
+            );
+          })}
+          <AddAnswerContainer>
+            <AddAnswerTitle>Your Answer</AddAnswerTitle>
+            <AddAnswerForm
+              value={addanswerValue}
+              onChange={(data) => {
+                answerValueHandler(data);
+              }}
+            ></AddAnswerForm>
+            <ButtonContainer>
+              <Button
+                children="Post Your Answer"
+                onClick={addAnswerValueHandler}
+              ></Button>
+            </ButtonContainer>
+          </AddAnswerContainer>
+          {isOpenLoginPopup ? <LoginPopup openLoginPopupHandler={()=>{setIsOpenLoginPopup(false)}}></LoginPopup>: null}
+        </AnswerMainContainer>
   );
 }
 
