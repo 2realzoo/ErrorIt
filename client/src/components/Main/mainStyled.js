@@ -23,7 +23,6 @@ export const Sort = styled.div`
   &:first-child {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    border-right: none;
   }
   &:last-child {
     border-top-right-radius: 3px;
@@ -45,7 +44,7 @@ export const QuestionContainer = styled.div`
   justify-content: space-between;
 `;
 export const LeftBox = styled.div`
-  width: 20%;
+  width: 15%;
   p {
     text-align: right;
     color: var(--highlight-comment);
@@ -53,7 +52,7 @@ export const LeftBox = styled.div`
   }
 `;
 export const RigthBox = styled.div`
-  width: 78%;
+  width: 83%;
   padding-right: 20px;
   margin-top: -3px;
   h3 {
@@ -110,4 +109,72 @@ export const Writer = styled.span`
 `;
 export const Date = styled.span`
   color: var(--black-500);
+`;
+
+export const PageContainer = styled.div`
+  margin: 50px 0 100px 50px;
+  .pagination {
+    display: flex;
+    justify-content: left;
+    margin-top: 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.pagination li {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    border: 1px solid var(--black-075);
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    &:first-child {
+      width: 46px;
+    }
+    &:last-child {
+      width: 46px;
+    }
+    &.disabled {
+      display: none;
+    }
+
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      text-align: center;
+      line-height: 28px;
+      font-size: 12px;
+    }
+    &:not(.active) {
+      a {
+        :hover {
+          background: var(--black-100);
+        }
+      }
+    }
+  }
+
+  ul.pagination li.active a {
+    color: white;
+    cursor: default;
+  }
+
+  ul.pagination li.active {
+    background-color: var(--theme-primary-color);
+  }
+
+  .page-selection {
+    width: 48px;
+    height: 30px;
+    color: #337ab7;
+  }
 `;

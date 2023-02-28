@@ -1,87 +1,76 @@
-import React from "react";
-import styled from "styled-components";
-import Container from "../styles/Container";
-import Wrapper from "../styles/Wrapper";
-import Notice from "../styles/Notice";
-
-const FormContainer = styled.div`
-  box-shadow: var(--bs-xl);
-  padding: var(--su24);
-  margin-bottom: var(--su24);
-  margin-left: auto;
-  margin-right: auto;
-  background-color: var(--white);
-  border-radius: var(--br-lg);
-  max-width: 20rem;
-`;
-const Label = styled.label`
-  font-size: 0.95rem;
-  color: var(--fc-dark);
-  font-family: inherit;
-  font-weight: 600;
-  padding: 0 var(--su2);
-  margin-top: ${(props) => props.marginTop || "0"};
-  margin-bottom: ${(props) => props.marginBottom || "0"};
-  margin-right: 0;
-  margin-left: 0;
-`;
-const Input = styled.input`
-  -webkit-appearance: none;
-  width: 100%;
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.6em 0.7em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  background-color: var(--white);
-  color: var(--fc-dark);
-  font-size: var(--fs-body1);
-  font-family: inherit;
-`;
-const Form = styled.div`
-  margin: calc(var(--su12) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  display: flex;
-  flex-direction: column;
-`;
-const Select = styled.select`
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.3em 0.5em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
-  width: 100%;
-`;
-const Button = styled.button`
-  margin: calc(var(--su16) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  background-color: var(--_bu-bg);
-  border: var(--_bu-baw) solid var(--_bu-bc);
-  border-radius: var(--_bu-br);
-  box-shadow: var(--_bu-bs);
-  color: white;
-  font-size: var(--_bu-fs);
-  padding: var(--_bu-p);
-  cursor: pointer;
-  display: inline-block;
-  font-family: inherit;
-  font-weight: normal;
-  line-height: var(--lh-sm);
-  position: relative;
-  width: 100%;
-  --_bu-baw: var(--su-static1);
-  --_bu-bc: transparent;
-  --_bu-br: var(--br-sm);
-`;
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Container from "./commons/Container";
+import Wrapper from "./commons/Wrapper";
+import Notice from "./commons/Notice";
+import FormContainer from "./commons/FormContainer";
+import FormWrapper from "./commons/FormWrapper";
+import Label from "./commons/Label";
+import Input from "./commons/Input";
+import Button from "./commons/Button";
+import axios from "axios";
+import Select from "./commons/Select";
+import { useDispatch } from "react-redux";
+import { currentPage } from "../reducers/actions";
+import Redirect from "../util/Redirect";
 
 function CheckUser() {
+  // Redirect("login");
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    findQuestion: "",
+    finAnswer: "",
+  });
+  const [vaild, setVaild] = useState({
+    email: 1,
+    findQuestion: 1,
+    findAnswer: 1,
+  });
+  const dispatch = useDispatch();
+  dispatch(currentPage("Users"));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!vaild.findQuestion) {
+      alert("Please select a password-finding question.");
+    } else {
+      return axios
+        .post("/api/members/password", userInfo)
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("jwtToken", res.headers.authorization);
+          sessionStorage.setItem("memberId", res.data.memberId);
+          sessionStorage.setItem("checkedUser", true);
+          navigate("/change-password");
+        })
+        .catch((err) => {
+          alert("user check failed");
+        });
+    }
+  };
+  const handleVaild = (e) => {
+    let regexp;
+    switch (e.target.id) {
+      case "emailAddress":
+        regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
+        regexp.test(e.target.value)
+          ? setVaild({ ...vaild, email: true })
+          : setVaild({ ...vaild, email: false });
+        break;
+      case "findQuestion":
+        e.target.value === ""
+          ? setVaild({ ...vaild, findQuestion: false })
+          : setVaild({ ...vaild, findQuestion: true });
+        break;
+      case "findAnswer":
+        e.target.value === ""
+          ? setVaild({ ...vaild, findAnswer: false })
+          : setVaild({ ...vaild, findAnswer: true });
+        break;
+      default:
+        return;
+    }
+  };
   return (
     <Container>
       <Wrapper pageName="CheckUser">
@@ -90,28 +79,57 @@ function CheckUser() {
             Forgot your account’s password?Please answer the email and the
             questions you chose when signing up. You can change your password.
           </Notice>
-          <Form>
-            <Label>Email</Label>
-            <Input></Input>
-          </Form>
-          <Form>
-            <Label>Password Finding Question</Label>
-            <Select>
-              <option defaultChecked>--Please choose an option--</option>
+          <FormWrapper>
+            <Label htmlfor="emailAddress">Email</Label>
+            <Input
+              onChange={(e) => {
+                handleVaild(e);
+                setUserInfo({ ...userInfo, email: e.target.value });
+              }}
+              id="emailAddress"></Input>
+            {vaild.email ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the email form.
+              </Notice>
+            )}
+          </FormWrapper>
+          <FormWrapper>
+            <Label htmlfor="findQuestion">Password Finding Question</Label>
+            <Select onChange={handleVaild} id="findQuestion">
+              <option defaultChecked value="">
+                --Please choose an option--
+              </option>
               <option>가장 인상깊게 읽었던 책은?</option>
               <option>자신의 보물 제 1호는?</option>
               <option>가장 기억에 남는 선생님 성함은?</option>
               <option>다시 태어나면 되고 싶은 것은?</option>
             </Select>
-          </Form>
-          <Form>
-            <Label>Password Finding Answer</Label>
-            <Input type="text" placeholder="type your answer"></Input>
+          </FormWrapper>
+          <FormWrapper>
+            <Label htmlfor="findAnswer">Password Finding Answer</Label>
+            <Input
+              id="findAnswer"
+              onChange={handleVaild}
+              type="text"
+              placeholder="type your answer"></Input>
             <Notice color="var(--fc-light)">
               This Question and Answer are used to find the password
             </Notice>
-          </Form>
-          <Button>Submit</Button>
+          </FormWrapper>
+          {vaild.email &&
+          vaild.email !== 1 &&
+          vaild.findAnswer &&
+          vaild.findAnswer !== 1 ? (
+            <Button onClick={handleSubmit} pageName="CheckUser">
+              Submit
+            </Button>
+          ) : (
+            <Button pageName="CheckUser" disabled>
+              Submit
+            </Button>
+          )}
         </FormContainer>
       </Wrapper>
     </Container>

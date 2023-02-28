@@ -59,7 +59,8 @@ const Itemflex = styled.span`
   padding-right: 5px;
 `;
 const NavLink = styled.a`
-  display: block;
+  display: flex;
+  align-items: center;
   font-weight: bold;
   color: var(--black-900);
   background: var(--black-050);
@@ -70,6 +71,9 @@ const NavLink = styled.a`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--fs-body1);
+  .globe-icon {
+    margin-left: 8px;
+  }
 `;
 function MenuSideBar() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -79,8 +83,8 @@ function MenuSideBar() {
   const handleClickMenu = () => {
     setOpenMenu(!openMenu);
   };
-  const handlePageHome = () => {
-    dispatch(currentPage("Home"));
+  const handlePage = (e) => {
+    dispatch(currentPage(e.target.textContent));
   };
   return (
     <>
@@ -90,22 +94,15 @@ function MenuSideBar() {
       {openMenu ? (
         <MenuSidebar>
           <SidebarNav>
-            {currentPageReducer === "Home" ? (
-              <SelectedItem onClick={handlePageHome}>
-                <NavLink>Home</NavLink>
-              </SelectedItem>
-            ) : (
-              <NavItemWrapper onClick={handlePageHome}>
-                <NavItem href="/">Home</NavItem>
-              </NavItemWrapper>
-            )}
-            {currentPageReducer === "Question" ? (
+            {currentPageReducer === "Questions" ? (
               <SelectedItem>
-                <NavLink>Questions</NavLink>
-                <FaGlobeAsia />
+                <NavLink>
+                  Questions
+                  <FaGlobeAsia className="globe-icon" />
+                </NavLink>
               </SelectedItem>
             ) : (
-              <NavItemWrapper>
+              <NavItemWrapper onClick={handlePage}>
                 <NavItem>
                   <Itemflex>Questions</Itemflex>
                   <FaGlobeAsia />
@@ -117,7 +114,7 @@ function MenuSideBar() {
                 <NavLink>Tags</NavLink>
               </SelectedItem>
             ) : (
-              <NavItemWrapper>
+              <NavItemWrapper onClick={handlePage}>
                 <NavItem>Tags</NavItem>
               </NavItemWrapper>
             )}
@@ -126,7 +123,7 @@ function MenuSideBar() {
                 <NavLink>Users</NavLink>
               </SelectedItem>
             ) : (
-              <NavItemWrapper>
+              <NavItemWrapper onClick={handlePage}>
                 <NavItem>Users</NavItem>
               </NavItemWrapper>
             )}

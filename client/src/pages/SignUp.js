@@ -1,10 +1,21 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { currentPage } from "../reducers/actions";
-import Container from "../styles/Container";
-import Wrapper from "../styles/Wrapper";
-import Notice from "../styles/Notice";
+import { currentPage, userInfo } from "../reducers/actions";
+import Container from "./commons/Container";
+import Wrapper from "./commons/Wrapper";
+import Notice from "./commons/Notice";
+import FormContainer from "./commons/FormContainer";
+import FormWrapper from "./commons/FormWrapper";
+import Label from "./commons/Label";
+import Input from "./commons/Input";
+import Button from "./commons/Button";
+import Caption from "./commons/Caption";
+import Select from "./commons/Select";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { AiFillCheckCircle } from "react-icons/ai";
+import Redirect from "../util/Redirect";
 
 const SignUpTitle = styled.div`
   font-size: 1.3rem;
@@ -13,82 +24,6 @@ const SignUpTitle = styled.div`
   margin-bottom: var(--su24);
   margin-left: auto;
   margin-right: auto;
-`;
-const FormContainer = styled.div`
-  box-shadow: var(--bs-xl);
-  padding: var(--su24);
-  margin-bottom: var(--su24);
-  margin-left: auto;
-  margin-right: auto;
-  background-color: var(--white);
-  border-radius: var(--br-lg);
-  max-width: 20rem;
-`;
-const Form = styled.div`
-  margin: calc(var(--su12) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  display: flex;
-  flex-direction: column;
-`;
-const Label = styled.label`
-  font-size: 0.95rem;
-  color: var(--fc-dark);
-  font-family: inherit;
-  font-weight: 600;
-  padding: 0 var(--su2);
-  margin-top: ${(props) => props.marginTop || "0"};
-  margin-bottom: ${(props) => props.marginBottom || "0"};
-  margin-right: 0;
-  margin-left: 0;
-`;
-const Input = styled.input`
-  -webkit-appearance: none;
-  width: 100%;
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.6em 0.7em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  background-color: var(--white);
-  color: var(--fc-dark);
-  font-size: var(--fs-body1);
-  font-family: inherit;
-`;
-const Select = styled.select`
-  margin: calc(var(--su4) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  padding: 0.3em 0.5em;
-  border: 1px solid var(--bc-darker);
-  border-radius: var(--br-sm);
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
-  width: 100%;
-`;
-const Button = styled.button`
-  margin: calc(var(--su16) / 2);
-  margin-right: 0;
-  margin-left: 0;
-  background-color: var(--_bu-bg);
-  border: var(--_bu-baw) solid var(--_bu-bc);
-  border-radius: var(--_bu-br);
-  box-shadow: var(--_bu-bs);
-  color: white;
-  font-size: var(--_bu-fs);
-  padding: var(--_bu-p);
-  cursor: pointer;
-  display: inline-block;
-  font-family: inherit;
-  font-weight: normal;
-  line-height: var(--lh-sm);
-  position: relative;
-  width: 100%;
-  --_bu-baw: var(--su-static1);
-  --_bu-bc: transparent;
-  --_bu-br: var(--br-sm);
 `;
 const LinkedWord = styled.a`
   color: var(--theme-link-color);
@@ -104,24 +39,153 @@ const GuideWrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
 `;
-const Caption = styled.a`
-  font-size: var(--fs-caption);
-  --_li-fc: var(--theme-link-color);
-  --_li-fc-hover: var(--theme-link-color-hover);
-  --_li-fc-visited: var(--theme-link-color-visited);
-  color: var(--_li-fc);
+const EmailBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  .check-icon {
+    color: #31b404;
+    font-size: 1.1rem;
+  }
+`;
+const EmailCheckBtn = styled.button`
+  border: 1px solid hsl(205, 41%, 63%);
+  border-radius: 3px;
+  align-self: center;
+  background-color: hsl(205, 46%, 92%);
+  font-size: 0.75rem;
+  padding: 0.3rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  box-shadow: inset 0 1px 0 0 hsla(0, 0%, 100%, 0.7);
+  margin-left: 0.5rem;
+  margin-top: 2px;
+  margin-bottom: 2px;
   cursor: pointer;
-  text-decoration: none;
-  user-select: auto;
+  &:hover {
+    background-color: var(--_bu-filled-bg-hover);
+  }
+  &:disabled {
+    background-color: var(--black-100);
+  }
 `;
 
 function SignUp() {
+  // Redirect("login")
+  const { userInfoReducer } = useSelector((state) => state);
+  const [vaild, setVaild] = useState({
+    name: 1,
+    email: 1,
+    password: 1,
+    confirmPw: 1,
+    findQuestion: 1,
+    findAnswer: 1,
+  });
+  const [emailCheck, setEmailCheck] = useState({
+    canUse: false,
+    checkedEmail: "",
+  });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [pwdInfo, setPwdInfo] = useState({ pwd: "", confirmPw: "" });
+
+  dispatch(currentPage("Users"));
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    if (userInfoReducer.name === "") {
+      alert("Please fill out display name");
+    }
+    if (userInfoReducer.findQuestion === "") {
+      alert("Please select a password-finding question.");
+    } else {
+      return axios
+        .post("/api/members", userInfoReducer, {
+          headers: { "ngrok-skip-browser-warning": "12" },
+        })
+        .then((res) => {
+          dispatch(userInfo({}));
+          setPwdInfo({ pwd: "", confirmPw: "" });
+        })
+        .then(() => {
+          sessionStorage.setItem("signUpComplete", true);
+          navigate("/alert/change");
+        })
+        .catch((err) => {
+          alert("Sign up failed");
+        });
+    }
+  };
+  const handleVaild = (e) => {
+    let regexp;
+    switch (e.target.id) {
+      case "displayName":
+        if (e.target.value.length > 0) {
+          setVaild({ ...vaild, name: true });
+        } else {
+          setVaild({ ...vaild, name: false });
+        }
+        break;
+      case "emailAddress":
+        regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
+        if (emailCheck === true && e.target.id !== emailCheck.checkedEmail) {
+          setEmailCheck({ canUse: false, checkedEmail: "" });
+        }
+        regexp.test(e.target.value)
+          ? setVaild({ ...vaild, email: true })
+          : setVaild({ ...vaild, email: false });
+        break;
+      case "password":
+        regexp = new RegExp(/^(?=.+[A-Za-z])(?=.+\d)[A-Za-z\d]{8,}$/gm);
+        let pwdVailds = { password: "", confirmPw: "" };
+        regexp.test(e.target.value)
+          ? (pwdVailds.password = true)
+          : (pwdVailds.password = false);
+        if (vaild.confirmPw !== 1 && e.target.value !== pwdInfo.confirmPw) {
+          pwdVailds.confirmPw = false;
+        } else if (
+          vaild.confirmPw !== 1 &&
+          e.target.value === pwdInfo.confirmPw
+        ) {
+          pwdVailds.confirmPw = true;
+        }
+        setVaild({ ...vaild, ...pwdVailds });
+        break;
+      case "confirmPassword":
+        pwdInfo.pwd === e.target.value
+          ? setVaild({ ...vaild, confirmPw: true })
+          : setVaild({ ...vaild, confirmPw: false });
+        break;
+      default:
+        return;
+    }
+  };
 
   useEffect(() => {
-    dispatch(currentPage("Users"));
-  }, []);
+    console.log(vaild);
+  }, [vaild]);
 
+  const onDuplicationCheck = (e) => {
+    e.preventDefault();
+    return axios
+      .post("/api/members/email", {
+        email: userInfoReducer.email,
+      })
+      .then((res) => {
+        if (res.data.canUse) {
+          setEmailCheck({ canUse: true, checkedEmail: userInfoReducer.email });
+          alert("Email duplicate verification completed");
+        } else {
+          setEmailCheck({ canUse: false, checkedEmail: "" });
+          alert("It's a duplicate email. Please check your email");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("duplicatation check failed!");
+      });
+  };
   return (
     <Container pageName="SignUp">
       <Wrapper pageName="SignUp">
@@ -129,41 +193,160 @@ function SignUp() {
           Create your Stack Overflow account. It’s free and only takes a minute.
         </SignUpTitle>
         <FormContainer>
-          <Form>
-            <Label>Display name</Label>
-            <Input type="text"></Input>
-          </Form>
-          <Form>
-            <Label>Email</Label>
-            <Input type="email"></Input>
-          </Form>
-          <Form>
-            <Label>Password</Label>
-            <Input type="password"></Input>
-          </Form>
-          <Form>
-            <Label>Confirm password</Label>
-            <Input type="password"></Input>{" "}
+          <FormWrapper>
+            <Label htmlfor="displayName">Display name</Label>
+            <Input
+              type="text"
+              id="displayName"
+              onChange={(e) => {
+                dispatch(
+                  userInfo({ ...userInfoReducer, name: e.target.value })
+                );
+                handleVaild(e);
+              }}></Input>
+          </FormWrapper>
+          <FormWrapper>
+            <EmailBox>
+              <Label htmlfor="emailAddress">Email</Label>
+              {emailCheck.canUse ? (
+                <AiFillCheckCircle className="check-icon" />
+              ) : vaild.email ? (
+                <EmailCheckBtn onClick={onDuplicationCheck}>
+                  Duplicate check
+                </EmailCheckBtn>
+              ) : (
+                <EmailCheckBtn disabled>Duplicate check</EmailCheckBtn>
+              )}
+            </EmailBox>
+            <Input
+              disabled={emailCheck.canUse}
+              pageName="SignUp"
+              type="email"
+              id="emailAddress"
+              onBlur={handleVaild}
+              onChange={(e) => {
+                dispatch(
+                  userInfo({ ...userInfoReducer, email: e.target.value })
+                );
+                handleVaild(e);
+              }}></Input>
+            {vaild.email ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the email form.
+              </Notice>
+            )}
+          </FormWrapper>
+          <FormWrapper>
+            <Label htmlfor="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              onChange={(e) => {
+                setPwdInfo({ ...pwdInfo, pwd: e.target.value });
+                dispatch(
+                  userInfo({ ...userInfoReducer, password: e.target.value })
+                );
+                handleVaild(e);
+              }}></Input>
+            {vaild.password ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Please fill it out according to the password form.
+              </Notice>
+            )}
             <Notice color="var(--fc-light)">
               Passwords must contain at least eight characters, including at
               least 1 letter and 1 number.
             </Notice>
-          </Form>
-          <Form>
-            <Label>Password Finding Question</Label>
-            <Select>
-              <option value="">--Please choose an option--</option>
-              <option>질문1</option>
+          </FormWrapper>
+          <FormWrapper>
+            <Label htmlfor="confirmPassword">Confirm password</Label>
+            <Input
+              type="password"
+              id="confirmPassword"
+              onChange={(e) => {
+                setPwdInfo({ ...pwdInfo, confirmPw: e.target.value });
+
+                handleVaild(e);
+              }}></Input>
+            {vaild.confirmPw ? (
+              <></>
+            ) : (
+              <Notice color="red">
+                Password and confirmation password must be same.
+              </Notice>
+            )}
+          </FormWrapper>
+          <FormWrapper>
+            <Label htmlfor="findQuestion">Password Finding Question</Label>
+            <Select
+              id="findQuestion"
+              onChange={(e) =>
+                dispatch(
+                  userInfo({
+                    ...userInfoReducer,
+                    findQuestion: e.target.value,
+                  })
+                )
+              }>
+              <option defaultChecked value="">
+                --Please choose an option--
+              </option>
+              <option value="가장 인상깊게 읽었던 책은?">
+                가장 인상깊게 읽었던 책은?
+              </option>
+              <option value="자신의 보물 제 1호는?">
+                자신의 보물 제 1호는?
+              </option>
+              <option value="가장 기억에 남는 선생님 성함은?">
+                가장 기억에 남는 선생님 성함은?
+              </option>
+              <option value="다시 태어나면 되고 싶은 것은?">
+                다시 태어나면 되고 싶은 것은?
+              </option>
             </Select>
-          </Form>
-          <Form>
-            <Label>Password Finding Answer</Label>
-            <Input type="text" placeholder="type your answer"></Input>
+          </FormWrapper>
+          <FormWrapper>
+            <Label htmlfor="findAnswer">Password Finding Answer</Label>
+            <Input
+              type="text"
+              id="findAnswer"
+              placeholder="type your answer"
+              onChange={(e) =>
+                dispatch(
+                  userInfo({ ...userInfoReducer, findAnswer: e.target.value })
+                )
+              }></Input>
             <Notice color="var(--fc-light)">
               This Question and Answer are used to find the password
             </Notice>
-          </Form>
-          <Button>Sign up</Button>
+          </FormWrapper>
+          {userInfoReducer.findAnswer !== "" &&
+          vaild.email !== 1 &&
+          vaild.email &&
+          vaild.password &&
+          vaild.password !== 1 &&
+          vaild.confirmPw &&
+          vaild.confirmPw !== 1 &&
+          emailCheck.canUse &&
+          vaild.name !== 1 &&
+          vaild.name ? (
+            <Button
+              onClick={(e) => {
+                handleSignUp(e);
+              }}
+              pageName="SignUp">
+              Sign up
+            </Button>
+          ) : (
+            <Button disabled pageName="SignUp">
+              Sign up
+            </Button>
+          )}
+
           <Notice color="var(--fc-light)" marginTop="var(--su16)">
             By clicking “Sign up”, you agree to our{" "}
             <LinkedWord
