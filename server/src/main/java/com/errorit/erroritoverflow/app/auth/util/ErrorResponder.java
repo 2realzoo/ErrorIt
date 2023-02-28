@@ -11,19 +11,27 @@ import java.io.IOException;
 
 // ErrorResponse 를 출력스트림으로 생성하는 역할
 public class ErrorResponder {
-    public static void sendErrorResponseByStatus(HttpServletResponse response, HttpStatus status) throws IOException {
+    public static void sendErrorResponseByStatus(HttpServletResponse response, HttpStatus status) {
         Gson gson = new Gson();
         ErrorResponse errorResponse = ErrorResponse.of(status);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(status.value());
-        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        try {
+            response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void sendErrorResponseByExceptionCode(HttpServletResponse response, ExceptionCode exceptionCode) throws IOException {
+    public static void sendErrorResponseByExceptionCode(HttpServletResponse response, ExceptionCode exceptionCode){
         Gson gson = new Gson();
         ErrorResponse errorResponse = ErrorResponse.of(exceptionCode);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(errorResponse.getStatus());
-        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        try {
+            response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -26,7 +26,7 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     // 처리하고자 하는 로직 구현
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
         Exception exception = (Exception) request.getAttribute("exception");
 
         // 클라이언트에게 ErrorResponse 를 생성해 전송

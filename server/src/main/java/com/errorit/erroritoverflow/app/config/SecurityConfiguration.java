@@ -18,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -78,16 +79,15 @@ public class SecurityConfiguration {
 
                 // 로그아웃 처리 설정
                 .and()
-                .logout()
-                .logoutUrl("/logout") // 로그아웃 처리 URL
-                // .logoutSuccessUrl("/") // logoutSuccessHandler 가 등록되면 무시된다.
-                .addLogoutHandler(new MemberLogoutHandler(refreshService, jwtTokenizer)) // 로그아웃시 특정 작업을 수정하기 위한 핸들러 등록
-                .invalidateHttpSession(true) // 세션 무효화 옵션 : 기본값 true
-                .deleteCookies(cookieManager.getREFRESH_COOKIE_NAME())
-                .logoutSuccessHandler(new MemberLogoutSuccessHandler())
+                .logout().disable() // 기획 변경으로 인한 logout 필터 비활성화 : 로그아웃 전처리 과정 필요 : 인터셉터에서 처리
+//                .logoutUrl("/logout") // 로그아웃 처리 URL
+//                // .logoutSuccessUrl("/") // logoutSuccessHandler 가 등록되면 무시된다.
+//                .addLogoutHandler(new MemberLogoutHandler(refreshService, jwtTokenizer)) // 로그아웃시 특정 작업을 수정하기 위한 핸들러 등록
+//                .invalidateHttpSession(true) // 세션 무효화 옵션 : 기본값 true
+//                .deleteCookies(cookieManager.getREFRESH_COOKIE_NAME())
+//                .logoutSuccessHandler(new MemberLogoutSuccessHandler())
 
                 // 접근 권한을 부여
-                .and()
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .antMatchers(HttpMethod.POST, "/members").permitAll()
@@ -103,8 +103,20 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.GET, "/members/*/answers").hasRole("USER")
 
                                 .antMatchers(HttpMethod.POST, "/questions").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/questions/*").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/questions/*").hasRole("USER")
+
+                                .antMatchers(HttpMethod.POST, "/answers").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/answers/*").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/answers/*").hasRole("USER")
+
                                 .antMatchers(HttpMethod.POST, "/answers/*/comment").hasRole("USER")
-                                .antMatchers(HttpMethod.POST, "/questions/*/answers").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/answers/*/comment").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/answers/*/comment").hasRole("USER")
+
+                                .antMatchers(HttpMethod.POST, "/questions/*/comment").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/questions/*/comment").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/questions/*/comment").hasRole("USER")
                                 .anyRequest().permitAll()
                 );
         return http.build();
@@ -118,6 +130,7 @@ public class SecurityConfiguration {
         // configure() 메서드를 오버라이드해서 Configuration 을 커스터마이징
         @Override
         public void configure(HttpSecurity builder) throws Exception {
+
             // getSharedObject() 를 통해서 Spring Security 의 설정을 구성하는 SecurityConfigurer 간에 공유되는 객체를 획득가능
             // getSharedObject(AuthenticationManager.class)를 통해 AuthenticationManager 객체 획득
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
