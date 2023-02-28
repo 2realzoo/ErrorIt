@@ -52,7 +52,7 @@ function ChangePassword() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     return axios
       .patch(

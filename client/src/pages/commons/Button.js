@@ -54,8 +54,12 @@ const StyledButton = styled.button`
   }}
 `;
 
-function Button({ children, ...rest }) {
-  return <StyledButton {...rest}>{children}</StyledButton>;
+function Button({ children, pageName, ...rest }) {
+  return (
+    <StyledButton pageName={pageName} {...rest}>
+      {children}
+    </StyledButton>
+  );
 }
 
 export default Button;
