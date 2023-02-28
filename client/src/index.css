@@ -9,6 +9,8 @@
   --theme-post-title-font-family: var(--ff-sans);
   --theme-body-font-family: var(--ff-sans);
   --theme-post-body-font-family: var(--ff-sans);
+  height: 100%;
+  min-height: max-content;
 }
 * {
   margin: 0;
@@ -76,12 +78,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 50px;
   min-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  padding-top: 50px;
 }
-
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

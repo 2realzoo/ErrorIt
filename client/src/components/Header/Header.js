@@ -152,7 +152,7 @@ function Header() {
             <UserImg href="/mypage">
               {imageUri === "default" ? (
                 <Gravatar
-                  email={userInfoReducer.email}
+                  email={sessionStorage.getItem("email")}
                   default="identicon"
                   size={33}
                   className="user-img"

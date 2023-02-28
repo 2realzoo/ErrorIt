@@ -2,7 +2,11 @@ import styled, { css } from "styled-components";
 
 const StyledWrapper = styled.div`
   height: 100%;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* flex-shrink: 0; */
   ${(props) => {
     switch (props.pageName) {
       case "Login":
@@ -12,7 +16,8 @@ const StyledWrapper = styled.div`
         `;
       case "SignUp":
         return css`
-          min-height: 530px;
+          padding-top: 100px;
+          padding-bottom: 20px;
         `;
       case "CheckUser":
         return css`

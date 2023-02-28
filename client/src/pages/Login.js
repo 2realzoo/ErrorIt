@@ -15,6 +15,7 @@ import logo from "../asset/stackoverflow_logo_icon.png";
 import RefreshToken from "../components/RefreshToken";
 import Caption from "./commons/Caption";
 import useRedirect from "../util/useRedirect";
+import { Cookies } from "react-cookie";
 
 const Logo = styled.a`
   margin: 0 8px 0 8px;
@@ -49,43 +50,48 @@ function Login() {
   // useRedirect();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState({
-    email: "",
-    password: "",
-  });
+  // const [loginInfo, setLoginInfo] = useState({
+  //   email: "",
+  //   password: "",
+  // });
   const [errorMessage, setErrorMessage] = useState("");
-  const { memberIdReducer } = useSelector((state) => state);
+  const { memberIdReducer, userInfoReducer } = useSelector((state) => state);
+  const { email, password } = userInfoReducer;
   dispatch(currentPage("Users"));
   // console.log(memberIdReducer);
-
+  axios.defaults.withCredentials = true;
   const handleSubmit = (e) => {
     e.preventDefault();
     const regexp = new RegExp(/^[A-Za-z0-9]+@[a-z]+\.[a-z.]+$/);
-    if (!loginInfo.email && loginInfo.password) {
+    if (!email && password) {
       alert("Please enter your ID.");
     }
-    if (!regexp.test(loginInfo.email)) {
+    if (!regexp.test(email)) {
       return alert("Fill it out in email format.");
-    } else if (loginInfo.email && !loginInfo.password) {
+    } else if (email && !password) {
       alert("Please enter your password.");
-    } else if (!loginInfo.email && !loginInfo.password) {
+    } else if (!email && !password) {
       alert("Please enter your ID and password.");
     } else {
       return axios
-        .post("/api/login", loginInfo, {
-          headers: { "ngrok-skip-browser-warning": "12" },
-        })
+        .post(
+          "/api/login",
+          { email, password },
+          {
+            headers: { "ngrok-skip-browser-warning": "12" },
+          }
+        )
         .then((res) => {
           dispatch(isLogin(true));
           setErrorMessage("");
           window.localStorage.setItem("jwtToken", res.headers.authorization);
           window.sessionStorage.setItem("memberId", res.data.memberId);
           window.sessionStorage.setItem("imageUri", res.data.imageUri);
-          console.log(res);
+          window.sessionStorage.setItem("email", email);
+          // console.log(res);
           // dispatch(memberId(res.data.memberId));
         })
         .then(() => {
-          dispatch(currentPage("Questions"));
           navigate("/");
         })
         .catch((err) => {
@@ -98,11 +104,8 @@ function Login() {
 
   const handleChange = (e) => {
     e.target.type === "email"
-      ? setLoginInfo({ ...loginInfo, email: e.target.value })
-      : setLoginInfo({
-          ...loginInfo,
-          password: e.target.value,
-        });
+      ? dispatch(userInfo({ ...userInfoReducer, email: e.target.value }))
+      : dispatch(userInfo({ ...userInfoReducer, password: e.target.value }));
   };
 
   return (

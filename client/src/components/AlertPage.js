@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Container from "../pages/commons/Container";
 import Wrapper from "../pages/commons/Wrapper";
 import { SlCheck } from "react-icons/sl";
 
@@ -27,18 +26,16 @@ const IconWrapper = styled.div`
 `;
 function AlertPage({ title, content }) {
   return (
-    <Container pageName="AlertChange">
-      <Wrapper>
-        <Title>{title}</Title>
-        <IconWrapper>
-          <SlCheck className="check-icon" />
-        </IconWrapper>
-        {content.map((el, idx) => (
-          <div key={idx}>{el}</div>
-        ))}
-        <LinkedWord href="/login">Log in</LinkedWord>
-      </Wrapper>
-    </Container>
+    <Wrapper>
+      <Title>{title}</Title>
+      <IconWrapper>
+        <SlCheck className="check-icon" />
+      </IconWrapper>
+      {content.map((el, idx) => (
+        <div key={idx}>{el}</div>
+      ))}
+      <LinkedWord href="/login">Log in</LinkedWord>
+    </Wrapper>
   );
 }
 

@@ -30,13 +30,16 @@ function CheckUser() {
   });
   const dispatch = useDispatch();
   dispatch(currentPage("Users"));
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (!vaild.findQuestion) {
       alert("Please select a password-finding question.");
     } else {
       return axios
         .post("/api/members/password", userInfo)
         .then((res) => {
+          console.log(res);
+          localStorage.setItem("jwtToken", res.headers.authorization);
           sessionStorage.setItem("memberId", res.data.memberId);
           navigate("/change-password");
         })

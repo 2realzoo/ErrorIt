@@ -3,11 +3,12 @@ import styled, { css } from "styled-components";
 const StyledContainer = styled.div`
   max-width: 100%;
   width: 100%;
-  height: 100vh;
+  min-height: 100%;
   justify-content: center;
   background-color: var(--black-050);
-  overflow: hidden;
-
+  display: flex;
+  flex: 1 0 auto;
+  margin: 0 auto;
   ${(props) => {
     switch (props.pageName) {
       case "SignUp":
@@ -23,7 +24,7 @@ const StyledContainer = styled.div`
       default:
         return;
     }
-  }}
+  }};
 `;
 
 function Container({ children, pageName, ...rest }) {
