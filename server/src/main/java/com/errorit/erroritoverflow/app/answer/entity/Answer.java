@@ -18,7 +18,7 @@ public class Answer extends Auditable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long answerId;
 
-    @Column
+    @Column(length = 2000)
     private String content;
 
     @ManyToOne

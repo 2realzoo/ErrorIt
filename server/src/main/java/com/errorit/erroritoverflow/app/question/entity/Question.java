@@ -25,7 +25,7 @@ public class Question extends Auditable{
     private String title;
 
     //질문 내용
-    @Column
+    @Column(length = 2000)
     private String content;
 
     //질문 조회수
