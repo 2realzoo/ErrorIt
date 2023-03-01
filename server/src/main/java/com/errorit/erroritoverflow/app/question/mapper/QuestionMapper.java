@@ -63,11 +63,13 @@ public interface QuestionMapper {
     };
 
     //질문리스트 -> 질문목록응답에 포함될 응답객체리스트
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     List<QuestionDto.QuestionElementResponse> questionsToQuestionElementList(List<Question> questions);
 
     // Page<Question> -> PageQuestionListResponse
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     default QuestionDto.PageQuestionListResponse pageListToPageQuestionListResponse(Page<Question> questions) {
         if ( questions == null ) {
             return null;
@@ -80,10 +82,12 @@ public interface QuestionMapper {
 
     // 댓글 -> 댓글 응답객체
     @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     CommentDto.CommentResponse CommentToResponse(Comment comment);
 
     // 댓글 리스트 -> 댓글 응답객체 리스트
     @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     List<CommentDto.CommentResponse> commentListToCommentsResponseDtoList(List<Comment> comments);
 
 }
