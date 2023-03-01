@@ -13,12 +13,14 @@ const QuestionComponent = styled.div`
 
 function Question() {
   const location = useLocation();
+  const [idValue, setIdValue] = useState(location.state.questionId)
   const [loginMemberId, setLoginMemberId] = useState(sessionStorage.getItem("memberId"));
+  const [rander, setRander] = useState(true)
   console.log(location)
   return (
     <QuestionComponent>
-      <QuestionMain idValue={location.state.questionId} loginMemberId={loginMemberId}></QuestionMain>
-      <AnswerMain idValue={location.state.questionId} loginMemberId={loginMemberId}></AnswerMain>
+      <QuestionMain rander={rander} setRander={setRander} idValue={idValue} loginMemberId={loginMemberId}></QuestionMain>
+      <AnswerMain rander={rander} setRander={setRander} idValue={idValue} loginMemberId={loginMemberId}></AnswerMain>
     </QuestionComponent>
   );
 }

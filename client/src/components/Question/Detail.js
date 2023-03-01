@@ -11,6 +11,9 @@ import {
   BsXLg,
 } from "react-icons/bs";
 import Button from "../../pages/commons/Button";
+import axiosCall from "../../util/axiosCall";
+import Refresh from "../../util/Refresh";
+import { useNavigate } from "react-router-dom";
 
 const DetailContainer = styled.div`
   margin-top: ${(props) => props.marginTop};
@@ -63,7 +66,7 @@ const UserAddOn = styled.div`
   color: var(--black-300);
   display: flex;
   align-items: flex-end;
-  ul{
+  ul {
     margin-bottom: 20px;
   }
   li {
@@ -93,8 +96,13 @@ const CreatedAt = styled.div`
   color: var(--black-200);
 `;
 const CommentAddBtn = styled.button`
+  font-size: 15px;
   color: var(--black-200);
   margin: 10px 0 39px 0;
+  color: var(--blue);
+  :hover{
+    color: var(--blue-300);
+  }
 `;
 const AddCommentContainer = styled.div`
   display: flex;
@@ -153,20 +161,24 @@ function Detail({
   data,
   idValue,
   loginMemberId,
-  setAnswers,
+  setData=()=>{},
   questionTitleValue,
-  setEditQuestionTitle,
+  setEditQuestionTitle = () => {},
+  answers,
+  setAnswers,
 }) {
   const [isOpenLoginPopup, setisOpenLoginPopup] = useState(false);
   const [isOpenCommentForm, setIsOpenCommentForm] = useState(false);
   const [isOpenEditContent, setIsOpenEditContent] = useState(false);
   const [commentValue, setCommentValue] = useState("");
-  const [detailData, setDetailData] = useState(data);
   const [questionContentValue, setQuestionContentValue] = useState(
     data.content
   );
+  const [overCount, setOverCount] = useState(5);
+  const [isOverfive, setisOverFive] = useState(data.comments.length>5)
+  const navigate = useNavigate();
   if (QorA === "answerId") {
-    idValue = detailData.answerId;
+    idValue = data.answerId;
   }
   const openLoginPopupHandler = () => {
     if (loginMemberId) {
@@ -185,41 +197,42 @@ function Detail({
     setCommentValue(e.target.value);
   };
 
-  const commentSubmitHandler = () => {
+  const commentSubmitHandler = async () => {
     if (commentValue.length <= 0) {
-      alert("길이좀");
+      alert("1글자 이상의 내용을 입력해주세요");
     } else {
-      axios
-        .post(
-          `/api/${
-            QorA === "questionId" ? "questions" : "answers"
-          }/${idValue}/comments`,
-          {
-            memberId: loginMemberId,
-            content: commentValue,
-          },
-          {
-            headers: {
-              "ngrok-skip-browser-warning": "12",
-              Authorization: localStorage.getItem("jwtToken"),
-            },
-          }
-        )
-        .then((res) => {
-          const obj = Object.assign({}, detailData);
-          obj.comments.push(res.data);
-          console.log(obj);
-          setDetailData(obj);
-          setCommentValue("");
-          setIsOpenCommentForm(false);
-        })
-        .catch((err) => err);
+      const reqUrl = QorA === "questionId" ? "questions" : "answers";
+      let result = await axiosCall(
+        `/api/${reqUrl}/${idValue}/comments`,
+        "POST",
+        {
+          memberId: loginMemberId,
+          content: commentValue,
+        }
+      );
+      while (result.response && result.response.data.status === 401) {
+        await Refresh();
+        result = await axiosCall(`/api/${reqUrl}/${idValue}/comments`, "POST", {
+          memberId: loginMemberId,
+          content: commentValue,
+        });
+      }
+      if (result.status === 201) {
+        const obj = Object.assign({}, data);
+        obj.comments.push(result.data);
+        console.log(obj);
+        setData(obj);
+        setCommentValue("");
+        setIsOpenCommentForm(false);
+        return;
+      }
+      return result;
     }
   };
 
   const editContentHandler = () => {
-    console.log(+loginMemberId, detailData.ownerId);
-    if (+loginMemberId === detailData.ownerId) {
+    console.log(+loginMemberId, data.ownerId);
+    if (+loginMemberId === data.ownerId) {
       setIsOpenEditContent(true);
       setEditQuestionTitle(true);
     } else if (loginMemberId) {
@@ -237,53 +250,66 @@ function Detail({
     setQuestionContentValue(e.target.value);
   };
 
-  const EditContentBtnHandler = () => {
-    if (QorA === "questionId") {
+  const EditContentBtnHandler = async () => {
+    const reqUrl = QorA === "questionId" ? "questions" : "answers";
+    let result = await axiosCall(`/api/${reqUrl}/${idValue}`, "PATCH", {
+      memberId: loginMemberId,
+      title: questionTitleValue,
+      content: questionContentValue,
+    });
+    while (result.response && result.response.data.status === 401) {
+      await Refresh();
+      result = await axiosCall(`/api/${reqUrl}/${idValue}`, "PATCH", {
+        memberId: loginMemberId,
+        title: questionTitleValue,
+        content: questionContentValue,
+      });
     }
-    axios
-      .patch(
-        `/api/${QorA === "questionId" ? "questions" : "answers"}/${idValue}`,
-        {
-          memberId: loginMemberId,
-          title: questionTitleValue,
-          content: questionContentValue,
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "12",
-            Authorization: localStorage.getItem("jwtToken"),
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => err);
+    if (result.status === 200) {
+      data.content = questionContentValue;
+      setIsOpenEditContent(false);
+      return;
+    }
+    return result;
   };
 
-  const deleteHandler = () => {
+  const onBlurHandler = () => {
+    if (commentValue === "") {
+      setIsOpenCommentForm(false);
+    }
+  };
+
+  const deleteHandler = async () => {
     console.log(loginMemberId);
-    axios
-      .delete(
-        `/api/${QorA === "questionId" ? "questions" : "answers"}/${idValue}`,
-        {
-          memberId: 1,
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "12",
-            Authorization: localStorage.getItem("jwtToken"),
-          },
+    // eslint-disable-next-line no-restricted-globals
+    const askDelete = confirm("정말로 삭제 하시겠습니까?");
+    if (!askDelete) {
+    } else {
+      const reqUrl = QorA === "questionId" ? "questions" : "answers";
+      let result = await axiosCall(`/api/${reqUrl}/${idValue}`, "DELETE");
+      while (result.response && result.response.data.status === 401) {
+        await Refresh();
+        result = await axiosCall(`/api/${reqUrl}/${idValue}`, "DELETE");
+      }
+      if (result.status === 200) {
+        if (QorA === "questionId") {
+          navigate("/");
+        } else {
+          const arr = [...answers].filter(
+            (e) => e.answerId !== result.data.deletedAnswerId
+          );
+          setAnswers(arr);
         }
-      )
-      .then(() => {})
-      .catch((err) => err);
+        return;
+      }
+      return result;
+    }
   };
-
+  console.log(data)
   return (
     <>
       <DetailContainer
-        key={detailData.QorA}
+        key={data.QorA}
         marginTop={QorA === "questionId" ? "0" : "30px"}
       >
         <SideMenu>
@@ -294,7 +320,7 @@ function Detail({
           </RecoContianer>
           <BsBookmarkCheck />
           <BsArrowCounterclockwise />
-          {+loginMemberId === detailData.ownerId ? (
+          {+loginMemberId === data.ownerId ? (
             <DeleteBtn>
               <BsXLg onClick={deleteHandler} />
             </DeleteBtn>
@@ -312,7 +338,7 @@ function Detail({
                 ></EditContentTextArea>
               </EditContentContainer>
             ) : (
-              detailData.content
+              data.content
             )}
           </QuestionDetail>
           <UserBoxContainer>
@@ -328,20 +354,22 @@ function Detail({
                 backG={QorA === "questionId" ? "var(--blue-100)" : "white"}
               >
                 <CreatedAt>
-                  asked {new Date(detailData.createdAt).toDateString()}
+                  asked {new Date(data.createdAt).toDateString()}
                 </CreatedAt>
-                <UserName>{detailData.ownerName}</UserName>
+                <UserName>{data.ownerName}</UserName>
               </UserInfo>
             </UserInfoConainer>
           </UserBoxContainer>
-          {detailData.comments.map((el) => {
-            return (
-              <Comment comments={el} loginMemberId={loginMemberId}></Comment>
-            );
+          {data.comments.map((el, index) => {
+            if(!isOverfive || index < overCount){
+              return <Comment comments={el} data={data} setData={setData} loginMemberId={loginMemberId}></Comment>
+            }
+            return ;
           })}
           {isOpenCommentForm ? (
             <AddCommentContainer>
               <AddCommentForm
+                onBlur={onBlurHandler}
                 value={commentValue}
                 onChange={(e) => commentValueHandler(e)}
                 placeholder="Enter Your Comment"
@@ -354,7 +382,16 @@ function Detail({
                 Submit
               </SubmitCommentBtn>
             </AddCommentContainer>
-          ) : (
+          ) : isOverfive ? (
+            <CommentAddBtn
+              onClick={() => {
+                setOverCount(data.comments.length)
+                setisOverFive(false)
+              }}
+            >
+              see {data.comments.length-5} more comments
+            </CommentAddBtn>
+          ) :(
             <CommentAddBtn
               onClick={() => {
                 openCommentHandler();
@@ -363,7 +400,7 @@ function Detail({
             >
               Add a comment
             </CommentAddBtn>
-          )}
+          ) }
           {isOpenLoginPopup ? (
             <LoginPopup
               openLoginPopupHandler={openLoginPopupHandler}
@@ -380,6 +417,7 @@ function Detail({
                 onClick={() => {
                   setIsOpenEditContent(false);
                   setEditQuestionTitle(false);
+                  setQuestionContentValue(data.content);
                 }}
               ></Button>
             </EditContentBtnArea>

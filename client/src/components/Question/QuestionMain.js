@@ -4,7 +4,7 @@ import * as Q from "./QuestionStyled";
 import Detail from "./Detail";
 import QuestionTitle from "../QuestionTitle";
 
-function Questions({ idValue, loginMemberId }) {
+function Questions({ idValue, loginMemberId, rander ,setRander }) {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [questionTitleValue, setquestionTitleValue] = useState("");
@@ -63,6 +63,7 @@ function Questions({ idValue, loginMemberId }) {
             idValue={idValue}
             data={data}
             loginMemberId={loginMemberId}
+            rander={rander}
           ></Detail>
         </>
       ) : null}

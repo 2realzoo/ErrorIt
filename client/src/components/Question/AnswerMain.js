@@ -30,7 +30,7 @@ const ButtonContainer = styled.div`
   width: 130px;
 `;
 
-function AnswerMain({ idValue, loginMemberId }) {
+function AnswerMain({ idValue, loginMemberId ,rander ,setRander }) {
   const [answers, setAnswers] = useState([]);
   const [addanswerValue, setAddanswersValue] = useState("");
   const [isOpenLoginPopup, setIsOpenLoginPopup] = useState(false);
@@ -56,7 +56,10 @@ function AnswerMain({ idValue, loginMemberId }) {
   };
 
   const addAnswerValueHandler = () => {
-    if (loginMemberId) {
+    if(addanswerValue.length < 1){
+      alert("길이")
+    }
+    else if (loginMemberId) {
       axios
         .post(
           `/api/questions/${idValue}/answers`,
@@ -89,6 +92,8 @@ function AnswerMain({ idValue, loginMemberId }) {
             return (
               <Detail
                 data={el}
+                answers={answers}
+                setAnswers={setAnswers}
                 QorA="answerId"
                 idValue={idValue}
                 loginMemberId={loginMemberId}
