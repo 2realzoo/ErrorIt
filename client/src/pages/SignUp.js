@@ -72,7 +72,7 @@ const EmailCheckBtn = styled.button`
 `;
 
 function SignUp() {
-  // Redirect("login")
+  Redirect("login");
   const { userInfoReducer } = useSelector((state) => state);
   const [vaild, setVaild] = useState({
     name: 1,
@@ -110,7 +110,7 @@ function SignUp() {
         })
         .then(() => {
           sessionStorage.setItem("signUpComplete", true);
-          navigate("/alert/change");
+          navigate("/alert/signup");
         })
         .catch((err) => {
           alert("Sign up failed");
