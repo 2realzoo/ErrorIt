@@ -15,7 +15,7 @@ import { currentPage } from "../reducers/actions";
 import Redirect from "../util/Redirect";
 
 function CheckUser() {
-  // Redirect("login");
+  Redirect("login");
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     email: "",
