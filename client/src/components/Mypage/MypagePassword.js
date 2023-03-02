@@ -33,7 +33,7 @@ const MypagePassword = ({ userInfo }) => {
   };
 
   const changePwd = () => {
-    const setting = { password: newPwd };
+    const setting = { memberId: sessionStorage.getItem("memberId"), password: newPwd };
     if (newPwd != pwdCheck || !pwdReg || !checkReg) {
       alert("비밀번호 양식이 맞지 않습니다. 다시 확인해주세요");
       newPass.current.focus();

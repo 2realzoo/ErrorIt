@@ -74,7 +74,7 @@ const MypageDelete = ({ userInfo }) => {
   };
   const deleteProfile = () => {
     if (delCheck) {
-      deleteReq
+      deleteReq()
         .then((res) => {
           console.log(res.data);
           window.location.replace("/");
