@@ -1,12 +1,12 @@
 {
-    "rewrites": [
-      {
-        "source": "/api/:path*",
-        "destination": "https://1ef4-1-227-164-12.jp.ngrok.io/:path*"
-      },
-      {
-        "source": "/api/:path*/",
-        "destination": "https://1ef4-1-227-164-12.jp.ngrok.io/:path*/"
-      }
-    ]
-  }
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://13.209.10.249:8080/:path*"
+    },
+    {
+      "source": "/api/:path*/",
+      "destination": "http://13.209.10.249:8080/:path*/"
+    }
+  ]
+}
