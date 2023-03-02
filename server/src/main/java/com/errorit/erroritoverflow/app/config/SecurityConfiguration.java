@@ -106,17 +106,14 @@ public class SecurityConfiguration {
                                 .antMatchers(HttpMethod.PATCH, "/questions/*").hasRole("USER")
                                 .antMatchers(HttpMethod.DELETE, "/questions/*").hasRole("USER")
 
-                                .antMatchers(HttpMethod.POST, "/answers").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "questions/*/answers").hasRole("USER")
                                 .antMatchers(HttpMethod.PATCH, "/answers/*").hasRole("USER")
                                 .antMatchers(HttpMethod.DELETE, "/answers/*").hasRole("USER")
 
-                                .antMatchers(HttpMethod.POST, "/answers/*/comment").hasRole("USER")
-                                .antMatchers(HttpMethod.PATCH, "/answers/*/comment").hasRole("USER")
-                                .antMatchers(HttpMethod.DELETE, "/answers/*/comment").hasRole("USER")
-
-                                .antMatchers(HttpMethod.POST, "/questions/*/comment").hasRole("USER")
-                                .antMatchers(HttpMethod.PATCH, "/questions/*/comment").hasRole("USER")
-                                .antMatchers(HttpMethod.DELETE, "/questions/*/comment").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/questions/*/comments").hasRole("USER")
+                                .antMatchers(HttpMethod.POST, "/answers/*/comments").hasRole("USER")
+                                .antMatchers(HttpMethod.PATCH, "/comments/*").hasRole("USER")
+                                .antMatchers(HttpMethod.DELETE, "/comments/*").hasRole("USER")
                                 .anyRequest().permitAll()
                 );
         return http.build();

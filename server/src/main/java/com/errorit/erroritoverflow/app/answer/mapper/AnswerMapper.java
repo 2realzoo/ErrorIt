@@ -19,7 +19,8 @@ public interface AnswerMapper {
     Answer answerPatchDtoToAnswer(AnswerDto.Patch patch);
 
     // entity -> AnswerResponse
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     default AnswerDto.AnswerResponse answerToResponseDto(Answer answer) {
         if ( answer == null ) {
             return null;
@@ -39,7 +40,8 @@ public interface AnswerMapper {
     };
 
     // entity -> MemberAnswerResponse
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     default AnswerDto.MemberAnswerResponse answerToMemberAnswerResponse(Answer answer) {
         if ( answer == null ) {
             return null;
@@ -59,15 +61,18 @@ public interface AnswerMapper {
     };
 
     // List<Answer> -> List<AnswerResponse>
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     List<AnswerDto.AnswerResponse> answerListToResponseDtoList(List<Answer> answers);
 
     // List<Answer> -> List<MemberAnswerResponse>
-    @Mapping(source = "member.name", target = "questionId")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     List<AnswerDto.MemberAnswerResponse> answerListToMemberAnswerResponseList(List<Answer> answers);
 
     // Page<Answer> -> MemberAnswerListResponse
-    @Mapping(source = "member.name", target = "member")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     default AnswerDto.MemberAnswerListResponse pageListToMemberAnswerListResponse(Page<Answer> answers){
         if ( answers == null ) {
             return null;
@@ -78,9 +83,11 @@ public interface AnswerMapper {
         return response;
     }
 
-    @Mapping(source = "member.name", target = "ownerName")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     CommentDto.CommentResponse commentToCommentResponse(Comment comment);
 
-    @Mapping(source = "member.name", target = "ownerName")
+    @Mapping(target = "ownerName", source = "member.name")
+    @Mapping(target = "ownerId", source = "member.memberId")
     List<CommentDto.CommentResponse> commentListToCommentResponseList(List<Comment> comments);
 }
